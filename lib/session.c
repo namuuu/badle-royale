@@ -89,7 +89,7 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketClient(char *ip, short port);
+ * \fn socket_t creerSocketEcoute(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
