@@ -22,8 +22,8 @@ data.o: ./lib/data.c
 session.o: ./lib/session.c
 	$(CC) $(CFLAGS) -c ./lib/session.c -o ./bin/session.o
 
-useLibNet: client.o data.o session.o ./app/useLibNet.c
-	$(CC) $(CFLAGS) ./bin/client.o ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNet.exe
+useLibNet: data.o session.o ./app/useLibNet.c
+	$(CC) $(CFLAGS) ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNet.exe
 
 clean:
 	rm -f *.o

@@ -15,6 +15,12 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+/* STRUCTURE */
+typedef struct {
+    int fd;
+    short mode; // DGRAM / STREAM
+} socket_t;
+
 /**
  * \fn int creerSocket(int mode);
  * 

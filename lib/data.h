@@ -7,6 +7,7 @@
 */
 
 /* INCLUDE */
+#include "session.h"
 
 /* DEFINITIONS */
 #define MAX_BUFF 1024
