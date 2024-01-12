@@ -16,9 +16,6 @@ install:
 	mkdir -p ./bin
 	mkdir -p ./exe
 
-client.o: ./client/client.c
-	$(CC) $(CFLAGS) -c ./client/client.c -o ./bin/client.o
-
 data.o: ./lib/data.c
 	$(CC) $(CFLAGS) -c ./lib/data.c -o ./bin/data.o
 
