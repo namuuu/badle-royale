@@ -20,8 +20,6 @@
 void envoyer(socket_t sock, generic quoi, pFct serial) {
     buffer_t buffer;
 
-    
-
     if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
         if(serial != NULL) {
