@@ -31,5 +31,5 @@ void envoyer(socket_t sock, generic quoi, pFct serial);
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-void recevoir(socket_t sock, generic quoi, pFct deSerial);
+void recevoir(socket_t sock, buffer_t quoi, pFct deSerial);
 

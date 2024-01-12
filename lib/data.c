@@ -21,7 +21,7 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
     buffer_t buffer;
 
     if(serial != NULL) 
-        buffer = serialiser(quoi);
+        serial(quoi, buffer);
 
     if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
@@ -41,7 +41,12 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-void recevoir(socket_t sock, generic quoi, pFct deSerial) {
+void recevoir(socket_t sock, buffer_t quoi, pFct deSerial) {
+    generic receivedData;
+
+    if(deSerial != NULL) 
+        deSerial(quoi, receivedData);
+
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
     } else if (sock.mode == SOCK_STREAM) {
