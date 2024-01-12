@@ -3,14 +3,6 @@ CFLAGS = -Wall -Wextra
 
 all: useLibNet
 
-client: CFLAGS += -DCLIENT
-client: all
-	@echo "Compilation du client"
-
-serveur: CFLAGS += -DSERVEUR
-serveur: all
-	@echo "Compilation du serveur"
-
 install:
 	@echo "Installation du projet"
 	mkdir -p ./bin
@@ -23,7 +15,8 @@ session.o: ./lib/session.c
 	$(CC) $(CFLAGS) -c ./lib/session.c -o ./bin/session.o
 
 useLibNet: data.o session.o ./app/useLibNet.c
-	$(CC) $(CFLAGS) ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNet.exe
+	$(CC) $(CFLAGS) -DCLIENT ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNetClient.exe
+	$(CC) $(CFLAGS) -DSERVEUR ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNetServeur.exe
 
 clean:
 	rm -f *.o
