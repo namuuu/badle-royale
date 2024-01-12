@@ -78,7 +78,7 @@ int connecterSocket (char *ip, short port);
  * @param sock Fournit la socket
  * @param msg Fournit le message à écrire
 */
-void ecrireSocket(int sock, char *msg);
+void ecrireSocket(socket_t sock, char *msg);
 
 /**
  * \fn int lireSocket(int sock, char *msg,;
@@ -86,7 +86,7 @@ void ecrireSocket(int sock, char *msg);
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(int sock);
+void lireSocket(socket_t sock);
 
 /**
  * \fn void closeSocket(int sock);

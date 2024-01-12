@@ -84,7 +84,6 @@ int creerSocketAddr_in(int mode, char *ip, short port) {
  * @return Numéro de fd de la socket créé
 */
 int creerSocketEcoute(char *ip, short port, short maxClts) {
-
     if(maxClts <= 0) {
         printf("Nombre de clients maximum invalide\n");
         exit(-1);
@@ -93,8 +92,8 @@ int creerSocketEcoute(char *ip, short port, short maxClts) {
     int sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
     CHECK(listen(sock, maxClts), "Impossible de mettre la socket en écoute");
     return sock;
-
 }
+
 /**
  * \fn int connecterSocket(char *ip, short port);
  * 
@@ -104,7 +103,6 @@ int creerSocketEcoute(char *ip, short port, short maxClts) {
  * @return Numéro de fd de la socket créé
 */
 int connecterSocket (char *ip, short port) {
-
     int sock = creerSocket(SOCK_STREAM);
     struct sockaddr_in addr = creerAddr_in(ip, port);
     //struct sockaddr_in monAddr;
@@ -121,8 +119,9 @@ int connecterSocket (char *ip, short port) {
  * @param sock Fournit la socket
  * @param msg Fournit le message à écrire
 */
-void ecrireSocket(int sock, char *msg) {
-    CHECK(write(sock, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
+void ecrireSocket(socket_t sock, char *msg) {
+    // TODO: Actuellement, ça ne marche que pour les sockets STREAM, il faut faire le cas DGRAM
+    CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
 }
 
 /**
@@ -131,14 +130,14 @@ void ecrireSocket(int sock, char *msg) {
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(int sockEcoute) {
+void lireSocket(socket_t sockEcoute) {
 
     struct sockaddr_in addr;
     socklen_t addrLen = sizeof(addr);
     int sd;
     char msg[1024];
 
-    CHECK(sd = accept(sockEcoute, (struct sockaddr *)&addr, &addrLen), "Impossible d'accepter la connexion");
+    CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&addr, &addrLen), "Impossible d'accepter la connexion");
     CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
 
     printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(addr.sin_addr));    
