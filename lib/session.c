@@ -94,7 +94,6 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
  * @return structure socket_t
 */
 socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
-
     if(maxClts <= 0) {
         printf("Nombre de clients maximum invalide\n");
         exit(-1);
@@ -109,8 +108,8 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
     sock = creerSocketAddr_in(SOCK_STREAM, sock.ip, sock.port);
     CHECK(listen(sock.fd, maxClts), "Impossible de mettre la socket en écoute");
     return sock;
-
 }
+
 /**
  * \fn socket_t connecterSocket(char *ip, short port);
  * 
@@ -129,7 +128,6 @@ socket_t connecterSocket (char *ip, short port) {
     sock.addr = creerAddr_in(sock.ip, sock.port);
 
     CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
-
     return sock;
 }
 
@@ -141,6 +139,7 @@ socket_t connecterSocket (char *ip, short port) {
  * @param msg Fournit le message à écrire
 */
 void ecrireSocket(socket_t sock, char *msg) {
+    // TODO: Actuellement, ça ne marche que pour les sockets STREAM, il faut faire le cas DGRAM
     CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
 }
 
