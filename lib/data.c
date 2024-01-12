@@ -20,15 +20,14 @@
 void envoyer(socket_t sock, generic quoi, pFct serial) {
     buffer_t buffer;
 
+    if(serial != NULL) 
+        buffer = serialiser(quoi);
+
     if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
-        if(serial != NULL) 
-            buffer = serial(quoi);
         envoyerMSGDgram(sock, (char *) quoi);
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
-        if(serial != NULL) 
-            buffer = serial(quoi);
         envoyerMSGStream(sock, (char *) quoi);
     } else {
         // Mode inconnu
@@ -50,4 +49,14 @@ void recevoir(socket_t sock, generic quoi, pFct deSerial) {
     } else {
         perror("Erreur de mode de socket");
     }
+}
+
+/**
+ * @brief Transforme une struct de données en string
+ * @param buffer Fournit le buffer
+ * @param quoi Fournit la donnée à sérialiser
+ * @return buffer_t
+*/
+void serialiser(char *buffer, generic quoi) {
+    // TODO
 }
