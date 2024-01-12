@@ -21,15 +21,14 @@
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @return structure socket_t créée
 */
-socket_t creerSocket(short mode) {
+int creerSocket(short mode) {
     if (mode != SOCK_DGRAM && mode != SOCK_STREAM) {
         printf("Mode de socket invalide %d\n", mode);
         exit(-1);
     }
-    socket_t sock;
-    sock.mode = mode;
-    CHECK(sock.fd = socket(PF_INET, sock.mode, 0), "Impossible de créer la socket");
-    return sock;
+    int fd;
+    CHECK(fd = socket(PF_INET, mode, 0), "Impossible de créer la socket");
+    return fd;
 }
 
 /**
@@ -79,11 +78,9 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
     sock.mode = mode;
     sock.ip = ip;
     sock.port = port;
-    sock = creerSocket(sock.mode);
+    sock.fd = creerSocket(sock.mode);
 
     // Bind de la socket
-    printf("ip: %s\n", ip);
-    printf("Socket: fd %d, mode %d, adresse %s, port %d\n", sock.fd, sock.mode, inet_ntoa(sock.addr.sin_addr), ntohs(sock.addr.sin_port));
     CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
     return sock;
 }
@@ -124,7 +121,7 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
 socket_t connecterSocket (char *ip, short port) {
 
     socket_t sock;
-    sock = creerSocket(SOCK_STREAM);
+    sock.fd = creerSocket(SOCK_STREAM);
     sock.ip = ip;
     sock.port = port;
     sock.addr = creerAddr_in(sock.ip, sock.port);

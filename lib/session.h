@@ -37,7 +37,7 @@ typedef struct {
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @return structure socket_t créée
 */
-socket_t creerSocket(short mode);
+int creerSocket(short mode);
 
 /**
  * \fn struct sockaddr_in creerAddr_in(char *ip, short port);

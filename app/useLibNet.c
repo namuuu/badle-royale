@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 void client(char *ip, short port) {
     printf("Client\n");
     socket_t sock = connecterSocket(ip, port);
+    sock.mode = SOCK_STREAM;
 
     char *msg = "Hello World";
     envoyer(sock, msg, NULL);
