@@ -1,9 +1,8 @@
 /**
  * @file session.c
- * @author Tomas TRENY
- * @brief Stream class
+ * @author Tomas TRENY, Leevan DAVID
  * @version 1.0
- * @date 2023-12-14
+ * @date 2024-01-12
 */
 
 #include "session.h"
@@ -39,6 +38,11 @@ int creerSocket(int mode) {
 */
 struct sockaddr_in creerAddr_in(char *ip, short port) {
     struct sockaddr_in addr;
+
+    if(ip == NULL) {
+        printf("Adresse IP invalide\n");
+        exit(-1);
+    }
 
     // Mise au format machine de l'adressage
     addr.sin_family = PF_INET;
@@ -131,7 +135,7 @@ void lireSocket(int sockEcoute) {
 
     struct sockaddr_in addr;
     socklen_t addrLen = sizeof(addr);
-    int sock, sd;
+    int sd;
     char msg[1024];
 
     CHECK(sd = accept(sockEcoute, (struct sockaddr *)&addr, &addrLen), "Impossible d'accepter la connexion");
