@@ -5,7 +5,7 @@
  * @date 2024-01-12
 */
 
-/* INCLUDE */
+/* ----------------------------------------- INCLUDE ----------------------------------------- */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,20 +15,29 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-/* STRUCTURE */
+/* ---------------------------------------- STRUCTURE ---------------------------------------- */
+
 typedef struct {
     int fd;
     short mode; // DGRAM / STREAM
+    struct sockaddr_in addr;
+    char *ip;
+    short port;
+    // @Loc, @Dist
+    // flag
+    // ...
 } socket_t;
 
+/* --------------------------------- PROTOTYPES DES FONCTIONS --------------------------------- */
+
 /**
- * \fn int creerSocket(int mode);
+ * \fn socket_t creerSocket(short mode);
  * 
  * @brief Création d'une socket dans un mode donné
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
- * @return num de fd de la socket créé
+ * @return structure socket_t créée
 */
-int creerSocket(int mode);
+socket_t creerSocket(short mode);
 
 /**
  * \fn struct sockaddr_in creerAddr_in(char *ip, short port);
@@ -41,38 +50,40 @@ int creerSocket(int mode);
 struct sockaddr_in creerAddr_in(char *ip, short port);
 
 /**
- * \fn int creerSocketAddr_in(int mode, char *ip, short port);
+ * \fn socket_t creerSocketAddr_in(short mode, char *ip, short port);
  * 
  * @brief Création d'une socket dans un mode donné et réalisation de l'adressage en INET 
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @return structure socket_t 
 */
-int creerSocketAddr_in(int mode, char *ip, short port);
+socket_t creerSocketAddr_in(short mode, char *ip, short port);
 
 /**
- * \fn int creerSocketClient(char *ip, short port);
+ * \fn socket_t creerSocketClient(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @note Modifier la structure pour le mode DGRAM
+ * @return structure socket_t
 */
-int creerSocketEcoute(char *ip, short port, short maxClts); 
+socket_t creerSocketEcoute(char *ip, short port, short maxClts); 
 
 /**
- * \fn int connecterSocket(char *ip, short port);
+ * \fn socket_t connecterSocket(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @note Modifier la structure pour le mode DGRAM
+ * @return structure socket_t
 */
-int connecterSocket (char *ip, short port);
+socket_t connecterSocket (char *ip, short port);
 
 /**
- * \fn int ecrireSocket(int sock, char *msg,;
+ * \fn void ecrireSocket(socket_t sock, char *msg);
  * 
  * @brief Ecrit un message sur une socket
  * @param sock Fournit la socket
@@ -81,7 +92,7 @@ int connecterSocket (char *ip, short port);
 void ecrireSocket(socket_t sock, char *msg);
 
 /**
- * \fn int lireSocket(int sock, char *msg,;
+ * \fn void lireSocket(socket_t sock);
  * 
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
@@ -89,9 +100,9 @@ void ecrireSocket(socket_t sock, char *msg);
 void lireSocket(socket_t sock);
 
 /**
- * \fn void closeSocket(int sock);
+ * \fn void closeSocket(socket_t sock);
  * 
  * @brief Ferme une socket
  * @param sock Fournit la socket
 */
-void closeSocket(int sock);
+void closeSocket(socket_t sock);

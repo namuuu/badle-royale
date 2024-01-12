@@ -11,20 +11,24 @@
         perror(msg);                                                         \
         exit(EXIT_FAILURE);                                                  \
     }
+
+
+/* ---------------------------------------- FONCTIONS ---------------------------------------- */
 /**
- * \fn int creerSocket(int mode);
+ * \fn socket_t creerSocket(int mode);
  * 
  * @brief Création d'une socket dans un mode donné
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
- * @return Numéro de fd de la socket créé 
+ * @return structure socket_t créée
 */
-int creerSocket(int mode) {
+socket_t creerSocket(short mode) {
     if (mode != SOCK_DGRAM && mode != SOCK_STREAM) {
         printf("Mode de socket invalide %d\n", mode);
         exit(-1);
     }
-    int sock;
-    CHECK(sock = socket(PF_INET, mode, 0), "Impossible de créer la socket");
+    socket_t sock;
+    sock.mode = mode;
+    CHECK(sock.fd = socket(PF_INET, sock.mode, 0), "Impossible de créer la socket");
     return sock;
 }
 
@@ -53,67 +57,82 @@ struct sockaddr_in creerAddr_in(char *ip, short port) {
 }
 
 /**
- * \fn int creerSocketAddr_in(int mode, char *ip, short port);
+ * \fn socket_t creerSocketAddr_in(short mode, char *ip, short port);
  * 
- * @brief Création d'une socket dans un mode donné et réalisation de l'adressage en INET
+ * @brief Création d'une socket dans un mode donné et réalisation de l'adressage en INET 
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @return structure socket_t 
 */
-int creerSocketAddr_in(int mode, char *ip, short port) {
+socket_t creerSocketAddr_in(short mode, char *ip, short port) {
+
+    // Vérification du mode
     if(mode != SOCK_DGRAM && mode != SOCK_STREAM) {
         printf("Mode de socket invalide %d\n", mode);
         exit(-1);
     }
     
-    struct sockaddr_in addr;
-    int sock;
-    addr = creerAddr_in(ip, port);
-    sock = creerSocket(mode);
-    CHECK(bind(sock, (struct sockaddr *)&addr, sizeof(addr)), "Impossible de lier la socket");
+    // Association des paramètres à la structure de la socket
+    socket_t sock;
+    sock.addr = creerAddr_in(ip, port);
+    sock.mode = mode;
+    sock = creerSocket(sock.mode);
+
+    // Bind de la socket
+    CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
     return sock;
 }
 
 /**
- * \fn int creerSocketClient(char *ip, short port);
+ * \fn socket_t creerSocketClient(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @note Modifier la structure pour le mode DGRAM
+ * @return structure socket_t
 */
-int creerSocketEcoute(char *ip, short port, short maxClts) {
+socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
     if(maxClts <= 0) {
         printf("Nombre de clients maximum invalide\n");
         exit(-1);
     }
+    
+    // Association des paramètres à la structure de la socket
+    socket_t sock;
+    sock.ip = ip;
+    sock.port = port;
 
-    int sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
-    CHECK(listen(sock, maxClts), "Impossible de mettre la socket en écoute");
+    // Création dans le mode STREAM et mise sur écoute
+    sock = creerSocketAddr_in(SOCK_STREAM, sock.ip, sock.port);
+    CHECK(listen(sock.fd, maxClts), "Impossible de mettre la socket en écoute");
     return sock;
 }
 
 /**
- * \fn int connecterSocket(char *ip, short port);
+ * \fn socket_t connecterSocket(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @return Numéro de fd de la socket créé
+ * @note Modifier la structure pour le mode DGRAM
+ * @return structure socket_t
 */
-int connecterSocket (char *ip, short port) {
-    int sock = creerSocket(SOCK_STREAM);
-    struct sockaddr_in addr = creerAddr_in(ip, port);
-    //struct sockaddr_in monAddr;
-    CHECK(connect(sock, (struct sockaddr *)&addr, sizeof(addr)), "Impossible de se connecter au serveur");
-    //CHECK(getsockname(sock, (struct sockaddr *)&monAddr, sizeof(monAddr)), "Impossible de récupérer l'adresse de la socket");
-    //fprintf(stderr, "L'adresse IP client = [%s], Port Client = [%d]\n", inet_ntoa(monAddr.sin_addr), ntohs(monAddr.sin_port));
+socket_t connecterSocket (char *ip, short port) {
+
+    socket_t sock;
+    sock = creerSocket(SOCK_STREAM);
+    sock.ip = ip;
+    sock.port = port;
+    sock.addr = creerAddr_in(sock.ip, sock.port);
+
+    CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
     return sock;
 }
 
 /**
- * \fn int ecrireSocket(int sock, char *msg,;
+ * \fn void ecrireSocket(socket_t sock, char *msg);
  * 
  * @brief Ecrit un message sur une socket
  * @param sock Fournit la socket
@@ -125,7 +144,7 @@ void ecrireSocket(socket_t sock, char *msg) {
 }
 
 /**
- * \fn int lireSocket(int sock, char *msg,;
+ * \fn void lireSocket(socket_t sock);
  * 
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
@@ -133,22 +152,22 @@ void ecrireSocket(socket_t sock, char *msg) {
 void lireSocket(socket_t sockEcoute) {
 
     struct sockaddr_in addr;
-    socklen_t addrLen = sizeof(addr);
+    socklen_t addrLen = sizeof(sockEcoute.addr);
     int sd;
     char msg[1024];
 
-    CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&addr, &addrLen), "Impossible d'accepter la connexion");
+    CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
     CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
 
     printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(addr.sin_addr));    
 }
 
 /**
- * \fn void closeSocket(int sock);
+ * \fn void closeSocket(socket_t sock);
  * 
  * @brief Ferme une socket
  * @param sock Fournit la socket
 */
-void closeSocket(int sock) {
-    CHECK(close(sock), "Impossible de fermer la socket");
+void closeSocket(socket_t sock) {
+    CHECK(close(sock.fd), "Impossible de fermer la socket");
 }
