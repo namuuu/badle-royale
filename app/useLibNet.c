@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+#include "../lib/data.h"
+
+void client(char *ip, short port);
+void serveur(char *ip, short port);
+
 int main(int argc, char *argv[])
 {
     if(argc != 3) {
@@ -11,13 +16,30 @@ int main(int argc, char *argv[])
     printf("Port: %s\n", argv[2]);
 
     #ifdef CLIENT
-        printf("Client\n");
+        client(argv[1], atoi(argv[2]));
     #endif
     #ifdef SERVEUR
-        printf("Serveur\n");
+        serveur(argv[1], atoi(argv[2]));
     #endif
     #if !defined(CLIENT) && !defined(SERVEUR)
         printf("Erreur: ni client ni serveur\n");
     #endif
     return 0; 
+}
+
+void client(char *ip, short port) {
+    printf("Client\n");
+    socket_t sock = connecterSocket(ip, port);
+
+    char *msg = "Hello World";
+    envoyer(sock, msg, NULL);
+}
+
+void serveur(char *ip, short port) {
+    printf("Serveur\n");
+    socket_t sock = creerSocketEcoute(ip, port, 5);
+
+    char *msg = NULL;
+
+    recevoir(sock, msg, NULL);
 }

@@ -77,9 +77,13 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
     socket_t sock;
     sock.addr = creerAddr_in(ip, port);
     sock.mode = mode;
+    sock.ip = ip;
+    sock.port = port;
     sock = creerSocket(sock.mode);
 
     // Bind de la socket
+    printf("ip: %s\n", ip);
+    printf("Socket: fd %d, mode %d, adresse %s, port %d\n", sock.fd, sock.mode, inet_ntoa(sock.addr.sin_addr), ntohs(sock.addr.sin_port));
     CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
     return sock;
 }
@@ -101,11 +105,9 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
     
     // Association des paramètres à la structure de la socket
     socket_t sock;
-    sock.ip = ip;
-    sock.port = port;
 
     // Création dans le mode STREAM et mise sur écoute
-    sock = creerSocketAddr_in(SOCK_STREAM, sock.ip, sock.port);
+    sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
     CHECK(listen(sock.fd, maxClts), "Impossible de mettre la socket en écoute");
     return sock;
 }

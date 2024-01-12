@@ -51,13 +51,20 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
 void recevoir(socket_t sock, generic quoi, pFct deSerial) {
     generic receivedData = NULL;
 
-    if(deSerial != NULL) 
-        deSerial(quoi, receivedData);
-
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
+        lireSocket(sock/*, (char *) receivedData*/);
+        // if(deSerial != NULL) 
+        //     deSerial(quoi, receivedData);
+        // else
+        //     quoi = receivedData;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
+        lireSocket(sock/*, (char *) receivedData*/);
+        // if(deSerial != NULL) 
+        //     deSerial(quoi, receivedData);
+        // else
+        //     quoi = receivedData;
     } else {
         perror("Erreur de mode de socket");
     }
