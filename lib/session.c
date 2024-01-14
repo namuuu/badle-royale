@@ -115,13 +115,18 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @note Modifier la structure pour le mode DGRAM
  * @return structure socket_t
 */
-socket_t connecterSocket (char *ip, short port) {
+socket_t connecterSocket(char *ip, short port, short mode) {
+
+    // Vérification du mode
+    if(mode != SOCK_DGRAM && mode != SOCK_STREAM) {
+        printf("Mode de socket invalide %d\n", mode);
+        exit(-1);
+    }
 
     socket_t sock;
-    sock.fd = creerSocket(SOCK_STREAM);
+    sock.fd = creerSocket(mode);
     sock.ip = ip;
     sock.port = port;
     sock.addr = creerAddr_in(sock.ip, sock.port);
@@ -135,11 +140,17 @@ socket_t connecterSocket (char *ip, short port) {
  * 
  * @brief Ecrit un message sur une socket
  * @param sock Fournit la socket
+ * @param mode Fournit le mode de la socket (DGRAM / STREAM)
  * @param msg Fournit le message à écrire
 */
-void ecrireSocket(socket_t sock, char *msg) {
+void ecrireSocket(socket_t sock, char *msg, short mode) {
     // TODO: Actuellement, ça ne marche que pour les sockets STREAM, il faut faire le cas DGRAM
-    CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
+    if(mode != SOCK_DGRAM && mode != SOCK_STREAM) {
+        printf("Mode de socket invalide %d\n", mode);
+        exit(-1);
+    }
+    if (mode == SOCK_DGRAM) CHECK(sendto(sock.fd, msg, strlen(msg)+1, 0, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible d'écrire sur la socket");
+    if (mode == SOCK_STREAM) CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
 }
 
 /**
@@ -155,10 +166,19 @@ void lireSocket(socket_t sockEcoute) {
     int sd;
     char msg[1024];
 
-    CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
-    CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
+    if(sockEcoute.mode != SOCK_DGRAM && sockEcoute.mode != SOCK_STREAM) {
+        printf("Mode de socket invalide %d\n", sockEcoute.mode);
+        exit(-1);
+    }
 
-    printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(addr.sin_addr));    
+    if(sockEcoute.mode == SOCK_DGRAM) 
+        CHECK(recvfrom(sockEcoute.fd, msg, sizeof(msg), 0, (struct sockaddr *)&addr, &addrLen), "Impossible de lire sur la socket");
+    if(sockEcoute.mode == SOCK_STREAM) {
+        CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
+        CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
+    } 
+
+    printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(sockEcoute.addr.sin_addr));    
 }
 
 /**

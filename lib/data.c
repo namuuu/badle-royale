@@ -24,17 +24,17 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
         // Fonctionnement DGRAM
         if(serial != NULL) {
             serial(quoi, buffer);
-            ecrireSocket(sock, buffer);
+            ecrireSocket(sock, buffer, sock.mode);
         } else {
-            ecrireSocket(sock, (char *) quoi);
+            ecrireSocket(sock, (char *) quoi, sock.mode);
         }
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
         if(serial != NULL) {
             serial(quoi, buffer);
-            ecrireSocket(sock, buffer);
+            ecrireSocket(sock, buffer, sock.mode);
         } else {
-            ecrireSocket(sock, (char *) quoi);
+            ecrireSocket(sock, (char *) quoi, sock.mode);
         }
     } else {
         // Mode inconnu

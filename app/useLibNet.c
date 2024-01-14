@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
 
 void client(char *ip, short port) {
     printf("Client\n");
-    socket_t sock = connecterSocket(ip, port);
-    sock.mode = SOCK_STREAM;
+    socket_t sock = connecterSocket(ip, port, SOCK_DGRAM);
+    sock.mode = SOCK_DGRAM;
 
     char *msg = "Hello World";
     envoyer(sock, msg, NULL);
@@ -38,8 +38,8 @@ void client(char *ip, short port) {
 
 void serveur(char *ip, short port) {
     printf("Serveur\n");
-    socket_t sock = creerSocketEcoute(ip, port, 5);
-
+    //socket_t sock = creerSocketEcoute(ip, port, 5); // STREAM
+    socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port); // DGRAM
     char *msg = NULL;
 
     recevoir(sock, msg, NULL);

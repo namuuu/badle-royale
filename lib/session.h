@@ -77,19 +77,19 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts);
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @note Modifier la structure pour le mode DGRAM
  * @return structure socket_t
 */
-socket_t connecterSocket (char *ip, short port);
+socket_t connecterSocket(char *ip, short port, short mode);
 
 /**
  * \fn void ecrireSocket(socket_t sock, char *msg);
  * 
  * @brief Ecrit un message sur une socket
  * @param sock Fournit la socket
+ * @param mode Fournit le mode de la socket (DGRAM / STREAM)
  * @param msg Fournit le message à écrire
 */
-void ecrireSocket(socket_t sock, char *msg);
+void ecrireSocket(socket_t sock, char *msg, short mode);
 
 /**
  * \fn void lireSocket(socket_t sock);
