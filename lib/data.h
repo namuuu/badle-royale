@@ -33,7 +33,23 @@ void envoyer(socket_t sock, generic quoi, pFct serial);
 */
 void recevoir(socket_t sock, generic quoi, pFct deSerial);
 
+/**
+ * \fn socket_t connectToServer(char *ip, short port, short mode);
+ * 
+ * @brief Création d'une socket dans un mode donné pour le client
+ * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
+ * @return structure socket_t créée
+*/
+socket_t connectToServer(char *ip, short port, short mode);
+
+/**
+ * \fn socket_t prepareForClient(char *ip, short port, short mode);
+ * 
+ * @brief Création d'une socket dans un mode donné pour le serveur
+ * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
+ * @return structure socket_t créée
+*/
 socket_t prepareForClient(char *ip, short port, short mode);
 
-socket_t connectToServer(char *ip, short port, short mode);
+
 

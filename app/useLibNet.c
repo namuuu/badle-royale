@@ -12,12 +12,6 @@
     #define DATA_MODE SOCK_STREAM
 #endif
 
-#define CHECK(status, msg)                                                   \
-    if ((status) == -1) {                                                    \
-        perror(msg);                                                         \
-        exit(EXIT_FAILURE);                                                  \
-    }
-
 
 void client(char *ip, short port);
 void serveur(char *ip, short port);

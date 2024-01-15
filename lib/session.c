@@ -86,12 +86,11 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketEcouteStream(char *ip, short port);
+ * \fn socket_t creerSocketEcouteStream(char *ip, short port)
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
  * @param port Fournit le port de la socket à créer
- * @note Modifier la structure pour le mode DGRAM
  * @return structure socket_t
 */
 socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
@@ -115,6 +114,14 @@ socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
     return sock;
 }
 
+/**
+ * \fn socket_t creerSocketEcritureStream(char *ip, short port)
+ * 
+ * @brief Création d'une socket d'écriture en STREAM
+ * @param ip Fournit l'adresse IP de la socket à créer
+ * @param port Fournit le port de la socket à créer
+ * @return structure socket_t
+*/
 socket_t creerSocketEcritureStream(char *ip, short port) {
     socket_t sock;
     sock.fd = creerSocket(SOCK_STREAM);
@@ -128,6 +135,14 @@ socket_t creerSocketEcritureStream(char *ip, short port) {
     return sock;
 }
 
+/**
+ * \fn socket_t creerSocketEcouteDgram(char *ip, short port);
+ * 
+ * @brief Création d'une socket d'écoute en DGRAM
+ * @param ip Fournit l'adresse IP de la socket à créer
+ * @param port Fournit le port de la socket à créer
+ * @return structure socket_t
+*/
 socket_t creerSocketEcouteDgram(char *ip, short port) {
     // Création dans le mode DGRAM et mise sur écoute
     socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port);
@@ -138,6 +153,14 @@ socket_t creerSocketEcouteDgram(char *ip, short port) {
     return sock;
 }
 
+/**
+ * \fn socket_t creerSocketEcritureDgram(char *ip, short port);
+ * 
+ * @brief Création d'une socket d'écriture en DGRAM
+ * @param ip Fournit l'adresse IP de la socket à créer
+ * @param port Fournit le port de la socket à créer
+ * @return structure socket_t
+*/
 socket_t creerSocketEcritureDgram(char *ip, short port) {
     // Création dans le mode DGRAM et mise sur écoute
     socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port);
