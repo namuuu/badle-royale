@@ -75,12 +75,12 @@ void client(char *ipClient, short portClient, char *ipServeur, short portServeur
  * @param port Fournit le port du serveur
 */
 void serveur(char *ip, short port) {
-    printc(BOLDYELLOW, "Lancement du Serveur\n");
-    printc(YELLOW, "| IP: ");
+    printc(BOLDMAGENTA, "Lancement du Serveur\n");
+    printc(MAGENTA, "| IP: ");
     printf("%s\n", ip);
-    printc(YELLOW, "| Port: ");
+    printc(MAGENTA, "| Port: ");
     printf("%d\n", port);
-    printc(YELLOW, "| Mode: ");
+    printc(MAGENTA, "| Mode: ");
     printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
     char *msg = NULL;
 
