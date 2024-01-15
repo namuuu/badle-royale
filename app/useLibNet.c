@@ -13,22 +13,27 @@
 #endif
 
 
-void client(char *ip, short port);
+void client(char *ipClient, short portClient, char *ipServeur, short portServeur);
 void serveur(char *ip, short port);
 
 int main(int argc, char *argv[])
 {
-    if(argc != 3) {
-        printf(RED);
-        printf("Usage: %s <ip> <port>\n", argv[0]);
-        printf(RESET);
-        return -1;
-    }
-
     #ifdef CLIENT
-        client(argv[1], atoi(argv[2]));
+        if(argc != 5) {
+            printf(RED);
+            printf("Usage: %s <ip-client> <port-client> <ip-serveur> <port-serveur>\n", argv[0]);
+            printf(RESET);
+            return -1;
+        }
+        client(argv[1], atoi(argv[2]), argv[3], atoi(argv[4]));
     #endif
     #ifdef SERVEUR
+        if(argc != 3) {
+            printf(RED);
+            printf("Usage: %s <ip> <port>\n", argv[0]);
+            printf(RESET);
+            return -1;
+        }
         serveur(argv[1], atoi(argv[2]));
     #endif
     #if !defined(CLIENT) && !defined(SERVEUR) 
@@ -38,21 +43,25 @@ int main(int argc, char *argv[])
 }
 
 /**
- * @fn void client(char *ip, short port);
+ * @fn void client(char *ip, short port, char *ipServeur, short portServeur);
  * 
  * @brief Lance un client
- * @param ip Fournit l'ip du serveur
- * @param port Fournit le port du serveur
+ * @param ipClient Fournit l'ip du client
+ * @param portClient Fournit le port du client
+ * @param ipServeur Fournit l'ip du serveur
+ * @param portServeur Fournit le port du serveur
 */
-void client(char *ip, short port) {
+void client(char *ipClient, short portClient, char *ipServeur, short portServeur) {
     printc(BOLDYELLOW, "Lancement du Client\n");
     printc(YELLOW, "| IP: ");
-    printf("%s\n", ip);
+    printf("%s\n", ipClient);
     printc(YELLOW, "| Port: ");
-    printf("%d\n", port);
+    printf("%d\n", portClient);
     printc(YELLOW, "| Mode: ");
     printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
-    socket_t sock = connectToServer(ip, port, DATA_MODE);
+    printc(YELLOW, "| Connexion vers: ");
+    printf("%s %d\n", ipServeur, portServeur);
+    socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, DATA_MODE);
 
     char *msg = "Hello World";
     envoyer(sock, msg, NULL);
