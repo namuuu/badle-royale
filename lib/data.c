@@ -69,3 +69,35 @@ void recevoir(socket_t sock, generic quoi, pFct deSerial) {
         perror("Erreur de mode de socket");
     }
 }
+
+/**
+ * @brief Création d'une socket dans un mode donné
+ * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
+ * @return structure socket_t créée
+*/
+socket_t connectToServer(char *ip, short port, short mode) {
+    if(mode == SOCK_DGRAM) {
+        return creerSocketEcritureDgram(ip, port);
+    } else if (mode == SOCK_STREAM) {   
+        return creerSocketEcritureStream(ip, port);
+    } else {
+        perror("Erreur de mode de socket");
+        exit(-1);
+    }
+}
+
+/**
+ * @brief Création d'une socket dans un mode donné
+ * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
+ * @return structure socket_t créée
+*/
+socket_t prepareForClient(char *ip, short port, short mode) {
+    if(mode == SOCK_DGRAM) {
+        return creerSocketEcouteDgram(ip, port);
+    } else if (mode == SOCK_STREAM) {
+        return creerSocketEcouteStream(ip, port, 5);
+    } else {
+        perror("Erreur de mode de socket");
+        exit(-1);
+    }
+}

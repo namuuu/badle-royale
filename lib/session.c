@@ -80,13 +80,13 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
     sock.port = port;
     sock.fd = creerSocket(sock.mode);
 
-    // Bind de la socket
-    CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
+    //CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de connecter la socket");
+    // printf("Socket créée\n");
     return sock;
 }
 
 /**
- * \fn socket_t creerSocketEcoute(char *ip, short port);
+ * \fn socket_t creerSocketEcouteStream(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -94,7 +94,11 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
  * @note Modifier la structure pour le mode DGRAM
  * @return structure socket_t
 */
-socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
+socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
+    if(ip == NULL) {
+        printf("Adresse IP invalide\n");
+        exit(-1);
+    }
     if(maxClts <= 0) {
         printf("Nombre de clients maximum invalide\n");
         exit(-1);
@@ -105,7 +109,38 @@ socket_t creerSocketEcoute(char *ip, short port, short maxClts) {
 
     // Création dans le mode STREAM et mise sur écoute
     sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
+    
+    CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
     CHECK(listen(sock.fd, maxClts), "Impossible de mettre la socket en écoute");
+    return sock;
+}
+
+socket_t creerSocketEcritureStream(char *ip, short port) {
+    socket_t sock;
+    sock.fd = creerSocket(SOCK_STREAM);
+    sock.ip = ip;
+    sock.port = port;
+    sock.addr = creerAddr_in(sock.ip, sock.port);
+    // CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
+
+    CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
+    return sock;
+}
+
+socket_t creerSocketEcouteDgram(char *ip, short port) {
+    // Création dans le mode DGRAM et mise sur écoute
+    socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port);
+    sock.mode = SOCK_DGRAM;
+
+    // associer l'adressage à la socket *serveur
+	CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
+    return sock;
+}
+
+socket_t creerSocketEcritureDgram(char *ip, short port) {
+    // Création dans le mode DGRAM et mise sur écoute
+    socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port);
+    sock.mode = SOCK_DGRAM;
     return sock;
 }
 
@@ -144,13 +179,15 @@ socket_t connecterSocket(char *ip, short port, short mode) {
  * @param msg Fournit le message à écrire
 */
 void ecrireSocket(socket_t sock, char *msg, short mode) {
-    // TODO: Actuellement, ça ne marche que pour les sockets STREAM, il faut faire le cas DGRAM
     if(mode != SOCK_DGRAM && mode != SOCK_STREAM) {
         printf("Mode de socket invalide %d\n", mode);
         exit(-1);
     }
-    if (mode == SOCK_DGRAM) CHECK(sendto(sock.fd, msg, strlen(msg)+1, 0, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible d'écrire sur la socket");
-    if (mode == SOCK_STREAM) CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
+    if (mode == SOCK_DGRAM) 
+        CHECK(sendto(sock.fd, msg, strlen(msg)+1, 0, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible d'écrire sur la socket");
+    if (mode == SOCK_STREAM) {
+        CHECK(write(sock.fd, msg, strlen(msg)+1), "Impossible d'écrire sur la socket");
+    }
 }
 
 /**
@@ -175,6 +212,8 @@ void lireSocket(socket_t sockEcoute) {
         CHECK(recvfrom(sockEcoute.fd, msg, sizeof(msg), 0, (struct sockaddr *)&addr, &addrLen), "Impossible de lire sur la socket");
     if(sockEcoute.mode == SOCK_STREAM) {
         CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
+        printf("Connexion acceptée\n");
+        CHECK(close(sockEcoute.fd), "Impossible de fermer la socket");
         CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
     } 
 

@@ -33,3 +33,7 @@ void envoyer(socket_t sock, generic quoi, pFct serial);
 */
 void recevoir(socket_t sock, generic quoi, pFct deSerial);
 
+socket_t prepareForClient(char *ip, short port, short mode);
+
+socket_t connectToServer(char *ip, short port, short mode);
+
