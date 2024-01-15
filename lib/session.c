@@ -213,7 +213,6 @@ void lireSocket(socket_t sockEcoute) {
         CHECK(recvfrom(sockEcoute.fd, msg, sizeof(msg), 0, (struct sockaddr *)&addr, &addrLen), "Impossible de lire sur la socket");
     if(sockEcoute.mode == SOCK_STREAM) {
         CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
-        printf("Connexion acceptée\n");
         CHECK(close(sockEcoute.fd), "Impossible de fermer la socket");
         CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
     } 

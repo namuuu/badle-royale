@@ -29,10 +29,6 @@ int main(int argc, char *argv[])
         printf("Usage: %s <ip> <port>\n", argv[0]);
         printf(RESET);
         return -1;
-    }
-
-    printf("IP: %s\n", argv[1]);
-    printf("Port: %s\n", argv[2]);
 
     #ifdef CLIENT
         client(argv[1], atoi(argv[2]));
@@ -40,14 +36,20 @@ int main(int argc, char *argv[])
     #ifdef SERVEUR
         serveur(argv[1], atoi(argv[2]));
     #endif
-    #if !defined(CLIENT) && !defined(SERVEUR)
+    #if !defined(CLIENT) && !defined(SERVEUR) 
         perror("Aucun mode défini. Veuillez définir CLIENT ou SERVEUR");
     #endif
     return 0; 
 }
 
 void client(char *ip, short port) {
-    printf("Client\n");
+    printc(BOLDYELLOW, "Lancement du Client\n");
+    printc(YELLOW, "| IP: ");
+    printf("%s\n", ip);
+    printc(YELLOW, "| Port: ");
+    printf("%d\n", port);
+    printc(YELLOW, "| Mode: ");
+    printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
     socket_t sock = connectToServer(ip, port, DATA_MODE);
 
     char *msg = "Hello World";
@@ -55,7 +57,13 @@ void client(char *ip, short port) {
 }
 
 void serveur(char *ip, short port) {
-    printf("Serveur\n");
+    printc(BOLDYELLOW, "Lancement du Serveur\n");
+    printc(YELLOW, "| IP: ");
+    printf("%s\n", ip);
+    printc(YELLOW, "| Port: ");
+    printf("%d\n", port);
+    printc(YELLOW, "| Mode: ");
+    printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
     char *msg = NULL;
 
     socket_t sock = prepareForClient(ip, port, DATA_MODE);
