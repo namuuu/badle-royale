@@ -44,7 +44,7 @@ void recevoir(socket_t sock, generic quoi, pFct deSerial);
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @return structure socket_t créée
 */
-socket_t connectToServer(char *ip, short port, short mode);
+socket_t connectToServer(char *ipClient, short portClient, char *ipServeur, short portServeur, short mode);
 
 /**
  * @fn socket_t prepareForClient(char *ip, short port, short mode);

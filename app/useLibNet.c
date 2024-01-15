@@ -61,7 +61,7 @@ void client(char *ipClient, short portClient, char *ipServeur, short portServeur
     printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
     printc(YELLOW, "| Connexion vers: ");
     printf("%s %d\n", ipServeur, portServeur);
-    socket_t sock = connectToServer(ipServeur, portServeur, DATA_MODE);
+    socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, DATA_MODE);
 
     char *msg = "Hello World";
     envoyer(sock, msg, NULL);

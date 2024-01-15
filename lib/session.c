@@ -122,9 +122,10 @@ socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
  * @param port Fournit le port de la socket à créer
  * @return structure socket_t
 */
-socket_t creerSocketEcritureStream(char *ip, short port) {
-    socket_t sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
-    // CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
+socket_t creerSocketEcritureStream(char *ipClient, short portClient, char *ipServeur, short portServeur) {
+    socket_t sock = creerSocketAddr_in(SOCK_STREAM, ipServeur, portServeur);
+    struct sockaddr_in addrClient = creerAddr_in(ipClient, portClient);
+    CHECK(bind(sock.fd, (struct sockaddr *)&addrClient, sizeof(addrClient)), "Impossible de lier la socket");
 
     CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
     return sock;

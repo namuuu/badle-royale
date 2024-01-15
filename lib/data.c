@@ -80,11 +80,11 @@ void recevoir(socket_t sock, generic quoi, pFct deSerial) {
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
  * @return structure socket_t créée
 */
-socket_t connectToServer(char *ip, short port, short mode) {
+socket_t connectToServer(char *ipClient, short portClient, char *ipServeur, short portServeur, short mode) {
     if(mode == SOCK_DGRAM) {
-        return creerSocketEcritureDgram(ip, port);
+        return creerSocketEcritureDgram(ipServeur, portServeur);
     } else if (mode == SOCK_STREAM) {   
-        return creerSocketEcritureStream(ip, port);
+        return creerSocketEcritureStream(ipClient, portClient, ipServeur, portServeur);
     } else {
         perror("Erreur de mode de socket");
         exit(-1);
