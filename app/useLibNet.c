@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
         printf("Usage: %s <ip> <port>\n", argv[0]);
         printf(RESET);
         return -1;
+    }
 
     #ifdef CLIENT
         client(argv[1], atoi(argv[2]));
