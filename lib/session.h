@@ -99,7 +99,7 @@ socket_t creerSocketEcouteStream(char *ip, short port, short maxClts);
  * @param port Fournit le port de la socket à créer
  * @return structure socket_t
 */
-socket_t creerSocketEcritureStream(char *ip, short port);
+socket_t creerSocketEcritureStream(char *ipClient, short portClient, char *ipServeur, short portServeur);
 
 /**
  * @fn socket_t creerSocketEcouteDgram(char *ip, short port);
