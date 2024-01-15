@@ -121,6 +121,7 @@ socket_t creerSocketEcritureStream(char *ip, short port) {
     sock.ip = ip;
     sock.port = port;
     sock.addr = creerAddr_in(sock.ip, sock.port);
+    sock.mode = SOCK_STREAM;
     // CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
 
     CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
