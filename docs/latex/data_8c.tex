@@ -1,0 +1,99 @@
+\hypertarget{data_8c}{}\doxysection{lib/data.c File Reference}
+\label{data_8c}\index{lib/data.c@{lib/data.c}}
+{\ttfamily \#include \char`\"{}data.\+h\char`\"{}}\newline
+Include dependency graph for data.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{data_8c_a35a680ae01c917a33973de4c0dd66d49}{envoyer}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}} serial)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{data_8c_a76b72db3f0aaa940e2ef2ec71c01dee0}{recevoir}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}} de\+Serial)
+\begin{DoxyCompactList}\small\item\em Réception d\textquotesingle{}une donnée sur une socket. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8c_a2196d57be69bf0f99c0f4997cf933b89}{connect\+To\+Server}} (char $\ast$ip, short port, short mode)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8c_a6654e21f161146a6966ed5c661ed6379}{prepare\+For\+Client}} (char $\ast$ip, short port, short mode)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{data_8c_a2196d57be69bf0f99c0f4997cf933b89}\label{data_8c_a2196d57be69bf0f99c0f4997cf933b89}} 
+\index{data.c@{data.c}!connectToServer@{connectToServer}}
+\index{connectToServer@{connectToServer}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{connectToServer()}{connectToServer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} connect\+To\+Server (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{short}]{mode }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket dans un mode donné 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Fournit le mode de la socket à créer (DGRAM / STREAM) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} créée 
+\end{DoxyReturn}
+\mbox{\Hypertarget{data_8c_a35a680ae01c917a33973de4c0dd66d49}\label{data_8c_a35a680ae01c917a33973de4c0dd66d49}} 
+\index{data.c@{data.c}!envoyer@{envoyer}}
+\index{envoyer@{envoyer}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{envoyer()}{envoyer()}}
+{\footnotesize\ttfamily void envoyer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}}}]{serial }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket dans un mode donné 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket \\
+\hline
+{\em quoi} & Fournit la donnée à envoyer \\
+\hline
+{\em serial} & Fournit la fonction de sérialisation \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{data_8c_a6654e21f161146a6966ed5c661ed6379}\label{data_8c_a6654e21f161146a6966ed5c661ed6379}} 
+\index{data.c@{data.c}!prepareForClient@{prepareForClient}}
+\index{prepareForClient@{prepareForClient}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{prepareForClient()}{prepareForClient()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} prepare\+For\+Client (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{short}]{mode }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket dans un mode donné 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Fournit le mode de la socket à créer (DGRAM / STREAM) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} créée 
+\end{DoxyReturn}
+\mbox{\Hypertarget{data_8c_a76b72db3f0aaa940e2ef2ec71c01dee0}\label{data_8c_a76b72db3f0aaa940e2ef2ec71c01dee0}} 
+\index{data.c@{data.c}!recevoir@{recevoir}}
+\index{recevoir@{recevoir}!data.c@{data.c}}
+\doxysubsubsection{\texorpdfstring{recevoir()}{recevoir()}}
+{\footnotesize\ttfamily void recevoir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}}}]{de\+Serial }\end{DoxyParamCaption})}
+
+
+
+Réception d\textquotesingle{}une donnée sur une socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket \\
+\hline
+{\em quoi} & Fournit la donnée à recevoir \\
+\hline
+{\em de\+Serial} & Fournit la fonction de désérialisation \\
+\hline
+\end{DoxyParams}

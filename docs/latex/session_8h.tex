@@ -1,0 +1,422 @@
+\hypertarget{session_8h}{}\doxysection{lib/session.h File Reference}
+\label{session_8h}\index{lib/session.h@{lib/session.h}}
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/socket.\+h$>$}\newline
+{\ttfamily \#include $<$netinet/in.\+h$>$}\newline
+{\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
+Include dependency graph for session.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{session_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=286pt]{session_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{session_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}}~\char`\"{}\textbackslash{}033\mbox{[}0m\char`\"{}
+\item 
+\#define \mbox{\hyperlink{session_8h_a7b3b25cba33b07c303f3060fe41887f6}{BLACK}}~\char`\"{}\textbackslash{}033\mbox{[}30m\char`\"{}      /$\ast$ Black $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a8d23feea868a983c8c2b661e1e16972f}{RED}}~\char`\"{}\textbackslash{}033\mbox{[}31m\char`\"{}      /$\ast$ Red $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_acfbc006ea433ad708fdee3e82996e721}{GREEN}}~\char`\"{}\textbackslash{}033\mbox{[}32m\char`\"{}      /$\ast$ Green $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_abf681265909adf3d3e8116c93c0ba179}{YELLOW}}~\char`\"{}\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Yellow $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a79d10e672abb49ad63eeaa8aaef57c38}{BLUE}}~\char`\"{}\textbackslash{}033\mbox{[}34m\char`\"{}      /$\ast$ Blue $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a6f699060902f800f12aaae150f3a708e}{MAGENTA}}~\char`\"{}\textbackslash{}033\mbox{[}35m\char`\"{}      /$\ast$ Magenta $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_ad243f93c16bc4c1d3e0a13b84421d760}{CYAN}}~\char`\"{}\textbackslash{}033\mbox{[}36m\char`\"{}      /$\ast$ Cyan $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a87b537f5fa5c109d3c05c13d6b18f382}{WHITE}}~\char`\"{}\textbackslash{}033\mbox{[}37m\char`\"{}      /$\ast$ White $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_ab912d02c7998c3d47d05f87be4e2c920}{BOLDRED}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}31m\char`\"{}      /$\ast$ Bold Red $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a4a6c893a1703c33ede7d702fe5f97c91}{BOLDGREEN}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}32m\char`\"{}      /$\ast$ Bold Green $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a8cec79108dfc3c61e8e32d390ec28b26}{BOLDYELLOW}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Bold Yellow $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_a11e77c19555cbd15bcc744ff36a18635}{BOLDBLUE}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}34m\char`\"{}      /$\ast$ Bold Blue $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_ac4723c5ee12cfca16e2172b57b99cb07}{BOLDMAGENTA}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}35m\char`\"{}      /$\ast$ Bold Magenta $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_ae87af5e6363eb1913b17f24dcb60a22d}{BOLDCYAN}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}36m\char`\"{}      /$\ast$ Bold Cyan $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_aa4ef051614aa0bd503b0a18ee158c5d7}{BOLDWHITE}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}37m\char`\"{}      /$\ast$ Bold White $\ast$/
+\item 
+\#define \mbox{\hyperlink{session_8h_ab88cc1297d6c95a97f8d80113b776262}{printc}}(color,  msg)~printf(color \char`\"{}\%s\char`\"{} RESET, msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{session_8h_a43f9c6ae141de0d5768b7fa495df0fd4}{creer\+Socket}} (short mode)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
+struct sockaddr\+\_\+in \mbox{\hyperlink{session_8h_a91d486d1919db183070f672cffdc4ccc}{creer\+Addr\+\_\+in}} (char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Réalisation de l\textquotesingle{}adressage d\textquotesingle{}une socket en INET. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_aba2a5b855824bdaf08d5f0ea7cd75a92}{creer\+Socket\+Addr\+\_\+in}} (short mode, char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné et réalisation de l\textquotesingle{}adressage en INET. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_af50e980caf0a387623e73319543d538b}{creer\+Socket\+Ecoute\+Stream}} (char $\ast$ip, short port, short max\+Clts)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_a6667499579de14d5d4c303661b647f31}{creer\+Socket\+Ecriture\+Stream}} (char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_a19936bc76cfe3311b6992a0cd5e87c52}{creer\+Socket\+Ecoute\+Dgram}} (char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en DGRAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_aae82e5786aca610986ee3abb981ec4df}{creer\+Socket\+Ecriture\+Dgram}} (char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écriture en DGRAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_aa2d23f4a0b625b06f6b1df1b92a47f1d}{connecter\+Socket}} (char $\ast$ip, short port, short mode)
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}{ecrire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, char $\ast$msg, short mode)
+\begin{DoxyCompactList}\small\item\em Ecrit un message sur une socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{session_8h_af0294d563b93bbb93cad9365dc17f3a1}{lire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
+\begin{DoxyCompactList}\small\item\em Lit un message sur une socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{session_8h_a690fdbe9b224b3609eb9a1c320e565d4}{close\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
+\begin{DoxyCompactList}\small\item\em Ferme une socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Tomas TRENY, Leevan DAVID 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/01-\/12 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{session_8h_a7b3b25cba33b07c303f3060fe41887f6}\label{session_8h_a7b3b25cba33b07c303f3060fe41887f6}} 
+\index{session.h@{session.h}!BLACK@{BLACK}}
+\index{BLACK@{BLACK}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BLACK}{BLACK}}
+{\footnotesize\ttfamily \#define BLACK~\char`\"{}\textbackslash{}033\mbox{[}30m\char`\"{}      /$\ast$ Black $\ast$/}
+
+\mbox{\Hypertarget{session_8h_a79d10e672abb49ad63eeaa8aaef57c38}\label{session_8h_a79d10e672abb49ad63eeaa8aaef57c38}} 
+\index{session.h@{session.h}!BLUE@{BLUE}}
+\index{BLUE@{BLUE}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BLUE}{BLUE}}
+{\footnotesize\ttfamily \#define BLUE~\char`\"{}\textbackslash{}033\mbox{[}34m\char`\"{}      /$\ast$ Blue $\ast$/}
+
+\mbox{\Hypertarget{session_8h_a11e77c19555cbd15bcc744ff36a18635}\label{session_8h_a11e77c19555cbd15bcc744ff36a18635}} 
+\index{session.h@{session.h}!BOLDBLUE@{BOLDBLUE}}
+\index{BOLDBLUE@{BOLDBLUE}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDBLUE}{BOLDBLUE}}
+{\footnotesize\ttfamily \#define BOLDBLUE~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}34m\char`\"{}      /$\ast$ Bold Blue $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ae87af5e6363eb1913b17f24dcb60a22d}\label{session_8h_ae87af5e6363eb1913b17f24dcb60a22d}} 
+\index{session.h@{session.h}!BOLDCYAN@{BOLDCYAN}}
+\index{BOLDCYAN@{BOLDCYAN}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDCYAN}{BOLDCYAN}}
+{\footnotesize\ttfamily \#define BOLDCYAN~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}36m\char`\"{}      /$\ast$ Bold Cyan $\ast$/}
+
+\mbox{\Hypertarget{session_8h_a4a6c893a1703c33ede7d702fe5f97c91}\label{session_8h_a4a6c893a1703c33ede7d702fe5f97c91}} 
+\index{session.h@{session.h}!BOLDGREEN@{BOLDGREEN}}
+\index{BOLDGREEN@{BOLDGREEN}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDGREEN}{BOLDGREEN}}
+{\footnotesize\ttfamily \#define BOLDGREEN~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}32m\char`\"{}      /$\ast$ Bold Green $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ac4723c5ee12cfca16e2172b57b99cb07}\label{session_8h_ac4723c5ee12cfca16e2172b57b99cb07}} 
+\index{session.h@{session.h}!BOLDMAGENTA@{BOLDMAGENTA}}
+\index{BOLDMAGENTA@{BOLDMAGENTA}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDMAGENTA}{BOLDMAGENTA}}
+{\footnotesize\ttfamily \#define BOLDMAGENTA~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}35m\char`\"{}      /$\ast$ Bold Magenta $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ab912d02c7998c3d47d05f87be4e2c920}\label{session_8h_ab912d02c7998c3d47d05f87be4e2c920}} 
+\index{session.h@{session.h}!BOLDRED@{BOLDRED}}
+\index{BOLDRED@{BOLDRED}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDRED}{BOLDRED}}
+{\footnotesize\ttfamily \#define BOLDRED~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}31m\char`\"{}      /$\ast$ Bold Red $\ast$/}
+
+\mbox{\Hypertarget{session_8h_aa4ef051614aa0bd503b0a18ee158c5d7}\label{session_8h_aa4ef051614aa0bd503b0a18ee158c5d7}} 
+\index{session.h@{session.h}!BOLDWHITE@{BOLDWHITE}}
+\index{BOLDWHITE@{BOLDWHITE}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDWHITE}{BOLDWHITE}}
+{\footnotesize\ttfamily \#define BOLDWHITE~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}37m\char`\"{}      /$\ast$ Bold White $\ast$/}
+
+\mbox{\Hypertarget{session_8h_a8cec79108dfc3c61e8e32d390ec28b26}\label{session_8h_a8cec79108dfc3c61e8e32d390ec28b26}} 
+\index{session.h@{session.h}!BOLDYELLOW@{BOLDYELLOW}}
+\index{BOLDYELLOW@{BOLDYELLOW}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{BOLDYELLOW}{BOLDYELLOW}}
+{\footnotesize\ttfamily \#define BOLDYELLOW~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Bold Yellow $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ad243f93c16bc4c1d3e0a13b84421d760}\label{session_8h_ad243f93c16bc4c1d3e0a13b84421d760}} 
+\index{session.h@{session.h}!CYAN@{CYAN}}
+\index{CYAN@{CYAN}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{CYAN}{CYAN}}
+{\footnotesize\ttfamily \#define CYAN~\char`\"{}\textbackslash{}033\mbox{[}36m\char`\"{}      /$\ast$ Cyan $\ast$/}
+
+\mbox{\Hypertarget{session_8h_acfbc006ea433ad708fdee3e82996e721}\label{session_8h_acfbc006ea433ad708fdee3e82996e721}} 
+\index{session.h@{session.h}!GREEN@{GREEN}}
+\index{GREEN@{GREEN}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{GREEN}{GREEN}}
+{\footnotesize\ttfamily \#define GREEN~\char`\"{}\textbackslash{}033\mbox{[}32m\char`\"{}      /$\ast$ Green $\ast$/}
+
+\mbox{\Hypertarget{session_8h_a6f699060902f800f12aaae150f3a708e}\label{session_8h_a6f699060902f800f12aaae150f3a708e}} 
+\index{session.h@{session.h}!MAGENTA@{MAGENTA}}
+\index{MAGENTA@{MAGENTA}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{MAGENTA}{MAGENTA}}
+{\footnotesize\ttfamily \#define MAGENTA~\char`\"{}\textbackslash{}033\mbox{[}35m\char`\"{}      /$\ast$ Magenta $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ab88cc1297d6c95a97f8d80113b776262}\label{session_8h_ab88cc1297d6c95a97f8d80113b776262}} 
+\index{session.h@{session.h}!printc@{printc}}
+\index{printc@{printc}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{printc}{printc}}
+{\footnotesize\ttfamily \#define printc(\begin{DoxyParamCaption}\item[{}]{color,  }\item[{}]{msg }\end{DoxyParamCaption})~printf(color \char`\"{}\%s\char`\"{} RESET, msg)}
+
+\mbox{\Hypertarget{session_8h_a8d23feea868a983c8c2b661e1e16972f}\label{session_8h_a8d23feea868a983c8c2b661e1e16972f}} 
+\index{session.h@{session.h}!RED@{RED}}
+\index{RED@{RED}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{RED}{RED}}
+{\footnotesize\ttfamily \#define RED~\char`\"{}\textbackslash{}033\mbox{[}31m\char`\"{}      /$\ast$ Red $\ast$/}
+
+\mbox{\Hypertarget{session_8h_ab702106cf3b3e96750b6845ded4e0299}\label{session_8h_ab702106cf3b3e96750b6845ded4e0299}} 
+\index{session.h@{session.h}!RESET@{RESET}}
+\index{RESET@{RESET}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{RESET}{RESET}}
+{\footnotesize\ttfamily \#define RESET~\char`\"{}\textbackslash{}033\mbox{[}0m\char`\"{}}
+
+\mbox{\Hypertarget{session_8h_a87b537f5fa5c109d3c05c13d6b18f382}\label{session_8h_a87b537f5fa5c109d3c05c13d6b18f382}} 
+\index{session.h@{session.h}!WHITE@{WHITE}}
+\index{WHITE@{WHITE}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{WHITE}{WHITE}}
+{\footnotesize\ttfamily \#define WHITE~\char`\"{}\textbackslash{}033\mbox{[}37m\char`\"{}      /$\ast$ White $\ast$/}
+
+\mbox{\Hypertarget{session_8h_abf681265909adf3d3e8116c93c0ba179}\label{session_8h_abf681265909adf3d3e8116c93c0ba179}} 
+\index{session.h@{session.h}!YELLOW@{YELLOW}}
+\index{YELLOW@{YELLOW}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{YELLOW}{YELLOW}}
+{\footnotesize\ttfamily \#define YELLOW~\char`\"{}\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Yellow $\ast$/}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{session_8h_a690fdbe9b224b3609eb9a1c320e565d4}\label{session_8h_a690fdbe9b224b3609eb9a1c320e565d4}} 
+\index{session.h@{session.h}!closeSocket@{closeSocket}}
+\index{closeSocket@{closeSocket}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{closeSocket()}{closeSocket()}}
+{\footnotesize\ttfamily void close\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock }\end{DoxyParamCaption})}
+
+
+
+Ferme une socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{session_8h_aa2d23f4a0b625b06f6b1df1b92a47f1d}\label{session_8h_aa2d23f4a0b625b06f6b1df1b92a47f1d}} 
+\index{session.h@{session.h}!connecterSocket@{connecterSocket}}
+\index{connecterSocket@{connecterSocket}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{connecterSocket()}{connecterSocket()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} connecter\+Socket (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{short}]{mode }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_a91d486d1919db183070f672cffdc4ccc}\label{session_8h_a91d486d1919db183070f672cffdc4ccc}} 
+\index{session.h@{session.h}!creerAddr\_in@{creerAddr\_in}}
+\index{creerAddr\_in@{creerAddr\_in}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerAddr\_in()}{creerAddr\_in()}}
+{\footnotesize\ttfamily struct sockaddr\+\_\+in creer\+Addr\+\_\+in (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Réalisation de l\textquotesingle{}adressage d\textquotesingle{}une socket en INET. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Structure sockaddr\+\_\+in créée 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_a43f9c6ae141de0d5768b7fa495df0fd4}\label{session_8h_a43f9c6ae141de0d5768b7fa495df0fd4}} 
+\index{session.h@{session.h}!creerSocket@{creerSocket}}
+\index{creerSocket@{creerSocket}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocket()}{creerSocket()}}
+{\footnotesize\ttfamily int creer\+Socket (\begin{DoxyParamCaption}\item[{short}]{mode }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket dans un mode donné 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Fournit le mode de la socket à créer (DGRAM / STREAM) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} créée 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_aba2a5b855824bdaf08d5f0ea7cd75a92}\label{session_8h_aba2a5b855824bdaf08d5f0ea7cd75a92}} 
+\index{session.h@{session.h}!creerSocketAddr\_in@{creerSocketAddr\_in}}
+\index{creerSocketAddr\_in@{creerSocketAddr\_in}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocketAddr\_in()}{creerSocketAddr\_in()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Addr\+\_\+in (\begin{DoxyParamCaption}\item[{short}]{mode,  }\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket dans un mode donné et réalisation de l\textquotesingle{}adressage en INET. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & Fournit le mode de la socket à créer (DGRAM / STREAM) \\
+\hline
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_a19936bc76cfe3311b6992a0cd5e87c52}\label{session_8h_a19936bc76cfe3311b6992a0cd5e87c52}} 
+\index{session.h@{session.h}!creerSocketEcouteDgram@{creerSocketEcouteDgram}}
+\index{creerSocketEcouteDgram@{creerSocketEcouteDgram}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocketEcouteDgram()}{creerSocketEcouteDgram()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecoute\+Dgram (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket d\textquotesingle{}écoute en DGRAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_af50e980caf0a387623e73319543d538b}\label{session_8h_af50e980caf0a387623e73319543d538b}} 
+\index{session.h@{session.h}!creerSocketEcouteStream@{creerSocketEcouteStream}}
+\index{creerSocketEcouteStream@{creerSocketEcouteStream}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocketEcouteStream()}{creerSocketEcouteStream()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecoute\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{short}]{max\+Clts }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_aae82e5786aca610986ee3abb981ec4df}\label{session_8h_aae82e5786aca610986ee3abb981ec4df}} 
+\index{session.h@{session.h}!creerSocketEcritureDgram@{creerSocketEcritureDgram}}
+\index{creerSocketEcritureDgram@{creerSocketEcritureDgram}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocketEcritureDgram()}{creerSocketEcritureDgram()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Dgram (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket d\textquotesingle{}écriture en DGRAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_a6667499579de14d5d4c303661b647f31}\label{session_8h_a6667499579de14d5d4c303661b647f31}} 
+\index{session.h@{session.h}!creerSocketEcritureStream@{creerSocketEcritureStream}}
+\index{creerSocketEcritureStream@{creerSocketEcritureStream}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{creerSocketEcritureStream()}{creerSocketEcritureStream()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
+\hline
+{\em port} & Fournit le port de la socket à créer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}\label{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}} 
+\index{session.h@{session.h}!ecrireSocket@{ecrireSocket}}
+\index{ecrireSocket@{ecrireSocket}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{ecrireSocket()}{ecrireSocket()}}
+{\footnotesize\ttfamily void ecrire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{char $\ast$}]{msg,  }\item[{short}]{mode }\end{DoxyParamCaption})}
+
+
+
+Ecrit un message sur une socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket \\
+\hline
+{\em mode} & Fournit le mode de la socket (DGRAM / STREAM) \\
+\hline
+{\em msg} & Fournit le message à écrire \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{session_8h_af0294d563b93bbb93cad9365dc17f3a1}\label{session_8h_af0294d563b93bbb93cad9365dc17f3a1}} 
+\index{session.h@{session.h}!lireSocket@{lireSocket}}
+\index{lireSocket@{lireSocket}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{lireSocket()}{lireSocket()}}
+{\footnotesize\ttfamily void lire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute }\end{DoxyParamCaption})}
+
+
+
+Lit un message sur une socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket \\
+\hline
+\end{DoxyParams}

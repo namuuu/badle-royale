@@ -42,6 +42,15 @@ int main(int argc, char *argv[])
     return 0; 
 }
 
+/**
+ * @fn void client(char *ip, short port, char *ipServeur, short portServeur);
+ * 
+ * @brief Lance un client
+ * @param ipClient Fournit l'ip du client
+ * @param portClient Fournit le port du client
+ * @param ipServeur Fournit l'ip du serveur
+ * @param portServeur Fournit le port du serveur
+*/
 void client(char *ipClient, short portClient, char *ipServeur, short portServeur) {
     printc(BOLDYELLOW, "Lancement du Client\n");
     printc(YELLOW, "| IP: ");
@@ -58,6 +67,13 @@ void client(char *ipClient, short portClient, char *ipServeur, short portServeur
     envoyer(sock, msg, NULL);
 }
 
+/**
+ * @fn void serveur(char *ip, short port);
+ * 
+ * @brief Lance un serveur
+ * @param ip Fournit l'ip du serveur
+ * @param port Fournit le port du serveur
+*/
 void serveur(char *ip, short port) {
     printc(BOLDYELLOW, "Lancement du Serveur\n");
     printc(YELLOW, "| IP: ");
