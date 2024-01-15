@@ -123,12 +123,7 @@ socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
  * @return structure socket_t
 */
 socket_t creerSocketEcritureStream(char *ip, short port) {
-    socket_t sock;
-    sock.fd = creerSocket(SOCK_STREAM);
-    sock.ip = ip;
-    sock.port = port;
-    sock.addr = creerAddr_in(sock.ip, sock.port);
-    sock.mode = SOCK_STREAM;
+    socket_t sock = creerSocketAddr_in(SOCK_STREAM, ip, port);
     // CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
 
     CHECK(connect(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de se connecter au serveur");
@@ -146,7 +141,6 @@ socket_t creerSocketEcritureStream(char *ip, short port) {
 socket_t creerSocketEcouteDgram(char *ip, short port) {
     // Création dans le mode DGRAM et mise sur écoute
     socket_t sock = creerSocketAddr_in(SOCK_DGRAM, ip, port);
-    sock.mode = SOCK_DGRAM;
 
     // associer l'adressage à la socket *serveur
 	CHECK(bind(sock.fd, (struct sockaddr *)&sock.addr, sizeof(sock.addr)), "Impossible de lier la socket");
