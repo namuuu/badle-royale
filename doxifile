@@ -1,0 +1,20 @@
+# Fichier de configuration Doxygen
+
+# Nom du projet
+PROJECT_NAME = "middleware-project-2i"
+
+# Répertoires à analyser
+INPUT = lib
+INPUT += app
+# Sortie pour la documentation générée
+OUTPUT_DIRECTORY = docs
+
+# Extensions de fichiers à analyser
+FILE_PATTERNS = *.h *.c
+
+# Activer la génération de documentation pour les commentaires Doxygen
+EXTRACT_ALL = YES
+
+# Options de format de documentation
+GENERATE_HTML = YES
+GENERATE_LATEX = YES

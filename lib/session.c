@@ -15,7 +15,7 @@
 
 /* ---------------------------------------- FONCTIONS ---------------------------------------- */
 /**
- * \fn socket_t creerSocket(int mode);
+ * @fn int creerSocket(short mode);
  * 
  * @brief Création d'une socket dans un mode donné
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
@@ -32,7 +32,7 @@ int creerSocket(short mode) {
 }
 
 /**
- * \fn struct sockaddr_in creerAddr_in(char *ip, short port);
+ * @fn struct sockaddr_in creerAddr_in(char *ip, short port);
  * 
  * @brief Réalisation de l'adressage d'une socket en INET
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -56,7 +56,7 @@ struct sockaddr_in creerAddr_in(char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketAddr_in(short mode, char *ip, short port);
+ * @fn socket_t creerSocketAddr_in(short mode, char *ip, short port);
  * 
  * @brief Création d'une socket dans un mode donné et réalisation de l'adressage en INET 
  * @param mode Fournit le mode de la socket à créer (DGRAM / STREAM)
@@ -86,7 +86,7 @@ socket_t creerSocketAddr_in(short mode, char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketEcouteStream(char *ip, short port)
+ * @fn socket_t creerSocketEcouteStream(char *ip, short port, short maxClts);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -115,7 +115,7 @@ socket_t creerSocketEcouteStream(char *ip, short port, short maxClts) {
 }
 
 /**
- * \fn socket_t creerSocketEcritureStream(char *ip, short port)
+ * @fn socket_t creerSocketEcritureStream(char *ip, short port);
  * 
  * @brief Création d'une socket d'écriture en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -131,7 +131,7 @@ socket_t creerSocketEcritureStream(char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketEcouteDgram(char *ip, short port);
+ * @fn socket_t creerSocketEcouteDgram(char *ip, short port);
  * 
  * @brief Création d'une socket d'écoute en DGRAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -148,7 +148,7 @@ socket_t creerSocketEcouteDgram(char *ip, short port) {
 }
 
 /**
- * \fn socket_t creerSocketEcritureDgram(char *ip, short port);
+ * @fn socket_t creerSocketEcritureDgram(char *ip, short port);
  * 
  * @brief Création d'une socket d'écriture en DGRAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -163,7 +163,7 @@ socket_t creerSocketEcritureDgram(char *ip, short port) {
 }
 
 /**
- * \fn socket_t connecterSocket(char *ip, short port);
+ * @fn socket_t connecterSocket(char *ip, short port, short mode);
  * 
  * @brief Création d'une socket d'écoute en STREAM
  * @param ip Fournit l'adresse IP de la socket à créer
@@ -189,7 +189,7 @@ socket_t connecterSocket(char *ip, short port, short mode) {
 }
 
 /**
- * \fn void ecrireSocket(socket_t sock, char *msg);
+ * @fn void ecrireSocket(socket_t sock, char *msg, short mode); 
  * 
  * @brief Ecrit un message sur une socket
  * @param sock Fournit la socket
@@ -209,7 +209,7 @@ void ecrireSocket(socket_t sock, char *msg, short mode) {
 }
 
 /**
- * \fn void lireSocket(socket_t sock);
+ * @fn void lireSocket(socket_t sockEcoute);
  * 
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
@@ -238,7 +238,7 @@ void lireSocket(socket_t sockEcoute) {
 }
 
 /**
- * \fn void closeSocket(socket_t sock);
+ * @fn void closeSocket(socket_t sock);
  * 
  * @brief Ferme une socket
  * @param sock Fournit la socket

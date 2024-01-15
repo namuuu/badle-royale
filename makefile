@@ -25,4 +25,6 @@ clean:
 	rm -f ./bin/*.o
 	rm -f ./exe/*.exe
 
+doxi :
+	doxygen doxifile
 	
