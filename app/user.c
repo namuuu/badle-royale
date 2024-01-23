@@ -64,7 +64,7 @@ void requireLobbyFromCode() {
     char *ipClient = "127.0.0.1";
     short portClient = 5001;
 
-    char *ipServeur = "127.0.0.1";
+    char *ipServeur = "0.0.0.0";
     short portServeur = 5000;
 
     printf("Quel est le code de la partie que vous souhaitez rejoindre ? ");
@@ -72,7 +72,7 @@ void requireLobbyFromCode() {
     scanf("%s", code);
 
     // Requête de connexion au serveur
-    char *req = malloc(sizeof(char) * 20);
+    char *req = malloc(sizeof(char) * 30);
     strcat(req, "requireLobbyFromCode-");
     strcat(req, code);
 
