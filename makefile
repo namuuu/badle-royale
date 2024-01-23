@@ -20,6 +20,9 @@ useLibNet: data.o session.o ./app/useLibNet.c
 	$(CC) $(CFLAGS) -DSERVEUR -DSTREAM ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNetServeurStream.exe
 	$(CC) $(CFLAGS) -DSERVEUR -DDGRAM ./bin/data.o ./bin/session.o ./app/useLibNet.c  -o ./exe/useLibNetServeurDGram.exe
 
+hub: data.o session.o ./app/hub.c
+	$(CC) $(CFLAGS) ./bin/data.o ./bin/session.o ./app/hub.c  -o ./exe/hub.exe
+
 clean:
 	rm -f *.o
 	rm -f ./bin/*.o
