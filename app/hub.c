@@ -9,7 +9,7 @@ void waitForInput(socket_t sock, generic msg);
 
 int main(int argc, char *argv[]){
    
-    if(argc != 3) {
+    if(argc != 3) { 
         printf(RED);
         printf("Usage: %s <ip> <port>\n", argv[0]);
         printf(RESET);
