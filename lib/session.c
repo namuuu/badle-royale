@@ -215,7 +215,7 @@ void ecrireSocket(socket_t sock, char *msg, short mode) {
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(socket_t sockEcoute) {
+void lireSocket(socket_t sockEcoute, generic receivedData) {
 
     struct sockaddr_in addr;
     socklen_t addrLen = sizeof(sockEcoute.addr);
@@ -235,6 +235,7 @@ void lireSocket(socket_t sockEcoute) {
         CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
     } 
 
+    receivedData = msg;
     printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(sockEcoute.addr.sin_addr));    
 }
 

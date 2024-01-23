@@ -56,21 +56,22 @@ void recevoir(socket_t sock, generic quoi, pFct deSerial) {
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
-        lireSocket(sock/*, (char *) receivedData*/);
-        // if(deSerial != NULL) 
-        //     deSerial(quoi, receivedData);
-        // else
-        //     quoi = receivedData;
+        lireSocket(sock, receivedData);
+        if(deSerial != NULL) 
+            deSerial(quoi, receivedData);
+        else
+            quoi = receivedData;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
-        lireSocket(sock/*, (char *) receivedData*/);
-        // if(deSerial != NULL) 
-        //     deSerial(quoi, receivedData);
-        // else
-        //     quoi = receivedData;
+        lireSocket(sock, receivedData);
+        if(deSerial != NULL) 
+            deSerial(quoi, receivedData);
+        else
+            quoi = receivedData;
     } else {
         perror("Erreur de mode de socket");
     }
+    printf("Received data: %s\n", (char *) quoi);
 }
 
 /**
