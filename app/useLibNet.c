@@ -52,14 +52,14 @@ int main(int argc, char *argv[])
  * @param portServeur Fournit le port du serveur
 */
 void client(char *ipClient, short portClient, char *ipServeur, short portServeur) {
-    printc(BOLDYELLOW, "Lancement du Client\n");
-    printc(YELLOW, "| IP: ");
+    printc(BOLDCYAN, "Lancement du Client\n");
+    printc(CYAN, "| IP: ");
     printf("%s\n", ipClient);
-    printc(YELLOW, "| Port: ");
+    printc(CYAN, "| Port: ");
     printf("%d\n", portClient);
-    printc(YELLOW, "| Mode: ");
+    printc(CYAN, "| Mode: ");
     printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
-    printc(YELLOW, "| Connexion vers: ");
+    printc(CYAN, "| Connexion vers: ");
     printf("%s %d\n", ipServeur, portServeur);
     socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, DATA_MODE);
 
@@ -75,12 +75,12 @@ void client(char *ipClient, short portClient, char *ipServeur, short portServeur
  * @param port Fournit le port du serveur
 */
 void serveur(char *ip, short port) {
-    printc(BOLDMAGENTA, "Lancement du Serveur\n");
-    printc(MAGENTA, "| IP: ");
+    printc(BOLDYELLOW, "Lancement du Serveur\n");
+    printc(YELLOW, "| IP: ");
     printf("%s\n", ip);
-    printc(MAGENTA, "| Port: ");
+    printc(YELLOW, "| Port: ");
     printf("%d\n", port);
-    printc(MAGENTA, "| Mode: ");
+    printc(YELLOW, "| Mode: ");
     printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
     char *msg = NULL;
 
