@@ -9,9 +9,45 @@
 #include "../lib/data.h"
 
 void requireLobbyFromCode();
+void menu();
 
 int main() {
-    requireLobbyFromCode();
+    menu();
+}
+
+
+/**
+ * @fn void menu();
+ * 
+ * @brief Menu principal
+ * 
+*/
+
+void menu() {
+    int choix = 0;
+
+    printf("Bienvenue sur Badle Royale ! Veuillez sélectionner votre choix : \n");
+    printf("\t[1] Rejoindre une partie via un code\n");
+    printf("\t[2] Créer une partie\n");
+    printf("\t[3] Quitter\n");
+    printf("Votre choix : ");
+    scanf("%d", &choix);
+
+    switch(choix) {
+        case 1:
+            requireLobbyFromCode();
+            break;
+        case 2:
+            // TODO: créer partie
+            break;
+        case 3:
+            printf("\nAu revoir !\n\n");
+            break;
+        default:
+            printf("\nErreur de saisie\n\n");
+            menu();
+            break;
+    }
 }
 
 /**
