@@ -36,6 +36,8 @@
 
 #define printc(color, msg) printf(color "%s" RESET, msg)
 
+#define MAX_BUFF 1024
+
 /* ---------------------------------------- STRUCTURE ---------------------------------------- */
 
 typedef struct {
