@@ -22,6 +22,9 @@ useLibNet: data.o session.o ./app/useLibNet.c
 
 user : data.o session.o ./app/user.c
 	$(CC) $(CFLAGS) ./bin/data.o ./bin/session.o ./app/user.c -o ./exe/user.exe
+  
+hub: data.o session.o ./app/hub.c
+	$(CC) $(CFLAGS) ./bin/data.o ./bin/session.o ./app/hub.c  -o ./exe/hub.exe
 
 clean:
 	rm -f *.o

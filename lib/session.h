@@ -49,6 +49,10 @@ typedef struct {
     // ...
 } socket_t;
 
+typedef char buffer_t[MAX_BUFF];
+typedef void * generic;
+typedef void (*pFct)(generic, generic);
+
 /* --------------------------------- PROTOTYPES DES FONCTIONS --------------------------------- */
 
 /**
@@ -147,8 +151,7 @@ void ecrireSocket(socket_t sock, char *msg, short mode);
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(socket_t sock);
-
+void lireSocket(socket_t sockEcoute, generic receivedData);
 /**
  * @fn void closeSocket(socket_t sock);
  * 

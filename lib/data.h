@@ -11,9 +11,7 @@
 
 /* DEFINITIONS */
 #define MAX_BUFF 1024
-typedef char buffer_t[MAX_BUFF];
-typedef void * generic;
-typedef void (*pFct)(generic, generic);
+
 
 /* DECLARATIONS DE FONCTIONS */
 
