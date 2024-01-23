@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-all: useLibNet
+all: user
 
 install:
 	@echo "Installation du projet"
