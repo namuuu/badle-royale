@@ -1,10 +1,12 @@
 #include <stdio.h>
 
 #include "../lib/data.h"
+#include "hub.h"
 
 //HUB
 void serveur(char *ip, short port);
 void waitForInput(socket_t sock, generic msg);
+void deserial(generic quoi, char *msg);
 
 
 int main(int argc, char *argv[]){
@@ -42,5 +44,34 @@ void serveur(char *ip, short port) {
 }
 
 void waitForInput(socket_t sock, generic msg){
-    recevoir(sock, msg, NULL);
+    recevoir(sock, msg, deserial);
+
+    received_t *received = (received_t *) msg;
+    printf("test\n");
+    printf("Received data: %d\n", received->code);
+}
+
+void deserial(generic quoi, char *msg){
+    // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
+    quoi = malloc(sizeof(received_t));
+    received_t *received = (received_t *) quoi;
+    printf("check\n");
+    char *token = strtok(msg, "-");
+    int requestCode = atoi(token);
+    printf("checking\n");
+    received->code = requestCode;
+    token = strtok(NULL, "-");
+    int i = 0;
+    printf("checkfuck\n");
+    while(token != NULL){
+        received->args[i] = token;
+        received->nbArgs++;
+        token = strtok(NULL, "-");
+        i++;
+    }
+    printf("checkok %d\n", received->code);
+
+
+    received_t *rece = (received_t *) quoi;
+    printf("checkok2 %d\n", rece->code);
 }
