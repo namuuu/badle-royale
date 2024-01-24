@@ -1,10 +1,11 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-all: user
+all: user hub
+	@echo "Project Badle-Royale has been compiled!"
 
 install:
-	@echo "Installation du projet"
+	@echo "Project install"
 	mkdir -p ./bin
 	mkdir -p ./exe
 

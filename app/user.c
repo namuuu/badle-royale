@@ -9,10 +9,26 @@
 #include "../lib/data.h"
 #include "string.h"
 
+/* SERVER HARDCODED DATA */
+char *ipServeur = "0.0.0.0";
+short portServeur = 5000;
+
+char* ipClient;
+short portClient;
+
 void requireLobbyFromCode();
 void menu();
 
-int main() {
+int main(int argc, char *argv[]) {
+    if(argc != 3) {
+        printf(RED);
+        printf("Usage: %s <ip> <port>\n", argv[0]);
+        printf(RESET);
+        return -1;
+    }
+    ipClient = argv[1];
+    portClient = atoi(argv[2]);
+
     menu();
 }
 
@@ -59,13 +75,6 @@ void menu() {
 */
 void requireLobbyFromCode() {
     // TODO: compléter fct
-
-    // Params hardcoder
-    char *ipClient = "127.0.0.1";
-    short portClient = 5001;
-
-    char *ipServeur = "0.0.0.0";
-    short portServeur = 5000;
 
     printf("Quel est le code de la partie que vous souhaitez rejoindre ? ");
     char *code = malloc(sizeof(char) * 5);
