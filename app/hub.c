@@ -8,6 +8,7 @@ void waitForInput(socket_t sock, generic msg);
 
 
 int main(int argc, char *argv[]){
+    system("clear");
    
     if(argc != 3) {
         printf(RED);
@@ -38,12 +39,8 @@ void serveur(char *ip, short port) {
     socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
 
     waitForInput(sock, msg);
-
-    
 }
 
 void waitForInput(socket_t sock, generic msg){
-
     recevoir(sock, msg, NULL);
-
 }

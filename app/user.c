@@ -20,6 +20,8 @@ void requireLobbyFromCode();
 void menu();
 
 int main(int argc, char *argv[]) {
+    system("clear");
+    
     if(argc != 3) {
         printf(RED);
         printf("Usage: %s <ip> <port>\n", argv[0]);

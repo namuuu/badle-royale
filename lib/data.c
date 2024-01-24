@@ -52,7 +52,7 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
  * @param deSerial Fournit la fonction de désérialisation
 */
 void recevoir(socket_t sock, generic quoi, pFct deSerial) {
-    generic receivedData = NULL;
+    char receivedData[1024];
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM

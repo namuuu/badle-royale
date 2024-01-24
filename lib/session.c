@@ -235,8 +235,8 @@ void lireSocket(socket_t sockEcoute, generic receivedData) {
         CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
     } 
 
-    strcpy(receivedData, msg);
     printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(sockEcoute.addr.sin_addr));    
+    strcpy(receivedData, msg);
 }
 
 /**
