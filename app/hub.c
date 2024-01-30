@@ -36,42 +36,36 @@ void serveur(char *ip, short port) {
     printc(YELLOW, "| Port: ");
     printf("%d\n", port);
 
-    char *msg = NULL;
+    received_t msg;
 
     socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
 
-    waitForInput(sock, msg);
+    waitForInput(sock, &msg);
+
+    close(sock.fd);
 }
 
 void waitForInput(socket_t sock, generic msg){
     recevoir(sock, msg, deserial);
-
-    received_t *received = (received_t *) msg;
-    printf("test\n");
-    printf("Received data: %d\n", received->code);
 }
 
 void deserial(generic quoi, char *msg){
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
-    quoi = malloc(sizeof(received_t));
-    received_t *received = (received_t *) quoi;
-    printf("check\n");
     char *token = strtok(msg, "-");
-    int requestCode = atoi(token);
-    printf("checking\n");
-    received->code = requestCode;
+    ((received_t*)quoi)->code = atoi(token);
+    ((received_t*)quoi)->nbArgs = 0;
     token = strtok(NULL, "-");
     int i = 0;
-    printf("checkfuck\n");
-    while(token != NULL){
-        received->args[i] = token;
-        received->nbArgs++;
-        token = strtok(NULL, "-");
-        i++;
+    int switchToken = atoi(token);
+    switch (switchToken)
+    {
+    default:
+        while(token != NULL){
+            ((received_t*)quoi)->args[i] = token;
+            ((received_t*)quoi)->nbArgs++;
+            token = strtok(NULL, "-");
+            i++;
+        }
+        break;
     }
-    printf("checkok %d\n", received->code);
-
-
-    received_t *rece = (received_t *) quoi;
-    printf("checkok2 %d\n", rece->code);
 }

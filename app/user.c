@@ -92,4 +92,6 @@ void requireLobbyFromCode() {
 
     envoyer(sock, req, NULL);
     printf("Requête envoyée : %s\n", req);
+
+    close(sock.fd);
 }
