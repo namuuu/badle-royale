@@ -84,7 +84,7 @@ void requireLobbyFromCode() {
 
     // Requête de connexion au serveur
     char *req = malloc(sizeof(char) * 30);
-    strcat(req, "requireLobbyFromCode-");
+    strcat(req, "100-");
     strcat(req, code);
 
     // Connexion au serveur en STREAM
@@ -92,4 +92,6 @@ void requireLobbyFromCode() {
 
     envoyer(sock, req, NULL);
     printf("Requête envoyée : %s\n", req);
+
+    close(sock.fd);
 }

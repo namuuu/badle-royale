@@ -23,19 +23,19 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
 
     if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
-        if(serial != NULL) {
-            serial(quoi, buffer);
-            ecrireSocket(sock, buffer, sock.mode);
-        } else {
-            ecrireSocket(sock, (char *) quoi, sock.mode);
-        }
+        // if(serial != NULL) {
+        //     serial(quoi, buffer);
+        //     ecrireSocket(sock, buffer, sock.mode);
+        // } else {
+        //     ecrireSocket(sock, quoi, sock.mode);
+        // }
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
         if(serial != NULL) {
             serial(quoi, buffer);
             ecrireSocket(sock, buffer, sock.mode);
         } else {
-            ecrireSocket(sock, (char *) quoi, sock.mode);
+            ecrireSocket(sock, quoi, sock.mode);
         }
     } else {
         // Mode inconnu
@@ -52,26 +52,25 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
  * @param deSerial Fournit la fonction de désérialisation
 */
 void recevoir(socket_t sock, generic quoi, pFct deSerial) {
-    char receivedData[1024];
+    char receivedData[MAX_BUFF];
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
-        lireSocket(sock, receivedData);
-        if(deSerial != NULL) 
-            deSerial(quoi, receivedData);
-        else
-            quoi = receivedData;
+        // lireSocket(sock, receivedData);
+        // if(deSerial != NULL) 
+        //     deSerial(quoi, receivedData);
+        // else
+        //     quoi = &receivedData;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
         lireSocket(sock, receivedData);
-        if(deSerial != NULL) 
+        if(deSerial != NULL) {
             deSerial(quoi, receivedData);
-        else
-            quoi = receivedData;
+        } else
+            quoi = &receivedData;
     } else {
         perror("Erreur de mode de socket");
     }
-    printf("Received data: %s\n", (char *) quoi);
 }
 
 /**
