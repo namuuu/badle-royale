@@ -1,51 +1,17 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
+#include <string.h>
 
-#include "../lib/data.h"
-
-// DECLARIATION DE FONCTIONS HUB
-void serveur(char *ip, short port);
-void waitForInput(socket_t sock, generic msg);
 char *generateLobbyCode();
 void genererCode(FILE* fichier, char code[6]);
 void suppressionCode(const char *code);
 
-
-int main(int argc, char *argv[]){
-    system("clear");
-   
-    if(argc != 3) {
-        printf(RED);
-        printf("Usage: %s <ip> <port>\n", argv[0]);
-        printf(RESET);
-        return -1;
-    }
-    serveur(argv[1], atoi(argv[2]));
-   
-    return 0; 
-}
-/**
- * @fn void serveur(char *ip, short port);
- * 
- * @brief Lance un serveur HUB
- * @param ip Fournit l'ip du serveur HUB
- * @param port Fournit le port du serveur HUB
-*/
-void serveur(char *ip, short port) {
-    printc(BOLDYELLOW, "Lancement du HUB\n");
-    printc(YELLOW, "| IP: ");
-    printf("%s\n", ip);
-    printc(YELLOW, "| Port: ");
-    printf("%d\n", port);
-
-    char *msg = NULL;
-
-    socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
-
-    waitForInput(sock, msg);
-}
-
-void waitForInput(socket_t sock, generic msg){
-    recevoir(sock, msg, NULL);
+int main(int argc, char *argv[]) {
+    char *code = generateLobbyCode();
+    suppressionCode(code);
+    free(code);
+    return 0;
 }
 
 /**
