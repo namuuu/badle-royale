@@ -16,6 +16,8 @@
 void client(char *ipClient, short portClient, char *ipServeur, short portServeur);
 void serveur(char *ip, short port);
 
+
+
 int main(int argc, char *argv[])
 {
     #ifdef CLIENT
@@ -88,3 +90,26 @@ void serveur(char *ip, short port) {
 
     recevoir(sock, msg, NULL);
 }
+
+*/**
+ * @fn void serveurLobby(char *ip, short port);
+ * 
+ * @brief Lance un lobby
+ * @param ip Fournit l'ip du lubby
+ * @param port Fournit le port du lobby
+*/
+void serveurLobby(char *ip, short port) {
+    printc(BOLDGREEN "Lancement du Lobby\n");
+    printc(GREEN, "| IP: ");
+    printf("%s\n", ip);
+    printc(GREEN, "| Port: ");
+    printf("%d\n", port);
+    printc(GREEN, "| Mode: ");
+    printf("%s\n", DATA_MODE == SOCK_DGRAM ? "DGRAM" : "STREAM");
+    char *msg = NULL;
+
+    socket_t sock = prepareForClient(ip, port, DATA_MODE);
+
+    recevoir(sock, msg, NULL);
+}
+

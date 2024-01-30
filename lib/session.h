@@ -14,6 +14,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/mman.h>
+#include <sys/stat.h>        /* For mode constants */
+#include <fcntl.h>           /* For O_* constants */
 
 /* ----------------------------------------- DEFINE ----------------------------------------- */
 
@@ -53,7 +56,7 @@ typedef struct {
 
 typedef char buffer_t[MAX_BUFF];
 typedef void * generic;
-typedef void (*pFct)(generic, generic);
+typedef void (*pFct)(generic, char *);
 
 /* --------------------------------- PROTOTYPES DES FONCTIONS --------------------------------- */
 
@@ -153,7 +156,7 @@ void ecrireSocket(socket_t sock, char *msg, short mode);
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(socket_t sockEcoute, generic receivedData);
+void lireSocket(socket_t sockEcoute, char* receivedData);
 /**
  * @fn void closeSocket(socket_t sock);
  * 
