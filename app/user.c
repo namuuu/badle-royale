@@ -8,6 +8,7 @@
 /* INCLUDE */
 #include "../lib/data.h"
 #include "string.h"
+#include "user.h"
 
 /* SERVER HARDCODED DATA */
 char *ipServeur = "0.0.0.0";
@@ -19,20 +20,35 @@ short portClient;
 void requireLobbyFromCode();
 void createLobbyWithCode();
 void menu();
+void serial(generic quoi, char* req);
 
-int main(int argc, char *argv[]) {
+int main() {
+    char choix = '0';
     system("clear");
-    
-    if(argc != 3) {
-        printf(RED);
-        printf("Usage: %s <ip> <port>\n", argv[0]);
-        printf(RESET);
-        return -1;
-    }
-    ipClient = argv[1];
-    portClient = atoi(argv[2]);
-
     menu();
+
+    while(choix != 'Q') {
+
+        printf(YELLOW "$ " RESET);
+        scanf("%c", &choix);
+
+        switch(choix) {
+            case '1':
+                requireLobbyFromCode();
+                exit(EXIT_SUCCESS);
+            case '2':
+                createLobbyWithCode();
+                exit(EXIT_SUCCESS);
+            case 'Q':
+                printf("Fermeture du système..........................Au revoir!\n");
+                exit(EXIT_SUCCESS);
+            default:
+                menu();
+                printf("\nErreur de saisie\n\n");
+                break;
+        }
+    }
+    
 }
 
 
@@ -44,30 +60,12 @@ int main(int argc, char *argv[]) {
 */
 
 void menu() {
-    int choix = 0;
-
-    printf("Bienvenue sur Badle Royale ! Veuillez sélectionner votre choix : \n");
-    printf("\t[1] Rejoindre une partie via un code\n");
-    printf("\t[2] Créer une partie\n");
-    printf("\t[3] Quitter\n");
-    printf("Votre choix : ");
-    scanf("%d", &choix);
-
-    switch(choix) {
-        case 1:
-            requireLobbyFromCode();
-            break;
-        case 2:
-            createLobbyWithCode();
-            break;
-        case 3:
-            printf("\nAu revoir !\n\n");
-            break;
-        default:
-            printf("\nErreur de saisie\n\n");
-            menu();
-            break;
-    }
+    printc(BOLDBLUE, "Bienvenue sur BadleRoyale !\n");
+    printc(BLUE, "Veuillez sélectionner une option: \n");
+    printf(CYAN "\t[1]" RESET " Rejoindre une partie via un code\n");
+    printf(CYAN "\t[2]" RESET " Créer une partie\n");
+    printf(CYAN "\t[Q]" RESET " Quitter\n");
+    
 }
 
 /**
@@ -84,8 +82,10 @@ void requireLobbyFromCode() {
     short portClient = 5001;
 
     printf("Quel est le code de la partie que vous souhaitez rejoindre ? (5 charactères MAX) ");
-    char *code = malloc(sizeof(char) * 5);
-    scanf("%s", code);
+    char *code = malloc(sizeof(char) * MAX_BUFF);
+    fgets(code, MAX_BUFF, stdin);
+    printf("%s\n", code);
+    printf("%ld\n", strlen(code));
 
     // Requête de connexion au serveur
     char *req = malloc(sizeof(char) * 30);
@@ -105,20 +105,49 @@ void createLobbyWithCode() {
 
     // Params hardcoder
     char *ipClient = "127.0.0.1";
-    short portClient = 5001;
+    short portClient = 0;
 
-    printf("Quel code voulez vous donner à votre partie ? (5 charactères MAX)");
-    char *code = malloc(sizeof(char) * 5);
-    scanf("%s", code);
+    int c;
+    /* discard all characters up to and including newline */
+    while ((c = getchar()) != '\n' && c != EOF); 
+
+    printf(BLUE "(Optionnel) Indiquez un code pour votre partie: " WHITE "(5 caractères max)\n" YELLOW "$ " RESET);
+    char *code = malloc(sizeof(char) * MAX_BUFF);
+    fgets(code, MAX_BUFF, stdin);
+
+    // Supprime le \n à la fin de la chaine
+    code[strcspn(code, "\n")] = 0;
+
+    // Limite le code à 5 caractères
+    if(strlen(code) > 4)
+        code[5] = '\0';
 
     //Requête de création de lobby
-    char *req = malloc(sizeof(char) * 30);
-    strcat(req, "createLobby-");
-    strcat(req, code);
+    send_t reqData;
+    reqData.code = 101;
+
+    reqData.nbArgs = 1;
+    reqData.args[0] = code;
+
+    buffer_t buffer;
+    serial(&reqData, buffer);
 
     // Connexion au serveur en STREAM
     socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, SOCK_STREAM);
 
-    envoyer(sock, req, NULL);
-    printf("Requête envoyée : %s\n", req);
+    envoyer(sock, &reqData, serial);
+
+    close(sock.fd);
+}
+
+void serial(generic quoi, char* req) {
+    send_t transQuoi = (*(send_t*)quoi);
+
+    sprintf(req, "%d", transQuoi.code); // Convertit le code en char
+    if(transQuoi.nbArgs == 0)
+        return;
+    for(int i = 0; i < transQuoi.nbArgs; i++) {
+        strcat(req, "-");
+        strcat(req, transQuoi.args[i]);
+    }
 }

@@ -1,31 +1,5 @@
-#include <stdio.h>
 
-#include "../lib/data.h"
 #include "hub.h"
-
-#define CHECK(status, msg)                                                   \
-    if (-1 == (status)) {                                                    \
-        perror(msg);                                                         \
-        exit(EXIT_FAILURE);                                                  \
-    }
-
-// DECLARIATION DE FONCTIONS HUB
-void serveur(char *ip, short port);
-void waitForInput(socket_t sock, generic msg);
-char *generateLobbyCode();
-void genererCode(char code[6]);
-void suppressionCode(const char *code);
-void serveurLobby();
-void deserial(generic quoi, char *msg);
-
-
-typedef struct {
-    char *ip;
-    short port;
-    char *code;
-    int tidLobby;
-} lobbyData_t;
-lobbyData_t* tabLobby;
 
 int main(int argc, char *argv[]){
     system("clear");
@@ -37,15 +11,6 @@ int main(int argc, char *argv[]){
         return -1;
     }
     serveur(argv[1], atoi(argv[2]));
-   
-    return 0; 
-
-    //creation d'un lobby
-    // if (1) {
-    //     CHECK(pthread_create(&tidLobby, NULL, serveurLobby, 0),"pthread_create(lobby)");
-    //     shutdown(sock,2);
-        
-    // }
 
 
     int fd; // file descriptor
@@ -56,7 +21,7 @@ int main(int argc, char *argv[]){
     // Map the tabEtats object into the virtual address space of the calling process
     tabLobby = mmap(0, pageSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
    
-
+    return 0; 
 }
 
 /**
@@ -73,12 +38,39 @@ void serveur(char *ip, short port) {
     printc(YELLOW, "| Port: ");
     printf("%d\n", port);
 
-    received_t msg;
+    received_t data;
 
-    socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
-    waitForInput(sock, &msg);
+    while(1) {
+        socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+        waitForInput(sock, &data);
 
-    close(sock.fd);
+        switch (data.code)
+        {
+        case 100: // joinLobby - code
+            printc(RED, "Requête joinLobby non implémentée\n");
+            break;
+        case 101: // createLobby
+            //creation d'un lobby
+            int pidLobby;
+            CHECK(pidLobby = fork(), "fork()");
+            if(pidLobby == 0) {
+                // Fils
+                shutdown(sock.fd, SHUT_RDWR);
+                serveurLobby();
+                exit(EXIT_SUCCESS);
+            } else {
+                // Père, attends l'update de la création du Lobby
+                while(1);
+            }
+
+            break;
+        default:
+            break;
+        }
+
+        close(sock.fd);
+    }
+    
 }
 
 /**
@@ -89,24 +81,26 @@ void serveur(char *ip, short port) {
  * @param port Fournit le port du lobby
 */
 void serveurLobby() {
-    printc(BOLDGREEN, "Lancement du Lobby\n");
+    // Préparation de la socket
     char* ip = "0.0.0.0";
-    printc(GREEN, "| IP: ");
-    printf("%s\n", ip);
-    short port = 0;
-    printc(GREEN, "| Port: ");
-    printf("%d\n", port);
-   
-    // char *msg = NULL;
+    int port = 0;
+    socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
 
-    // socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    socklen_t len = sizeof(sock.addr);
+    CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
+    port = ntohs(sock.addr.sin_port);
 
-    // waitForInput(sock, msg);
-    // pthread_exit(NULL);
+    // Envoi de l'ip et du port au client
+    printf(BOLDGREEN "Lancement du Lobby\n");
+    printf(GREEN "| IP: " RESET "%s\n", ip);
+    printf(GREEN "| Port: " RESET "%d\n", port);
+
+    char *msg = NULL;   
+    waitForInput(sock, msg);
 }
 
 void waitForInput(socket_t sock, generic msg){
-    printf("En attente de connexion");
+    printf("En attente de connexion\n");
     recevoir(sock, msg, deserial);
 }
 
@@ -198,7 +192,8 @@ void suppressionCode(const char *code) {
     rename("temp.txt", "code.txt");
 }
 
-void deserial(generic quoi, char *msg){
+void deserial(generic quoi, char *msg) {
+
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
     char *token = strtok(msg, "-");
     ((received_t*)quoi)->code = atoi(token);

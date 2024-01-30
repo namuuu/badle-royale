@@ -1,5 +1,5 @@
 all:
-	cd ..; make all
+	@cd ..; make all
 
 client:
 	cd ..; make client
