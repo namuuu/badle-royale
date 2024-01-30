@@ -11,3 +11,9 @@ typedef struct
     char* args[10];
     int nbArgs;
 } send_t;
+
+typedef struct {
+    int code;
+    char *args[10];
+    int nbArgs;
+} received_t;

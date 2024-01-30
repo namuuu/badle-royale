@@ -20,6 +20,7 @@ void requireLobbyFromCode();
 void createLobbyWithCode();
 void menu();
 void serial(generic quoi, char* req);
+void waitForInput(socket_t sock, generic msg);
 
 int main() {
     char choix = '0';
@@ -123,6 +124,9 @@ void createLobbyWithCode() {
 
     envoyer(sock, &reqData, serial);
 
+    char *recData = NULL;   
+    recevoir(sock, recData, deserial);
+
     close(sock.fd);
 }
 
@@ -136,4 +140,31 @@ void serial(generic quoi, char* req) {
         strcat(req, "-");
         strcat(req, transQuoi.args[i]);
     }
+}
+
+void deserial(generic quoi, char *msg) {
+
+    // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
+    char *token = strtok(msg, "-");
+    ((received_t*)quoi)->code = atoi(token);
+    ((received_t*)quoi)->nbArgs = 0;
+    token = strtok(NULL, "-");
+    int i = 0;
+    int switchToken = atoi(token);
+    switch (switchToken)
+    {
+    default:
+        while(token != NULL){
+            ((received_t*)quoi)->args[i] = token;
+            ((received_t*)quoi)->nbArgs++;
+            token = strtok(NULL, "-");
+            i++;
+        }
+        break;
+    }
+}
+
+void waitForInput(socket_t sock, generic msg){
+    printf("En attente de connexion\n");
+    recevoir(sock, msg, deserial);
 }
