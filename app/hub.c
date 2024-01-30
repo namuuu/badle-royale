@@ -13,7 +13,7 @@
 void serveur(char *ip, short port);
 void waitForInput(socket_t sock, generic msg);
 char *generateLobbyCode();
-void genererCode(FILE* fichier, char code[6]);
+void genererCode(char code[6]);
 void suppressionCode(const char *code);
 void serveurLobby();
 void deserial(generic quoi, char *msg);
@@ -106,7 +106,8 @@ void serveurLobby() {
 }
 
 void waitForInput(socket_t sock, generic msg){
-    recevoir(sock, msg, NULL);
+    printf("En attente de connexion");
+    recevoir(sock, msg, deserial);
 }
 
 /**
@@ -127,11 +128,11 @@ char *generateLobbyCode() {
         exit(1);
     }
 
-    genererCode(fichier, code);
+    genererCode(code);
 
     while(fgets(codeLu, 6, fichier) != NULL) {
         if(strcmp(codeLu, code) == 0) {
-            genererCode(fichier, code);
+            genererCode(code);
         }
     }
 
@@ -150,7 +151,7 @@ char *generateLobbyCode() {
  * @param fichier Nom du fichier à modifier
  * @param code Code à ajouter au fichier
 */
-void genererCode(FILE *fichier, char code[6]) {
+void genererCode(char code[6]) {
     int i;
     for (i = 0; i < 5; i++) {
         int random = rand() % 36;
@@ -195,9 +196,6 @@ void suppressionCode(const char *code) {
 
     remove("code.txt");
     rename("temp.txt", "code.txt");
-
-    printf("En attente de connexion");
-    recevoir(sock, msg, deserial);
 }
 
 void deserial(generic quoi, char *msg){
