@@ -26,8 +26,8 @@ int main() {
 */
 void serveur() {
     printc(BOLDYELLOW, "Lancement du HUB\n");
-    printf(YELLOW "| IP: %s\n" RESET, HUB_IP);
-    printf(YELLOW "| Port: %d\n" RESET, HUB_PORT);
+    printf(YELLOW "| IP:" RESET " %s\n" , HUB_IP);
+    printf(YELLOW "| Port:" RESET " %d\n", HUB_PORT);
 
     received_t data;
 

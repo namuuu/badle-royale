@@ -6,16 +6,15 @@
 */
 
 /* INCLUDE */
-#include "../lib/data.h"
-#include "string.h"
 #include "user.h"
 
 /* SERVER HARDCODED DATA */
-char *ipServeur = "0.0.0.0";
-short portServeur = 5000;
+#define IP_HUB "0.0.0.0"
+#define PORT_HUB 5000
 
-char* ipClient;
-short portClient;
+/* CLIENT DATA */
+#define IP_CLIENT "127.0.0.1"
+short portClient = 0;
 
 void requireLobbyFromCode();
 void createLobbyWithCode();
@@ -65,7 +64,6 @@ void menu() {
     printf(CYAN "\t[1]" RESET " Rejoindre une partie via un code\n");
     printf(CYAN "\t[2]" RESET " Créer une partie\n");
     printf(CYAN "\t[Q]" RESET " Quitter\n");
-    
 }
 
 /**
@@ -75,11 +73,6 @@ void menu() {
  * @return 
 */
 void requireLobbyFromCode() {
-    // TODO: compléter fct
-
-    // Params hardcoder
-    char *ipClient = "127.0.0.1";
-    short portClient = 5001;
 
     printf("Quel est le code de la partie que vous souhaitez rejoindre ? (5 charactères MAX) ");
     char *code = malloc(sizeof(char) * MAX_BUFF);
@@ -93,7 +86,7 @@ void requireLobbyFromCode() {
     strcat(req, code);
 
     // Connexion au serveur en STREAM
-    socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, SOCK_STREAM);
+    socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
 
     envoyer(sock, req, NULL);
     printf("Requête envoyée : %s\n", req);
@@ -102,11 +95,6 @@ void requireLobbyFromCode() {
 }
 
 void createLobbyWithCode() {
-
-    // Params hardcoder
-    char *ipClient = "127.0.0.1";
-    short portClient = 0;
-
     int c;
     /* discard all characters up to and including newline */
     while ((c = getchar()) != '\n' && c != EOF); 
@@ -117,7 +105,6 @@ void createLobbyWithCode() {
 
     // Supprime le \n à la fin de la chaine
     code[strcspn(code, "\n")] = 0;
-
     // Limite le code à 5 caractères
     if(strlen(code) > 4)
         code[5] = '\0';
@@ -125,7 +112,6 @@ void createLobbyWithCode() {
     //Requête de création de lobby
     send_t reqData;
     reqData.code = 101;
-
     reqData.nbArgs = 1;
     reqData.args[0] = code;
 
@@ -133,7 +119,7 @@ void createLobbyWithCode() {
     serial(&reqData, buffer);
 
     // Connexion au serveur en STREAM
-    socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, SOCK_STREAM);
+    socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
 
     envoyer(sock, &reqData, serial);
 
