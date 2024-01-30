@@ -215,12 +215,11 @@ void ecrireSocket(socket_t sock, char *msg, short mode) {
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(socket_t sockEcoute, generic receivedData) {
+void lireSocket(socket_t sockEcoute, char* receivedData) {
 
     struct sockaddr_in addr;
     socklen_t addrLen = sizeof(sockEcoute.addr);
     int sd;
-    char msg[1024];
 
     if(sockEcoute.mode != SOCK_DGRAM && sockEcoute.mode != SOCK_STREAM) {
         printf("Mode de socket invalide %d\n", sockEcoute.mode);
@@ -228,15 +227,14 @@ void lireSocket(socket_t sockEcoute, generic receivedData) {
     }
 
     if(sockEcoute.mode == SOCK_DGRAM) 
-        CHECK(recvfrom(sockEcoute.fd, msg, sizeof(msg), 0, (struct sockaddr *)&addr, &addrLen), "Impossible de lire sur la socket");
+        CHECK(recvfrom(sockEcoute.fd, receivedData, sizeof(receivedData), 0, (struct sockaddr *)&addr, &addrLen), "Impossible de lire sur la socket");
     if(sockEcoute.mode == SOCK_STREAM) {
         CHECK(sd = accept(sockEcoute.fd, (struct sockaddr *)&sockEcoute.addr, &addrLen), "Impossible d'accepter la connexion");
         CHECK(close(sockEcoute.fd), "Impossible de fermer la socket");
-        CHECK(read(sd, msg, sizeof(msg)), "Impossible de lire sur la socket");
+        CHECK(read(sd, receivedData, sizeof(receivedData)), "Impossible de lire sur la socket");
     } 
 
-    receivedData = msg;
-    printf("Message reçu : [%s] de la part de [%s]\n", msg, inet_ntoa(sockEcoute.addr.sin_addr));    
+    printf("Message reçu : [%s] de la part de [%s]\n", receivedData, inet_ntoa(sockEcoute.addr.sin_addr));  
 }
 
 /**
