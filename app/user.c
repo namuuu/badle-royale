@@ -17,6 +17,7 @@ char* ipClient;
 short portClient;
 
 void requireLobbyFromCode();
+void createLobbyWithCode();
 void menu();
 
 int main(int argc, char *argv[]) {
@@ -57,7 +58,7 @@ void menu() {
             requireLobbyFromCode();
             break;
         case 2:
-            // TODO: créer partie
+            createLobbyWithCode();
             break;
         case 3:
             printf("\nAu revoir !\n\n");
@@ -78,7 +79,11 @@ void menu() {
 void requireLobbyFromCode() {
     // TODO: compléter fct
 
-    printf("Quel est le code de la partie que vous souhaitez rejoindre ? ");
+    // Params hardcoder
+    char *ipClient = "127.0.0.1";
+    short portClient = 5001;
+
+    printf("Quel est le code de la partie que vous souhaitez rejoindre ? (5 charactères MAX) ");
     char *code = malloc(sizeof(char) * 5);
     scanf("%s", code);
 
@@ -92,6 +97,28 @@ void requireLobbyFromCode() {
 
     envoyer(sock, req, NULL);
     printf("Requête envoyée : %s\n", req);
-
+  
     close(sock.fd);
+}
+
+void createLobbyWithCode() {
+
+    // Params hardcoder
+    char *ipClient = "127.0.0.1";
+    short portClient = 5001;
+
+    printf("Quel code voulez vous donner à votre partie ? (5 charactères MAX)");
+    char *code = malloc(sizeof(char) * 5);
+    scanf("%s", code);
+
+    //Requête de création de lobby
+    char *req = malloc(sizeof(char) * 30);
+    strcat(req, "createLobby-");
+    strcat(req, code);
+
+    // Connexion au serveur en STREAM
+    socket_t sock = connectToServer(ipClient, portClient, ipServeur, portServeur, SOCK_STREAM);
+
+    envoyer(sock, req, NULL);
+    printf("Requête envoyée : %s\n", req);
 }
