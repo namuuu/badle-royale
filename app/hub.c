@@ -1,26 +1,21 @@
 
 #include "hub.h"
 
-int main(int argc, char *argv[]){
-    system("clear");
-   
-    if(argc != 3) { 
-        printf(RED);
-        printf("Usage: %s <ip> <port>\n", argv[0]);
-        printf(RESET);
-        return -1;
-    }
-    serveur(argv[1], atoi(argv[2]));
+#define HUB_IP "0.0.0.0"
+#define HUB_PORT 5000
 
+// tabLobby est le tableau permettant de stocker les données des différents lobbys
+lobbyData_t* tabLobby;
 
-    int fd; // file descriptor
-    fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
+int main() {
+    int fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
     // Set the size of the shared memory object
     int pageSize = sysconf(_SC_PAGE_SIZE);
     CHECK(ftruncate(fd, pageSize), "__ftruncate__");
     // Map the tabEtats object into the virtual address space of the calling process
     tabLobby = mmap(0, pageSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-   
+
+    serveur();
     return 0; 
 }
 
@@ -28,20 +23,16 @@ int main(int argc, char *argv[]){
  * @fn void serveur(char *ip, short port);
  * 
  * @brief Lance un serveur HUB
- * @param ip Fournit l'ip du serveur HUB
- * @param port Fournit le port du serveur HUB
 */
-void serveur(char *ip, short port) {
+void serveur() {
     printc(BOLDYELLOW, "Lancement du HUB\n");
-    printc(YELLOW, "| IP: ");
-    printf("%s\n", ip);
-    printc(YELLOW, "| Port: ");
-    printf("%d\n", port);
+    printf(YELLOW "| IP: %s\n" RESET, HUB_IP);
+    printf(YELLOW "| Port: %d\n" RESET, HUB_PORT);
 
     received_t data;
 
     while(1) {
-        socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+        socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
         waitForInput(sock, &data);
 
         switch (data.code)

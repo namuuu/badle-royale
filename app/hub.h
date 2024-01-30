@@ -23,11 +23,10 @@ typedef struct {
     char *code;
     int tidLobby;
 } lobbyData_t;
-lobbyData_t* tabLobby;
 
 /* ---------------------------------------  PROTOTYPES ------------------------------------------ */
 
-void serveur(char *ip, short port);
+void serveur();
 void waitForInput(socket_t sock, generic msg);
 void serveurLobby();
 void deserial(generic quoi, char *msg);
