@@ -1,3 +1,5 @@
+#include <time.h>
+
 /* ---------------------------------------- STRUCTURE ---------------------------------------- */
 
 typedef struct {
@@ -9,3 +11,4 @@ typedef struct {
 typedef struct {
     int code;
 } test_t;
+
