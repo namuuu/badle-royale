@@ -12,7 +12,7 @@
 //HUB
 void serveur(char *ip, short port);
 void waitForInput(socket_t sock, generic msg);
-void serveurLobby(char *ip, short port);
+void serveurLobby();
 void deserial(generic quoi, char *msg);
 
 typedef struct {
@@ -20,7 +20,8 @@ typedef struct {
     short port;
     char *code;
     int tidLobby;
-} tabLobby;
+} lobbyData_t;
+lobbyData_t* tabLobby;
 
 int main(int argc, char *argv[]){
     system("clear");
@@ -36,11 +37,11 @@ int main(int argc, char *argv[]){
     return 0; 
 
     //creation d'un lobby
-    if {
-        CHECK(pthread_create(&tidLobby, NULL, serveurLobby, 0),"pthread_create(lobby)");
-        shutdown(sock,2);
+    // if (1) {
+    //     CHECK(pthread_create(&tidLobby, NULL, serveurLobby, 0),"pthread_create(lobby)");
+    //     shutdown(sock,2);
         
-    }
+    // }
 
 
     int fd; // file descriptor
@@ -76,7 +77,7 @@ void serveur(char *ip, short port) {
     close(sock.fd);
 }
 
-*/**
+/**
  * @fn void serveurLobby();
  * 
  * @brief Lance un lobby
@@ -84,18 +85,20 @@ void serveur(char *ip, short port) {
  * @param port Fournit le port du lobby
 */
 void serveurLobby() {
-    printc(BOLDGREEN "Lancement du Lobby\n");
+    printc(BOLDGREEN, "Lancement du Lobby\n");
+    char* ip = "0.0.0.0";
     printc(GREEN, "| IP: ");
     printf("%s\n", ip);
+    short port = 0;
     printc(GREEN, "| Port: ");
     printf("%d\n", port);
    
-    char *msg = NULL;
+    // char *msg = NULL;
 
-    socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    // socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
 
-    waitForInput(sock, msg);
-    pthread_exit(NULL);
+    // waitForInput(sock, msg);
+    // pthread_exit(NULL);
 }
 
 void waitForInput(socket_t sock, generic msg){
