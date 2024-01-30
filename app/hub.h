@@ -31,3 +31,4 @@ void serveur(char *ip, short port);
 void waitForInput(socket_t sock, generic msg);
 void serveurLobby();
 void deserial(generic quoi, char *msg);
+void genererCode(char code[6]);
