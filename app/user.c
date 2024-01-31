@@ -98,8 +98,7 @@ void requireLobbyFromCode() {
     
     printf("Requête envoyée : %s\n", req);
     
-    // Conexion au lobby
-    void connectToLobby(char *lobby_ip, unsigned short lobby_port);
+    
 
     close(sock.fd);
 }
@@ -141,7 +140,7 @@ void createLobbyWithCode() {
 
     
     // Conexion au lobby
-    void connectToLobby(char *lobby_ip, unsigned short lobby_port);
+    connectToLobby(lobbyData.args[0], atoi(lobbyData.args[2]));
 
     // Requête de connexion au lobby
     char *req = malloc(sizeof(char) * 30);

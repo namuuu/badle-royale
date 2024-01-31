@@ -96,7 +96,7 @@ void serveurLobby(int idLobby) {
     // Préparation de la socket
     
     socket_t sock = prepareForClient(lobby_ip, lobby_port, SOCK_STREAM);
-
+    
     socklen_t len = sizeof(sock.addr);
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
     lobby_port = ntohs(sock.addr.sin_port);
@@ -106,7 +106,6 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = lobby_port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
-    idLobby++;
 
     printc(BOLDRED, "Lancement du LOBBY\n");
     printf(RED "| IP:" RESET " %s\n" , lobby_ip);
@@ -114,12 +113,15 @@ void serveurLobby(int idLobby) {
     printf(RED "| Code:" RESET " %s\n", tabLobby[idLobby].code);
 
 
-      
+
     received_t data;
-    socket_t sockClient;
-    sockClient.fd = recevoir(sock, &data, deserial);
-    sockClient.mode = SOCK_STREAM;
+    sock.fd = recevoir(sock, &data, deserial);
+    sock.mode = SOCK_STREAM;
     printf("Requête reçue : %d\n", data.code);
+    
+    
+    
+    
 }
 
 /**
