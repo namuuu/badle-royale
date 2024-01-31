@@ -110,6 +110,11 @@ void serveurLobby(int idLobby) {
 
     char *msg = NULL;   
     waitForInput(sock, msg);
+
+
+    //connexion d'un user 
+    
+
 }
 
 void waitForInput(socket_t sock, generic msg){

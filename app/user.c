@@ -121,6 +121,7 @@ void createLobbyWithCode() {
     serial(&reqData, buffer);
 
     // Connexion au serveur en STREAM
+    
     socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
 
     envoyer(sock, &reqData, serial);
@@ -128,6 +129,10 @@ void createLobbyWithCode() {
     buffer_t recData; 
     lireSocketNext(sock, recData);
     printf("Requête reçue : %s\n", recData);
+}
+
+void connectToLobby(){
+    
 }
 
 void serial(generic quoi, char* req) {
