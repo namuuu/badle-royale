@@ -101,19 +101,11 @@ void serveurLobby(int idLobby) {
     // Emplacement du lobby dans le tableau
     tabLobby[idLobby].ip = ip;
     tabLobby[idLobby].port = port;
-    char* code = malloc(sizeof(char) * 6);
-    generateLobbyCode(code);
-    printf("Code du lobby : %s\n", code);
-    strcpy(tabLobby[idLobby].code, code);
-    printf("Code du lobby : %s\n", tabLobby[idLobby].code);
+    generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
+    idLobby++;
 
     char *msg = NULL;   
-    waitForInput(sock, msg);
-}
-
-void waitForInput(socket_t sock, generic msg){
-    printf("En attente de connexion\n");
     recevoir(sock, msg, deserial);
 }
 
@@ -142,7 +134,6 @@ void generateLobbyCode(char *code) {
         }
     }
 
-    printf("Le code de votre session est : %s\n", code);
     fprintf(fichier, "%s\n", code);
 
     fclose(fichier);

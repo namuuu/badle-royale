@@ -29,7 +29,7 @@ typedef struct {
 typedef struct {
     char *ip;
     unsigned short port;
-    char *code;
+    char code[6];
     int pidLobby;
 } lobbyData_t;
 
