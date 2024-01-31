@@ -1,0 +1,9 @@
+Bonjour
+Salut
+Mot
+Message
+Recevoir
+Envoyer
+Lire
+Ecrire
+Répondre
