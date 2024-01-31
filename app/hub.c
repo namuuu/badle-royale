@@ -62,7 +62,6 @@ void serveur() {
                     sleep(1);
                 }
                 // Envoi de l'ip et du port au client
-                printf(GREEN "Création du Lobby %s (Port %d)\n" RESET, tabLobby[nbLobby].code, tabLobby[nbLobby].port);
                 send_t sendData;
                 sendData.code = 200;
                 sendData.nbArgs = 3;
@@ -89,37 +88,37 @@ void serveur() {
  * @param idLobby Emplacement du lobby dans le tableau
 */
 void serveurLobby(int idLobby) {
+    char* lobby_ip = "0.0.0.0";
+    int lobby_port = 0;
+
+    
+
     // Préparation de la socket
-    char* ip = "0.0.0.0";
-    int port = 0;
-    socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    
+    socket_t sock = prepareForClient(lobby_ip, lobby_port, SOCK_STREAM);
 
     socklen_t len = sizeof(sock.addr);
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
-    port = ntohs(sock.addr.sin_port);
+    lobby_port = ntohs(sock.addr.sin_port);
 
     // Emplacement du lobby dans le tableau
-    tabLobby[idLobby].ip = ip;
-    tabLobby[idLobby].port = port;
-    char* code = malloc(sizeof(char) * 6);
-    generateLobbyCode(code);
-    printf("Code du lobby : %s\n", code);
-    strcpy(tabLobby[idLobby].code, code);
-    printf("Code du lobby : %s\n", tabLobby[idLobby].code);
+    tabLobby[idLobby].ip = lobby_ip;
+    tabLobby[idLobby].port = lobby_port;
+    generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
 
-    char *msg = NULL;   
-    waitForInput(sock, msg);
+    printc(BOLDRED, "Lancement du LOBBY\n");
+    printf(RED "| IP:" RESET " %s\n" , lobby_ip);
+    printf(RED "| Port:" RESET " %d\n", lobby_port);
+    printf(RED "| Code:" RESET " %s\n", tabLobby[idLobby].code);
 
 
-    //connexion d'un user 
-    
-
-}
-
-void waitForInput(socket_t sock, generic msg){
-    printf("En attente de connexion\n");
-    recevoir(sock, msg, deserial);
+      
+    received_t data;
+    socket_t sockClient;
+    sockClient.fd = recevoir(sock, &data, deserial);
+    sockClient.mode = SOCK_STREAM;
+    printf("Requête reçue : %d\n", data.code);
 }
 
 /**
@@ -147,7 +146,6 @@ void generateLobbyCode(char *code) {
         }
     }
 
-    printf("Le code de votre session est : %s\n", code);
     fprintf(fichier, "%s\n", code);
 
     fclose(fichier);
