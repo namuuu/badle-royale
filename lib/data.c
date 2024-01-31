@@ -76,6 +76,31 @@ int recevoir(socket_t sock, generic quoi, pFct deSerial) {
     return -1;
 }
 
+int recevoirSuivant(socket_t sock, generic quoi, pFct deSerial) {
+    buffer_t receivedData;
+
+     if(sock.mode == SOCK_DGRAM) {
+        // Fonctionnement DGRAM
+        int sd = lireSocketNext(sock, receivedData);
+        if(deSerial != NULL) 
+            deSerial(quoi, receivedData);
+        else
+            quoi = &receivedData;
+        return sd;
+    } else if (sock.mode == SOCK_STREAM) {
+        // Fonctionnement STREAM
+        int sd = lireSocketNext(sock, receivedData);
+        if(deSerial != NULL) {
+            deSerial(quoi, receivedData);
+        } else
+            quoi = &receivedData;
+        return sd;
+    } else {
+        perror("Erreur de mode de socket");
+    }
+    return -1;
+}
+
 /**
  * @fn socket_t connectToServer(char *ip, short port, short mode);
  * 

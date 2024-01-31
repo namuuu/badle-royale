@@ -16,7 +16,7 @@
 #define IP_CLIENT "127.0.0.1"
 short portClient = 0;
 
-void requireLobbyFromCode();
+int requireLobbyFromCode();
 void createLobbyWithCode();
 void menu();
 void serial(generic quoi, char* req);
@@ -24,30 +24,46 @@ void deserial(generic quoi, char *msg);
 void waitForInput(socket_t sock, generic msg);
 
 int main() {
-    char choix = '0';
+    char* choix = malloc(sizeof(char) * 10);
+    char* returnMsg;
+    int returnCode;
     system("clear");
     menu();
 
-    while(choix != 'Q') {
-
+    while(choix[0] != 'Q') {
         printf(YELLOW "$ " RESET);
-        scanf("%c", &choix);
+        scanf("%s", choix);
 
-        switch(choix) {
+        switch(choix[0]) {
             case '1':
-                requireLobbyFromCode();
-                exit(EXIT_SUCCESS);
+                returnCode = requireLobbyFromCode();
+                switch (returnCode)
+                {
+                case 500:
+                    returnMsg = RED "ERR:" RESET " Le lobby n'existe pas!";
+                    break;
+                default:
+                    break;
+                }
+                break;
             case '2':
                 createLobbyWithCode();
-                exit(EXIT_SUCCESS);
+                break;
             case 'Q':
                 printf("Fermeture du système..........................Au revoir!\n");
                 exit(EXIT_SUCCESS);
+            case '\n':
+                returnMsg = "Veuillez entrer une option valide";
+                break;
             default:
-                menu();
-                printf("\nErreur de saisie\n\n");
                 break;
         }
+
+        system("clear");
+        menu();
+        if(returnCode != 0)
+            printf("\n%s\n\n", returnMsg);
+        returnCode = 0;
     }
     
 }
@@ -74,48 +90,52 @@ void menu() {
  * @brief Connexion au serveur
  * @return 
 */
-void requireLobbyFromCode() {
-
-    printf("Quel est le code de la partie que vous souhaitez rejoindre ? (5 charactères MAX) ");
-    char *code = malloc(sizeof(char) * MAX_BUFF);
-    fgets(code, MAX_BUFF, stdin);
-    printf("%s\n", code);
-    printf("%ld\n", strlen(code));
-
-    // Requête de connexion au serveur
-    char *req = malloc(sizeof(char) * 30);
-    strcat(req, "100-");
-    strcat(req, code);
-
-    // Connexion au serveur en STREAM
-    socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
-
-    envoyer(sock, req, NULL);
-    printf("Requête envoyée : %s\n", req);
-  
-    close(sock.fd);
-}
-
-void createLobbyWithCode() {
+int requireLobbyFromCode() {
     int c;
     /* discard all characters up to and including newline */
     while ((c = getchar()) != '\n' && c != EOF); 
 
-    printf(BLUE "(Optionnel) Indiquez un code pour votre partie: " WHITE "(5 caractères max)\n" YELLOW "$ " RESET);
+    printf(BLUE "Quel est le code de la partie que vous souhaitez rejoindre ?" RESET " (5 caractères MAX)\n" YELLOW "$ " RESET);
     char *code = malloc(sizeof(char) * MAX_BUFF);
     fgets(code, MAX_BUFF, stdin);
 
-    // Supprime le \n à la fin de la chaine
-    code[strcspn(code, "\n")] = 0;
-    // Limite le code à 5 caractères
-    if(strlen(code) > 4)
-        code[5] = '\0';
+    // Suppression du \n
+    code[strlen(code) - 1] = '\0';
 
+    // Requête de connexion au serveur
+    send_t sendData;
+    sendData.code = 100;
+    sendData.nbArgs = 1;
+    sendData.args[0] = code;
+
+    // Connexion au serveur en STREAM
+    socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
+
+    envoyer(sock, &sendData, serial);
+    printf("Recherche du lobby %s...\n", code);
+
+    received_t recData;
+    recevoirSuivant(sock, &recData, deserial);
+    
+    switch (recData.code)
+    {
+    case 200:
+        printf("Connexion au lobby %s...\n", code);
+        break;
+    case 500:
+        return recData.code;
+    default:
+        break;
+    }
+    close(sock.fd);
+    return 0;
+}
+
+void createLobbyWithCode() {
     //Requête de création de lobby
     send_t reqData;
     reqData.code = 101;
-    reqData.nbArgs = 1;
-    reqData.args[0] = code;
+    reqData.nbArgs = 0;
 
     buffer_t buffer;
     serial(&reqData, buffer);
@@ -128,6 +148,8 @@ void createLobbyWithCode() {
     buffer_t recData; 
     lireSocketNext(sock, recData);
     printf("Requête reçue : %s\n", recData);
+
+    while(1);
 }
 
 void serial(generic quoi, char* req) {
@@ -150,6 +172,8 @@ void deserial(generic quoi, char *msg) {
     ((received_t*)quoi)->nbArgs = 0;
     token = strtok(NULL, "-");
     int i = 0;
+    if(token == NULL)
+        return;
     int switchToken = atoi(token);
     switch (switchToken)
     {
