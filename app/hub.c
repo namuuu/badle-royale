@@ -106,6 +106,7 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = lobby_port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
+    idLobby++;
 
     printc(BOLDRED, "Lancement du LOBBY\n");
     printf(RED "| IP:" RESET " %s\n" , lobby_ip);
