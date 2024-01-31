@@ -40,5 +40,5 @@ void waitForInput(socket_t sock, generic msg);
 void serveurLobby(int idLobby);
 void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
-void genererCode(char code[6]);
-char *generateLobbyCode();
+void genererCode(char* code);
+void generateLobbyCode(char *code);

@@ -34,10 +34,13 @@ void serveur() {
     printf(YELLOW "| Port:" RESET " %d\n", HUB_PORT);
 
     received_t data;
+    socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
 
     while(1) {
-        socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
-        waitForInput(sock, &data);
+        socket_t sockClient;
+        sockClient.fd = recevoir(sock, &data, deserial);
+        sockClient.mode = SOCK_STREAM;
+
 
         switch (data.code)
         {
@@ -68,16 +71,13 @@ void serveur() {
                 char* portChar = malloc(sizeof(char) * 5);
                 sprintf(portChar, "%d", tabLobby[nbLobby].port);
                 sendData.args[2] = portChar;
-                envoyer(sock, &sendData, serial);
+                envoyer(sockClient, &sendData, serial);
             }
 
             break;
         default:
             break;
         }
-
-        printf("Closed\n");
-        close(sock.fd);
     }
     
 }
@@ -101,7 +101,11 @@ void serveurLobby(int idLobby) {
     // Emplacement du lobby dans le tableau
     tabLobby[idLobby].ip = ip;
     tabLobby[idLobby].port = port;
-    tabLobby[idLobby].code = generateLobbyCode();
+    char* code = malloc(sizeof(char) * 6);
+    generateLobbyCode(code);
+    printf("Code du lobby : %s\n", code);
+    strcpy(tabLobby[idLobby].code, code);
+    printf("Code du lobby : %s\n", tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
 
     char *msg = NULL;   
@@ -118,9 +122,8 @@ void waitForInput(socket_t sock, generic msg){
  * 
  * @brief Génération d'un code de session
 */
-char *generateLobbyCode() {
+void generateLobbyCode(char *code) {
     FILE* fichier;
-    char *code = malloc(6 * sizeof(char));
     char codeLu[6];
 
     srand(time(NULL));
@@ -143,8 +146,6 @@ char *generateLobbyCode() {
     fprintf(fichier, "%s\n", code);
 
     fclose(fichier);
-
-    return code;
 }
 
 /**
@@ -154,7 +155,7 @@ char *generateLobbyCode() {
  * @param fichier Nom du fichier à modifier
  * @param code Code à ajouter au fichier
 */
-void genererCode(char code[6]) {
+void genererCode(char* code) {
     int i;
     for (i = 0; i < 5; i++) {
         int random = rand() % 36;

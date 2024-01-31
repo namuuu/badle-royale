@@ -157,7 +157,8 @@ void ecrireSocket(socket_t sock, char *msg, short mode);
  * @brief Lit un message sur une socket
  * @param sock Fournit la socket
 */
-void lireSocket(socket_t sockEcoute, char* receivedData);
+int lireSocket(socket_t sockEcoute, char* receivedData);
+int lireSocketNext(socket_t sockEcoute, char* receivedData);
 /**
  * @fn void closeSocket(socket_t sock);
  * 

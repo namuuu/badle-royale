@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -lpthread
+CFLAGS = -Wall -Wextra -lpthread -lrt
 IMPORTS = ./bin/data.o ./bin/session.o
 
 all: user hub

@@ -20,6 +20,7 @@ void requireLobbyFromCode();
 void createLobbyWithCode();
 void menu();
 void serial(generic quoi, char* req);
+void deserial(generic quoi, char *msg);
 void waitForInput(socket_t sock, generic msg);
 
 int main() {
@@ -124,10 +125,9 @@ void createLobbyWithCode() {
 
     envoyer(sock, &reqData, serial);
 
-    char *recData = NULL;   
-    recevoir(sock, recData, deserial);
-
-    close(sock.fd);
+    buffer_t recData; 
+    lireSocketNext(sock, recData);
+    printf("Requête reçue : %s\n", recData);
 }
 
 void serial(generic quoi, char* req) {

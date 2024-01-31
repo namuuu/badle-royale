@@ -33,7 +33,7 @@ void envoyer(socket_t sock, generic quoi, pFct serial);
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-void recevoir(socket_t sock, generic quoi, pFct deSerial);
+int recevoir(socket_t sock, generic quoi, pFct deSerial);
 
 /**
  * @fn socket_t connectToServer(char *ip, short port, short mode);
