@@ -45,7 +45,33 @@ void serveur() {
         switch (data.code)
         {
         case 100: // joinLobby - code
-            printc(RED, "Requête joinLobby non implémentée\n");
+            if(data.nbArgs == 0) {
+                send_t sendData;
+                sendData.code = 506;
+                sendData.nbArgs = 0;
+                envoyer(sockClient, &sendData, serial);
+            }
+            for(int i = 0; i < nbLobby; i++) {
+                if(strncmp(data.args[0], tabLobby[i].code, 5) == 0) {
+                    // Envoi de l'ip et du port au client
+                    printf(GREEN "Connexion au Lobby %s (Port %d)\n" RESET, tabLobby[i].code, tabLobby[i].port);
+                    send_t sendData;
+                    sendData.code = 200;
+                    sendData.nbArgs = 3;
+                    sendData.args[0] = tabLobby[i].ip;
+                    sendData.args[1] = tabLobby[i].code;
+                    char* portChar = malloc(sizeof(char) * 5);
+                    sprintf(portChar, "%d", tabLobby[i].port);
+                    sendData.args[2] = portChar;
+                    envoyer(sockClient, &sendData, serial);
+                    break;
+                }
+            }
+            // Si le code n'existe pas
+            send_t sendData;
+            sendData.code = 500;
+            sendData.nbArgs = 0;
+            envoyer(sockClient, &sendData, serial);
             break;
         case 101: // createLobby
             //creation d'un lobby
@@ -71,6 +97,7 @@ void serveur() {
                 char* portChar = malloc(sizeof(char) * 5);
                 sprintf(portChar, "%d", tabLobby[nbLobby].port);
                 sendData.args[2] = portChar;
+                nbLobby++;
                 envoyer(sockClient, &sendData, serial);
             }
 
@@ -103,7 +130,6 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
-    idLobby++;
 
     char *msg = NULL;   
     recevoir(sock, msg, deserial);
@@ -213,6 +239,8 @@ void deserial(generic quoi, char *msg) {
     ((received_t*)quoi)->nbArgs = 0;
     token = strtok(NULL, "-");
     int i = 0;
+    if(token == NULL)
+        return;
     int switchToken = atoi(token);
     switch (switchToken)
     {

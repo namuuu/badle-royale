@@ -26,9 +26,11 @@ useLibNet: data.o session.o ./app/useLibNet.c # Compile tous les fichiers de use
 
 user : data.o session.o ./app/user.c # Compile tous les fichiers de user
 	@$(CC) $(CFLAGS) $(IMPORTS) ./app/user.c -o ./exe/user.exe
+	@ln -sf exe/user.exe user.exe
   
 hub: data.o session.o ./app/hub.c # Compile tous les fichiers de hub
 	@$(CC) $(CFLAGS) $(IMPORTS) ./app/hub.c  -o ./exe/hub.exe
+	@ln -sf exe/hub.exe hub.exe
 
 clean:
 	rm -f *.o
