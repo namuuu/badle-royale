@@ -1,26 +1,25 @@
 
 #include "hub.h"
 
-int main(int argc, char *argv[]){
-    system("clear");
-   
-    if(argc != 3) { 
-        printf(RED);
-        printf("Usage: %s <ip> <port>\n", argv[0]);
-        printf(RESET);
-        return -1;
-    }
-    serveur(argv[1], atoi(argv[2]));
+#define HUB_IP "0.0.0.0"
+#define HUB_PORT 5000
 
+// tabLobby est le tableau permettant de stocker les données des différents lobbys
+lobbyData_t* tabLobby;
+int nbLobby = 0;
 
-    int fd; // file descriptor
-    fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
+// action est la structure permettant de gérer les signaux
+struct sigaction action;
+
+int main() {
+    int fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
     // Set the size of the shared memory object
     int pageSize = sysconf(_SC_PAGE_SIZE);
     CHECK(ftruncate(fd, pageSize), "__ftruncate__");
     // Map the tabEtats object into the virtual address space of the calling process
     tabLobby = mmap(0, pageSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-   
+
+    serveur();
     return 0; 
 }
 
@@ -28,21 +27,20 @@ int main(int argc, char *argv[]){
  * @fn void serveur(char *ip, short port);
  * 
  * @brief Lance un serveur HUB
- * @param ip Fournit l'ip du serveur HUB
- * @param port Fournit le port du serveur HUB
 */
-void serveur(char *ip, short port) {
+void serveur() {
     printc(BOLDYELLOW, "Lancement du HUB\n");
-    printc(YELLOW, "| IP: ");
-    printf("%s\n", ip);
-    printc(YELLOW, "| Port: ");
-    printf("%d\n", port);
+    printf(YELLOW "| IP:" RESET " %s\n" , HUB_IP);
+    printf(YELLOW "| Port:" RESET " %d\n", HUB_PORT);
 
     received_t data;
+    socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
 
     while(1) {
-        socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
-        waitForInput(sock, &data);
+        socket_t sockClient;
+        sockClient.fd = recevoir(sock, &data, deserial);
+        sockClient.mode = SOCK_STREAM;
+
 
         switch (data.code)
         {
@@ -52,23 +50,34 @@ void serveur(char *ip, short port) {
         case 101: // createLobby
             //creation d'un lobby
             int pidLobby;
+            tabLobby[nbLobby].pidLobby = 0;
             CHECK(pidLobby = fork(), "fork()");
             if(pidLobby == 0) {
                 // Fils
-                shutdown(sock.fd, SHUT_RDWR);
-                serveurLobby();
+                serveurLobby(nbLobby);
                 exit(EXIT_SUCCESS);
             } else {
                 // Père, attends l'update de la création du Lobby
-                while(1);
+                while(tabLobby[nbLobby].pidLobby == 0) {
+                    sleep(1);
+                }
+                // Envoi de l'ip et du port au client
+                printf(GREEN "Création du Lobby %s (Port %d)\n" RESET, tabLobby[nbLobby].code, tabLobby[nbLobby].port);
+                send_t sendData;
+                sendData.code = 200;
+                sendData.nbArgs = 3;
+                sendData.args[0] = tabLobby[nbLobby].ip;
+                sendData.args[1] = tabLobby[nbLobby].code;
+                char* portChar = malloc(sizeof(char) * 5);
+                sprintf(portChar, "%d", tabLobby[nbLobby].port);
+                sendData.args[2] = portChar;
+                envoyer(sockClient, &sendData, serial);
             }
 
             break;
         default:
             break;
         }
-
-        close(sock.fd);
     }
     
 }
@@ -77,10 +86,9 @@ void serveur(char *ip, short port) {
  * @fn void serveurLobby();
  * 
  * @brief Lance un lobby
- * @param ip Fournit l'ip du lubby
- * @param port Fournit le port du lobby
+ * @param idLobby Emplacement du lobby dans le tableau
 */
-void serveurLobby() {
+void serveurLobby(int idLobby) {
     // Préparation de la socket
     char* ip = "0.0.0.0";
     int port = 0;
@@ -90,10 +98,15 @@ void serveurLobby() {
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
     port = ntohs(sock.addr.sin_port);
 
-    // Envoi de l'ip et du port au client
-    printf(BOLDGREEN "Lancement du Lobby\n");
-    printf(GREEN "| IP: " RESET "%s\n", ip);
-    printf(GREEN "| Port: " RESET "%d\n", port);
+    // Emplacement du lobby dans le tableau
+    tabLobby[idLobby].ip = ip;
+    tabLobby[idLobby].port = port;
+    char* code = malloc(sizeof(char) * 6);
+    generateLobbyCode(code);
+    printf("Code du lobby : %s\n", code);
+    strcpy(tabLobby[idLobby].code, code);
+    printf("Code du lobby : %s\n", tabLobby[idLobby].code);
+    tabLobby[idLobby].pidLobby = getpid();
 
     char *msg = NULL;   
     waitForInput(sock, msg);
@@ -109,9 +122,8 @@ void waitForInput(socket_t sock, generic msg){
  * 
  * @brief Génération d'un code de session
 */
-char *generateLobbyCode() {
+void generateLobbyCode(char *code) {
     FILE* fichier;
-    char *code = malloc(6 * sizeof(char));
     char codeLu[6];
 
     srand(time(NULL));
@@ -134,8 +146,6 @@ char *generateLobbyCode() {
     fprintf(fichier, "%s\n", code);
 
     fclose(fichier);
-
-    return code;
 }
 
 /**
@@ -145,7 +155,7 @@ char *generateLobbyCode() {
  * @param fichier Nom du fichier à modifier
  * @param code Code à ajouter au fichier
 */
-void genererCode(char code[6]) {
+void genererCode(char* code) {
     int i;
     for (i = 0; i < 5; i++) {
         int random = rand() % 36;
@@ -192,6 +202,18 @@ void suppressionCode(const char *code) {
     rename("temp.txt", "code.txt");
 }
 
+void serial(generic quoi, char* req) {
+    send_t transQuoi = (*(send_t*)quoi);
+
+    sprintf(req, "%d", transQuoi.code); // Convertit le code en char
+    if(transQuoi.nbArgs == 0)
+        return;
+    for(int i = 0; i < transQuoi.nbArgs; i++) {
+        strcat(req, "-");
+        strcat(req, transQuoi.args[i]);
+    }
+}
+
 void deserial(generic quoi, char *msg) {
 
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
@@ -211,5 +233,38 @@ void deserial(generic quoi, char *msg) {
             i++;
         }
         break;
+    }
+}
+
+/**
+ * \fn      void installerGestionSignal(int sigNum, void (*handler)(int))
+ * \brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
+ * \param   sigNum : Numéro du signal déclencheur
+ * \param   handler : Nom de la fonction de traitement du signal sigNum
+ * \note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
+ */
+void installerGestionSignal(int sigNum, void (*handler)(int)) {
+    // Gestion des signaux
+    action.sa_handler = handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = 0;
+    CHECK(sigaction(sigNum, &action, NULL), "__sigaction__");
+}
+
+/*      ****    FCTS GESTION SIGNAUX    *** Q3  *** _________________________*/
+/**
+ * \fn      void traiterSignal(int sigNum)
+ * \brief   Traitement du signal sigNum
+ * \param   sigNum : Numéro du signal déclencheur
+ * \note    Signaux implémentés : SIGALRM
+ */
+void traiterSignal(int sigNum) {
+    switch (sigNum) {
+        case SIGALRM:
+            printf("Signal SIGALRM reçu\n");
+            break;
+        default:
+            printf("Signal %d reçu\n", sigNum);
+            break;
     }
 }

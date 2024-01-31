@@ -51,26 +51,29 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-void recevoir(socket_t sock, generic quoi, pFct deSerial) {
+int recevoir(socket_t sock, generic quoi, pFct deSerial) {
     buffer_t receivedData;
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
-        lireSocket(sock, receivedData);
+        int sd = lireSocket(sock, receivedData);
         if(deSerial != NULL) 
             deSerial(quoi, receivedData);
         else
             quoi = &receivedData;
+        return sd;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
-        lireSocket(sock, receivedData);
+        int sd = lireSocket(sock, receivedData);
         if(deSerial != NULL) {
             deSerial(quoi, receivedData);
         } else
             quoi = &receivedData;
+        return sd;
     } else {
         perror("Erreur de mode de socket");
     }
+    return -1;
 }
 
 /**
