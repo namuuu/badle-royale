@@ -117,6 +117,7 @@ void serveurLobby(int idLobby) {
     char* ip = "0.0.0.0";
     int port = 0;
     socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    socket_t sockPlayer;
 
     socklen_t len = sizeof(sock.addr);
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
@@ -127,18 +128,47 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
+    tabLobby[idLobby].playerCount = 0;
 
     received_t recData;
-    sock = recevoir(sock, &recData, deserial);
 
-    printf("Demande de connexion au lobby %s\n", tabLobby[idLobby].code);
+    while (1)
+    {
+        sockPlayer = accepterConnexion(sock);
+        printf(YELLOW "[%s]"  RESET " %d se connecte...\n", tabLobby[idLobby].code, sockPlayer.port);
 
-    // Envoi de confirmation de connexion au Lobby
-    send_t sendData;
-    sendData.code = 202;
-    sendData.nbArgs = 0;
-    envoyer(sock, &sendData, serial);
-    printf("Envoi de la confirmation de connexion au lobby %s\n", tabLobby[idLobby].code);
+        int pidPlayer;
+        CHECK(pidPlayer = fork(), "fork()");
+
+        if(pidPlayer == 0) {
+            CHECK(close(sock.fd), "close()");
+            // Fils
+            recevoirSuivant(sockPlayer, &recData, deserial);
+            int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
+            printf(YELLOW "[%s]"  RESET " %d (id: %d) a rejoint le lobby\n", tabLobby[idLobby].code, sockPlayer.port, idPlayerInLobby);
+
+            // Envoi de confirmation de connexion au Lobby
+            send_t sendData;
+            sendData.code = 202;
+            sendData.nbArgs = 0;
+            envoyer(sockPlayer, &sendData, serial);
+
+            while(1);
+        }
+
+
+
+    }
+
+    CHECK(close(sock.fd), "close()");
+}
+
+int recognizePlayer(int idLobby, char* ip, unsigned short port) {
+    strcpy(tabLobby[idLobby].players[tabLobby[idLobby].playerCount].ip, ip);
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].port = port;
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].pidPlayer = getpid();
+    tabLobby[idLobby].playerCount++;
+    return tabLobby[idLobby].playerCount - 1;
 }
 
 /**

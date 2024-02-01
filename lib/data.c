@@ -122,6 +122,8 @@ socket_t accepterConnexion(socket_t sock) {
     // CHECK(close(sock.fd), "Impossible de fermer la socket");
     sockEcoute.fd = sd;
     sockEcoute.mode = SOCK_STREAM;
+    sockEcoute.ip = inet_ntoa(sock.addr.sin_addr);
+    sockEcoute.port = ntohs(sock.addr.sin_port);
 
     return sockEcoute;
 }

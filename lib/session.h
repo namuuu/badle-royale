@@ -51,7 +51,7 @@ typedef struct {
     short mode; // DGRAM / STREAM
     struct sockaddr_in addr;
     char *ip;
-    short port;
+    unsigned short port;
     // @Loc, @Dist
     // flag
     // ...
