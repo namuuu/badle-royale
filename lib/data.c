@@ -51,54 +51,79 @@ void envoyer(socket_t sock, generic quoi, pFct serial) {
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-int recevoir(socket_t sock, generic quoi, pFct deSerial) {
+socket_t recevoir(socket_t sock, generic quoi, pFct deSerial) {
     buffer_t receivedData;
+    socket_t sockEcoute;
+    sockEcoute.mode = sock.mode;
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
         int sd = lireSocket(sock, receivedData);
+        sockEcoute.fd = sd;
         if(deSerial != NULL) 
             deSerial(quoi, receivedData);
         else
             quoi = &receivedData;
-        return sd;
+        return sockEcoute;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
         int sd = lireSocket(sock, receivedData);
+        sockEcoute.fd = sd;
         if(deSerial != NULL) {
             deSerial(quoi, receivedData);
         } else
             quoi = &receivedData;
-        return sd;
+        return sockEcoute;
     } else {
         perror("Erreur de mode de socket");
     }
-    return -1;
+    exit(EXIT_FAILURE);
 }
 
-int recevoirSuivant(socket_t sock, generic quoi, pFct deSerial) {
+socket_t recevoirSuivant(socket_t sock, generic quoi, pFct deSerial) {
     buffer_t receivedData;
+    socket_t sockEcoute;
+    sockEcoute.mode = sock.mode;
 
      if(sock.mode == SOCK_DGRAM) {
         // Fonctionnement DGRAM
         int sd = lireSocketNext(sock, receivedData);
+        sockEcoute.fd = sd;
         if(deSerial != NULL) 
             deSerial(quoi, receivedData);
         else
             quoi = &receivedData;
-        return sd;
+        return sockEcoute;
     } else if (sock.mode == SOCK_STREAM) {
         // Fonctionnement STREAM
         int sd = lireSocketNext(sock, receivedData);
+        sockEcoute.fd = sd;
         if(deSerial != NULL) {
             deSerial(quoi, receivedData);
         } else
             quoi = &receivedData;
-        return sd;
+        return sockEcoute;
     } else {
         perror("Erreur de mode de socket");
     }
-    return -1;
+    exit(EXIT_FAILURE);
+}
+
+socket_t accepterConnexion(socket_t sock) {
+    socklen_t addrLen = sizeof(sock.addr);
+    int sd;
+
+    if(sock.mode != SOCK_STREAM) {
+        printf("Mode de socket invalide %d\n", sock.mode);
+        exit(-1);
+    }
+    socket_t sockEcoute;
+    CHECK(sd = accept(sock.fd, (struct sockaddr *)&sock.addr, &addrLen), "Impossible d'accepter la connexion");
+    // CHECK(close(sock.fd), "Impossible de fermer la socket");
+    sockEcoute.fd = sd;
+    sockEcoute.mode = SOCK_STREAM;
+
+    return sockEcoute;
 }
 
 /**

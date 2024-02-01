@@ -6,12 +6,6 @@
 */
 
 #include "session.h"
-#define CHECK(status, msg)                                                   \
-    if ((status) == -1) {                                                    \
-        perror(msg);                                                         \
-        exit(EXIT_FAILURE);                                                  \
-    }
-
 
 /* ---------------------------------------- FONCTIONS ---------------------------------------- */
 /**

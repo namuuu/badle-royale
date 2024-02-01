@@ -7,8 +7,6 @@
 #include <signal.h>
 
 /* ---------------------------------------  DEFINE ------------------------------------------ */
-#define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
-
 #define HUB_IP "0.0.0.0"
 #define HUB_PORT 5000
 

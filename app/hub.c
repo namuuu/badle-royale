@@ -36,9 +36,7 @@ void serveur() {
     socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
 
     while(1) {
-        socket_t sockClient;
-        sockClient.fd = recevoir(sock, &data, deserial);
-        sockClient.mode = SOCK_STREAM;
+        socket_t sockClient = recevoir(sock, &data, deserial);
 
 
         switch (data.code)
@@ -131,8 +129,7 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].pidLobby = getpid();
 
     received_t recData;
-    sock.fd = recevoir(sock, &recData, deserial);
-    sock.mode = SOCK_STREAM;
+    sock = recevoir(sock, &recData, deserial);
 
     printf("Demande de connexion au lobby %s\n", tabLobby[idLobby].code);
 

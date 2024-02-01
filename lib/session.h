@@ -38,6 +38,8 @@
 #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
+#define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
+
 #define printc(color, msg) printf(color "%s" RESET, msg)
 
 #define MAX_BUFF 1024
