@@ -9,6 +9,10 @@
 /* ---------------------------------------  DEFINE ------------------------------------------ */
 #define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
 
+#define HUB_IP "0.0.0.0"
+#define HUB_PORT 5000
+
+#define PLAYER_MAX 4
 
 /* ---------------------------------------- STRUCTURE ---------------------------------------- */
 
@@ -27,9 +31,15 @@ typedef struct {
 } received_t;
 
 typedef struct {
+    char ip[15];
+    unsigned short port;
+} playerData_t;
+
+typedef struct {
     char *ip;
     unsigned short port;
     char code[6];
+    playerData_t players[PLAYER_MAX];
     int pidLobby;
 } lobbyData_t;
 

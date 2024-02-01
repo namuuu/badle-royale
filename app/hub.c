@@ -1,9 +1,6 @@
 
 #include "hub.h"
 
-#define HUB_IP "0.0.0.0"
-#define HUB_PORT 5000
-
 // tabLobby est le tableau permettant de stocker les données des différents lobbys
 lobbyData_t* tabLobby;
 int nbLobby = 0;
@@ -12,6 +9,8 @@ int nbLobby = 0;
 struct sigaction action;
 
 int main() {
+    system("clear");
+
     int fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
     // Set the size of the shared memory object
     int pageSize = sysconf(_SC_PAGE_SIZE);
@@ -131,8 +130,18 @@ void serveurLobby(int idLobby) {
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
 
-    char *msg = NULL;   
-    recevoir(sock, msg, deserial);
+    received_t recData;
+    sock.fd = recevoir(sock, &recData, deserial);
+    sock.mode = SOCK_STREAM;
+
+    printf("Demande de connexion au lobby %s\n", tabLobby[idLobby].code);
+
+    // Envoi de confirmation de connexion au Lobby
+    send_t sendData;
+    sendData.code = 202;
+    sendData.nbArgs = 0;
+    envoyer(sock, &sendData, serial);
+    printf("Envoi de la confirmation de connexion au lobby %s\n", tabLobby[idLobby].code);
 }
 
 /**

@@ -8,20 +8,7 @@
 /* INCLUDE */
 #include "user.h"
 
-/* SERVER HARDCODED DATA */
-#define IP_HUB "0.0.0.0"
-#define PORT_HUB 5000
-
-/* CLIENT DATA */
-#define IP_CLIENT "127.0.0.1"
 short portClient = 0;
-
-int requireLobbyFromCode();
-void createLobbyWithCode();
-void menu();
-void serial(generic quoi, char* req);
-void deserial(generic quoi, char *msg);
-void waitForInput(socket_t sock, generic msg);
 
 int main() {
     char* choix = malloc(sizeof(char) * 10);
@@ -47,7 +34,16 @@ int main() {
                 }
                 break;
             case '2':
-                createLobbyWithCode();
+                returnCode = createLobbyWithCode();
+                switch (returnCode)
+                {  
+                case 503:
+                    returnMsg = RED "ERR:" RESET " Le lobby est plein!";
+                    break;
+                case 504:
+                    returnMsg = RED "ERR:" RESET " Le lobby est en cours de partie!";
+                    break;
+                }
                 break;
             case 'Q':
                 printf("Fermeture du système..........................Au revoir!\n");
@@ -124,32 +120,56 @@ int requireLobbyFromCode() {
         break;
     case 500:
         return recData.code;
-    default:
-        break;
     }
     close(sock.fd);
     return 0;
 }
 
-void createLobbyWithCode() {
+int createLobbyWithCode() {
     //Requête de création de lobby
     send_t reqData;
     reqData.code = 101;
     reqData.nbArgs = 0;
-
-    buffer_t buffer;
-    serial(&reqData, buffer);
 
     // Connexion au serveur en STREAM
     socket_t sock = connectToServer(IP_CLIENT, portClient, IP_HUB, PORT_HUB, SOCK_STREAM);
 
     envoyer(sock, &reqData, serial);
 
-    buffer_t recData; 
-    lireSocketNext(sock, recData);
-    printf("Requête reçue : %s\n", recData);
+    received_t recData;
+    recevoirSuivant(sock, &recData, deserial);
 
-    while(1);
+    close(sock.fd);
+
+    return connectToLobby(recData.args[0], atoi(recData.args[2]), recData.args[1]);
+}
+
+int connectToLobby(char* ip, unsigned short port, char* code) {
+    socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
+
+    send_t reqDataLobby;
+    reqDataLobby.code = 102;
+    reqDataLobby.nbArgs = 0;
+
+
+    envoyer(sockLobby, &reqDataLobby, serial);
+    printf("Connexion au lobby %s...\n", code);
+
+    received_t recDataLobby;
+    recevoirSuivant(sockLobby, &recDataLobby, deserial);
+
+    switch (recDataLobby.code)
+    {
+    case 202:
+        printf("Lobby %s connecté !\n", code);
+        while(1);
+        break;
+    default:
+        printf("Lobby %s reçu ! (code: %d)\n", code, recDataLobby.code);
+        return recDataLobby.code;
+    }
+
+    return 0;
 }
 
 void serial(generic quoi, char* req) {
