@@ -7,8 +7,6 @@
 #include <signal.h>
 
 /* ---------------------------------------  DEFINE ------------------------------------------ */
-#define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
-
 #define HUB_IP "0.0.0.0"
 #define HUB_PORT 5000
 
@@ -33,6 +31,7 @@ typedef struct {
 typedef struct {
     char ip[15];
     unsigned short port;
+    int pidPlayer;
 } playerData_t;
 
 typedef struct {
@@ -40,6 +39,7 @@ typedef struct {
     unsigned short port;
     char code[6];
     playerData_t players[PLAYER_MAX];
+    int playerCount;
     int pidLobby;
 } lobbyData_t;
 
@@ -52,3 +52,4 @@ void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
 void genererCode(char* code);
 void generateLobbyCode(char *code);
+int recognizePlayer(int idLobby, char* ip, unsigned short port);

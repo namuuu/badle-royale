@@ -116,7 +116,7 @@ int requireLobbyFromCode() {
     switch (recData.code)
     {
     case 200:
-        printf("Connexion au lobby %s...\n", code);
+        return connectToLobby(recData.args[0], atoi(recData.args[2]), recData.args[1]);
         break;
     case 500:
         return recData.code;
