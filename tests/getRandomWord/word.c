@@ -3,13 +3,15 @@
 #include <time.h>
 #include <stdbool.h>
 #include <string.h>
+#include "../../lib/session.h"
 
-#define NB_LIGNES 21074
+#define NB_LIGNES 9256
 #define MAX_LENGTH 20
 
 char *getRandomWord();
 bool validateWord(char *word);
 void testWord();
+void wordlize(char *word, char *wordToValidate);
 
 int main() {
     testWord();
@@ -19,23 +21,32 @@ int main() {
 void testWord() {
     char *word = getRandomWord();
     char wordToValidate[MAX_LENGTH];
+
     if(word == NULL) {
-        printf("Erreur lors de la récupération du mot\n");
+        printc(RED, "Erreur lors de la récupération du mot\n");
         return;
     }
-    printf("Le mot était %s", word);
 
-    printf("Veuillez entrer le mot : ");
-    scanf("%s", wordToValidate);
+    printf("DEBUG : Le mot aléatoire est : %s\n", word);
+    printcf(BLUE, " ● Le mot est de %d lettres\n", strlen(word) - 1);
 
-    wordToValidate[strlen(wordToValidate)] = '\n';
+    while(strcmp(word, wordToValidate) != 0) {
+        printf("\t| Veuillez entrer le mot : ");
+        scanf("%s", wordToValidate);
+        wordToValidate[strlen(wordToValidate)] = '\n';
 
-    if(validateWord(wordToValidate)) {
-        printf("Le mot est valide\n");
-    } else {
-        printf("Le mot n'est pas valide\n");
+        //printf("DEBUG : Longueur %ld %ld\n", strlen(wordToValidate), strlen(word));
+
+            if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) {
+                wordlize(word, wordToValidate);
+            } else if(strlen(wordToValidate) != strlen(word)-1) {
+                printc(RED, "\t| Le mot n'a pas le bon nombre de lettres !\n");
+            } else {
+                printc(RED, "\t| Ce mot n'est pas dans notre dictionnaire\n");
+            }
     }
-
+    
+    printc(GREEN, "Bravo ! Vous avez trouvé le mot !\n");
     free(word);
 }
 
@@ -53,7 +64,7 @@ char *getRandomWord() {
 
     f = fopen("dico.txt", "r");
     if (f == NULL) {
-        printf("Erreur lors de l'ouverture du fichier\n");
+        printc(RED, "ERREUR : Ne pas ouvrir le fichier\n");
         return NULL;
     }
 
@@ -86,16 +97,60 @@ bool validateWord(char *word) {
 
     f = fopen("dico.txt", "r");
     if (f == NULL) {
-        printf("Erreur lors de l'ouverture du fichier\n");
+        printc(RED, "ERREUR : Ne pas ouvrir le fichier\n");
         return true;
     }
 
     while (fgets(wordInFile, MAX_LENGTH, f) != NULL) {
-        if (strcmp(wordInFile, word) == 0 && strlen(wordInFile) == strlen(word)) {
+        if (strcmp(wordInFile, word) == 0) {
             return true;
         }
     }
 
     fclose(f);
     return false;
+}
+
+/**
+ * \fn void wordlize();
+ * 
+ * @brief Vérifie pour chaque caractère s'il est présent dans le mot et renvoie des indices pour chaque caractère
+ * @param wordToValidate
+ * @param word
+*/
+void wordlize(char *word, char *wordToValidate) {
+
+    int i, j;
+    int wtvL = strlen(wordToValidate);
+    char *wordlized = malloc(wtvL * sizeof(char));
+
+    // Initialisation
+    for(i = 0; i < wtvL; i++) {
+        wordlized[i] = '.';
+    }
+
+    // Vérification des lettres
+    for(i = 0; i < wtvL-1; i++) {
+        if(word[i] == wordToValidate[i]) {
+            wordlized[i] = '!';
+        } else {
+            for(j = 0; j < wtvL-1; j++) {
+                if(word[i] == wordToValidate[j]) {
+                    wordlized[i] = '?';
+                }
+            }
+        }
+    }
+
+    // Affichage
+    for(i = 0; i < wtvL; i++) {
+        printcf(BLUE, "\t%c ", wordToValidate[i]);
+    }
+    for(i = 0; i < wtvL-1; i++) {
+        printcf(GREEN, "\t%c ", wordlized[i]);
+    }
+
+    printf("\n");
+    free(wordlized);
+
 }

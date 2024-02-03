@@ -6,6 +6,7 @@
 char *generateLobbyCode();
 void genererCode(FILE* fichier, char code[6]);
 void suppressionCode(const char *code);
+void wordlize();
 
 int main(int argc, char *argv[]) {
     char *code = generateLobbyCode();

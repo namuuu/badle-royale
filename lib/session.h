@@ -39,6 +39,7 @@
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 #define printc(color, msg) printf(color "%s" RESET, msg)
+#define printcf(color, msg,  ...) printf(color msg RESET, __VA_ARGS__)
 
 #define MAX_BUFF 1024
 
