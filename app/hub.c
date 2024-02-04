@@ -1,9 +1,6 @@
 
 #include "hub.h"
 
-#define HUB_IP "0.0.0.0"
-#define HUB_PORT 5000
-
 // tabLobby est le tableau permettant de stocker les données des différents lobbys
 lobbyData_t* tabLobby;
 int nbLobby = 0;
@@ -12,6 +9,8 @@ int nbLobby = 0;
 struct sigaction action;
 
 int main() {
+    system("clear");
+
     int fd = shm_open("tabLobby", O_CREAT | O_RDWR, S_IRWXU);  
     // Set the size of the shared memory object
     int pageSize = sysconf(_SC_PAGE_SIZE);
@@ -37,15 +36,39 @@ void serveur() {
     socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
 
     while(1) {
-        socket_t sockClient;
-        sockClient.fd = recevoir(sock, &data, deserial);
-        sockClient.mode = SOCK_STREAM;
+        socket_t sockClient = recevoir(sock, &data, deserial);
 
 
         switch (data.code)
         {
         case 100: // joinLobby - code
-            printc(RED, "Requête joinLobby non implémentée\n");
+            if(data.nbArgs == 0) {
+                send_t sendData;
+                sendData.code = 506;
+                sendData.nbArgs = 0;
+                envoyer(sockClient, &sendData, serial);
+            }
+            for(int i = 0; i < nbLobby; i++) {
+                if(strncmp(data.args[0], tabLobby[i].code, 5) == 0) {
+                    // Envoi de l'ip et du port au client
+                    printf(GREEN "Connexion au Lobby %s (Port %d)\n" RESET, tabLobby[i].code, tabLobby[i].port);
+                    send_t sendData;
+                    sendData.code = 200;
+                    sendData.nbArgs = 3;
+                    sendData.args[0] = tabLobby[i].ip;
+                    sendData.args[1] = tabLobby[i].code;
+                    char* portChar = malloc(sizeof(char) * 5);
+                    sprintf(portChar, "%d", tabLobby[i].port);
+                    sendData.args[2] = portChar;
+                    envoyer(sockClient, &sendData, serial);
+                    break;
+                }
+            }
+            // Si le code n'existe pas
+            send_t sendData;
+            sendData.code = 500;
+            sendData.nbArgs = 0;
+            envoyer(sockClient, &sendData, serial);
             break;
         case 101: // createLobby
             //creation d'un lobby
@@ -71,6 +94,7 @@ void serveur() {
                 char* portChar = malloc(sizeof(char) * 5);
                 sprintf(portChar, "%d", tabLobby[nbLobby].port);
                 sendData.args[2] = portChar;
+                nbLobby++;
                 envoyer(sockClient, &sendData, serial);
             }
 
@@ -93,6 +117,7 @@ void serveurLobby(int idLobby) {
     char* ip = "0.0.0.0";
     int port = 0;
     socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    socket_t sockPlayer;
 
     socklen_t len = sizeof(sock.addr);
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
@@ -103,10 +128,47 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
-    idLobby++;
+    tabLobby[idLobby].playerCount = 0;
 
-    char *msg = NULL;   
-    recevoir(sock, msg, deserial);
+    received_t recData;
+
+    while (1)
+    {
+        sockPlayer = accepterConnexion(sock);
+        printf(YELLOW "[%s]"  RESET " %d se connecte...\n", tabLobby[idLobby].code, sockPlayer.port);
+
+        int pidPlayer;
+        CHECK(pidPlayer = fork(), "fork()");
+
+        if(pidPlayer == 0) {
+            CHECK(close(sock.fd), "close()");
+            // Fils
+            recevoirSuivant(sockPlayer, &recData, deserial);
+            int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
+            printf(YELLOW "[%s]"  RESET " %d (id: %d) a rejoint le lobby\n", tabLobby[idLobby].code, sockPlayer.port, idPlayerInLobby);
+
+            // Envoi de confirmation de connexion au Lobby
+            send_t sendData;
+            sendData.code = 202;
+            sendData.nbArgs = 0;
+            envoyer(sockPlayer, &sendData, serial);
+
+            while(1);
+        }
+
+
+
+    }
+
+    CHECK(close(sock.fd), "close()");
+}
+
+int recognizePlayer(int idLobby, char* ip, unsigned short port) {
+    strcpy(tabLobby[idLobby].players[tabLobby[idLobby].playerCount].ip, ip);
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].port = port;
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].pidPlayer = getpid();
+    tabLobby[idLobby].playerCount++;
+    return tabLobby[idLobby].playerCount - 1;
 }
 
 /**
@@ -213,6 +275,8 @@ void deserial(generic quoi, char *msg) {
     ((received_t*)quoi)->nbArgs = 0;
     token = strtok(NULL, "-");
     int i = 0;
+    if(token == NULL)
+        return;
     int switchToken = atoi(token);
     switch (switchToken)
     {
