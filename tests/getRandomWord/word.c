@@ -5,8 +5,8 @@
 #include <string.h>
 #include "../../lib/session.h"
 
-#define NB_LIGNES 9256
-#define MAX_LENGTH 20
+#define NB_LIGNES 9081
+#define MAX_LENGTH 9
 
 char *getRandomWord();
 bool validateWord(char *word);
@@ -21,6 +21,7 @@ int main() {
 void testWord() {
     char *word = getRandomWord();
     char wordToValidate[MAX_LENGTH];
+    int nbEssai = 1;
 
     if(word == NULL) {
         printc(RED, "Erreur lors de la récupération du mot\n");
@@ -30,23 +31,31 @@ void testWord() {
     printf("DEBUG : Le mot aléatoire est : %s\n", word);
     printcf(BLUE, " ● Le mot est de %d lettres\n", strlen(word) - 1);
 
-    while(strcmp(word, wordToValidate) != 0) {
+    while(strcmp(word, wordToValidate) != 0 && nbEssai < strlen(word)) {
+
+        // on vide le wordToValidate pour éviter les erreurs
+        memset(wordToValidate, 0, sizeof(wordToValidate));
+
+        // On demande à l'utilisateur de rentrer un mot
         printf("\t| Veuillez entrer le mot : ");
         scanf("%s", wordToValidate);
-        wordToValidate[strlen(wordToValidate)] = '\n';
 
-        //printf("DEBUG : Longueur %ld %ld\n", strlen(wordToValidate), strlen(word));
+        // On ajoute un retour chariot uniquement s'il n'y en a pas
+        if(wordToValidate[strlen(wordToValidate)-1] != '\n') {
+            wordToValidate[strlen(wordToValidate)] = '\n';
+        }
 
             if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) {
                 wordlize(word, wordToValidate);
-            } else if(strlen(wordToValidate) != strlen(word)-1) {
+            } else if(strlen(wordToValidate) != strlen(word)) {
                 printc(RED, "\t| Le mot n'a pas le bon nombre de lettres !\n");
             } else {
                 printc(RED, "\t| Ce mot n'est pas dans notre dictionnaire\n");
             }
+        nbEssai++;
     }
-    
-    printc(GREEN, "Bravo ! Vous avez trouvé le mot !\n");
+    if(nbEssai == strlen(word)) printc(RED, "Vous avez épuisé tous vos essais !\n");
+    else printc(GREEN, "Bravo ! Vous avez trouvé le mot !\n");
     free(word);
 }
 
