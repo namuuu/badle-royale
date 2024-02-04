@@ -41,6 +41,7 @@
 #define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
 
 #define printc(color, msg) printf(color "%s" RESET, msg)
+#define printcf(color, msg,  ...) printf(color msg RESET, __VA_ARGS__)
 
 #define MAX_BUFF 1024
 
