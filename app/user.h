@@ -37,5 +37,6 @@ void menu();
 void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
 void waitForInput(socket_t sock, generic msg);
+void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby);
 void mainToLobby(socket_t socketLobby);
 void writerToLobby(char * ip, unsigned short port);

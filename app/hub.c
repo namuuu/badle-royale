@@ -36,9 +36,7 @@ void serveur() {
     socket_t sock = prepareForClient(HUB_IP, HUB_PORT, SOCK_STREAM);
 
     while(1) {
-        socket_t sockClient;
-        sockClient.fd = recevoir(sock, &data, deserial);
-        sockClient.mode = SOCK_STREAM;
+        socket_t sockClient = recevoir(sock, &data, deserial);
 
 
         switch (data.code)
@@ -119,6 +117,7 @@ void serveurLobby(int idLobby) {
     char* ip = "0.0.0.0";
     int port = 0;
     socket_t sock = prepareForClient(ip, port, SOCK_STREAM);
+    socket_t sockPlayer;
 
     socklen_t len = sizeof(sock.addr);
     CHECK(getsockname(sock.fd, (struct sockaddr *)&sock.addr, &len), "getsockname()");
@@ -129,23 +128,67 @@ void serveurLobby(int idLobby) {
     tabLobby[idLobby].port = port;
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
+    tabLobby[idLobby].playerCount = 0;
 
     received_t recData;
-    sock.fd = recevoir(sock, &recData, deserial);
-    sock.mode = SOCK_STREAM;
 
-    printf("Demande de connexion au lobby %s\n", tabLobby[idLobby].code);
+    while (1)
+    {
+        sockPlayer = accepterConnexion(sock);
+        printf(YELLOW "[%s]"  RESET " %d se connecte...\n", tabLobby[idLobby].code, sockPlayer.port);
 
-    // Envoi de confirmation de connexion au Lobby
-    send_t sendData;
-    sendData.code = 202;
-    sendData.nbArgs = 0;
-    envoyer(sock, &sendData, serial);
-    printf("Envoi de la confirmation de connexion au lobby %s\n", tabLobby[idLobby].code);
+        int pidPlayer;
+        CHECK(pidPlayer = fork(), "fork()");
+
+        if(pidPlayer == 0) {
+            fermerConnexion(sock);
+            // Fils
+            recevoirSuivant(sockPlayer, &recData, deserial);
+            int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
+            printf(YELLOW "[%s]"  RESET " %d (id: %d) a rejoint le lobby\n", tabLobby[idLobby].code, sockPlayer.port, idPlayerInLobby);
+
+            // Envoi de confirmation de connexion au Lobby
+            send_t sendData;
+            sendData.code = 202;
+            sendData.nbArgs = 1;
+            if (idPlayerInLobby==0)
+                sendData.args[0] = "1"; // si le user est le chef 
+            else 
+                sendData.args[0] = "0"; 
+            
+
+            envoyer(sockPlayer, &sendData, serial);
+
+            while(1);
+        }
+    }
+
+    fermerConnexion(sock);
 }
 
 /**
- * \fn char *generateLobbyCode();
+ * \fn int recognizePlayer(int idLobby, char* ip, unsigned short port, int num ) ;
+ * 
+ * @brief reconnaitre les differents joueurs 
+ * @param idLobby Emplacement du lobby dans le tableau
+ * @param ip 
+ * @param port
+ */
+int recognizePlayer(int idLobby, char* ip, unsigned short port) {
+    strcpy(tabLobby[idLobby].players[tabLobby[idLobby].playerCount].ip, ip);
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].port = port;
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 0;  
+
+    if (tabLobby[idLobby].playerCount ==0)
+        tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 1 ;
+
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].pidPlayer = getpid();
+    tabLobby[idLobby].playerCount++;
+    return tabLobby[idLobby].playerCount - 1;
+}
+
+/**
+ * \fn void generateLobbyCode();
  * 
  * @brief Génération d'un code de session
 */

@@ -33,8 +33,9 @@ void envoyer(socket_t sock, generic quoi, pFct serial);
  * @param quoi Fournit la donnée à recevoir
  * @param deSerial Fournit la fonction de désérialisation
 */
-int recevoir(socket_t sock, generic quoi, pFct deSerial);
-int recevoirSuivant(socket_t sock, generic quoi, pFct deSerial);
+socket_t recevoir(socket_t sock, generic quoi, pFct deSerial);
+socket_t recevoirSuivant(socket_t sock, generic quoi, pFct deSerial);
+socket_t accepterConnexion(socket_t sock);
 
 /**
  * @fn socket_t connectToServer(char *ip, short port, short mode);
@@ -54,5 +55,11 @@ socket_t connectToServer(char *ipClient, short portClient, char *ipServeur, shor
 */
 socket_t prepareForClient(char *ip, short port, short mode);
 
-
+/** 
+ * @fn void fermerConnexion(socket_t sock)
+ * 
+ * @brief Fermeture d'une connexion
+ * @param sock Fournit la socket à fermer
+*/
+void fermerConnexion(socket_t sock);
 

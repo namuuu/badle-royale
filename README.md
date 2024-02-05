@@ -11,5 +11,5 @@ You can then use the `/app/hub.exe` executable to launch a server. To connect as
 | Role  | Name | Github |
 | ------------- | ------------- | ------------- |
 | Developer  | Leevan DAVID  | [namuuu](https://github.com/namuuu) |
-| Developer  | Tomas TRENY  | [TRETomas](https://github.com/TRETomas) |
+| Developer  | Tomas TRENY  | [Viixyy](https://github.com/Viixyy) |
 | Developer  | Noé FRANCOIS  | [Nowayyyyyy](https://github.com/Nowayyyyyy) |
