@@ -150,7 +150,13 @@ void serveurLobby(int idLobby) {
             // Envoi de confirmation de connexion au Lobby
             send_t sendData;
             sendData.code = 202;
-            sendData.nbArgs = 0;
+            sendData.nbArgs = 1;
+            if (idPlayerInLobby==0)
+                sendData.args[0] = "1"; // si le user est le chef 
+            else 
+                sendData.args[0] = "0"; 
+            
+
             envoyer(sockPlayer, &sendData, serial);
 
             while(1);
@@ -163,16 +169,29 @@ void serveurLobby(int idLobby) {
     CHECK(close(sock.fd), "close()");
 }
 
+/**
+ * \fn int recognizePlayer(int idLobby, char* ip, unsigned short port, int num ) ;
+ * 
+ * @brief reconnaitre les differents joueurs 
+ * @param idLobby Emplacement du lobby dans le tableau
+ * @param ip 
+ * @param port
+ */
 int recognizePlayer(int idLobby, char* ip, unsigned short port) {
     strcpy(tabLobby[idLobby].players[tabLobby[idLobby].playerCount].ip, ip);
     tabLobby[idLobby].players[tabLobby[idLobby].playerCount].port = port;
+    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 0;  
+
+    if (tabLobby[idLobby].playerCount ==0)
+        tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 1 ;
+
     tabLobby[idLobby].players[tabLobby[idLobby].playerCount].pidPlayer = getpid();
     tabLobby[idLobby].playerCount++;
     return tabLobby[idLobby].playerCount - 1;
 }
 
 /**
- * \fn char *generateLobbyCode();
+ * \fn void generateLobbyCode();
  * 
  * @brief Génération d'un code de session
 */

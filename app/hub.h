@@ -32,6 +32,8 @@ typedef struct {
     char ip[15];
     unsigned short port;
     int pidPlayer;
+    int lobbyHost;
+
 } playerData_t;
 
 typedef struct {
