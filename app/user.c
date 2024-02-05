@@ -172,6 +172,51 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     return 0;
 }
 
+void mainToLobby(socket_t socketLobby) {
+
+    while(1) {
+        // Fork write To Lobby
+        int pidWriter;
+        CHECK(pidWriter = fork(), "fork()");
+        if(pidWriter == 0) {
+            writerToLobby(socketLobby.ip, socketLobby.port);
+            return;
+        }
+        // Main
+        received_t recDataLobby;
+        recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        while(1);
+    }
+    
+
+}
+
+/**
+ * @fn void writerToLobby(char * ip, unsigned short port);
+ * 
+ * @brief This function will handle writing words to the Lobby in a fork while the main one is listening to the lobby
+*/
+void writerToLobby(char * ip, unsigned short port) {
+    socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
+
+    send_t reqDataLobby;
+    reqDataLobby.code = 103;
+    reqDataLobby.nbArgs = 0;
+
+    envoyer(sockLobby, &reqDataLobby, serial);
+    // printf("Connexion au lobby %s...\n", code);
+
+    received_t recDataLobby;
+    recevoirSuivant(sockLobby, &recDataLobby, deserial);
+
+    switch (recDataLobby.code)
+    {
+        default:
+            printf("Data received: %d\n", recDataLobby.code);
+            return;
+    }
+}
+
 void serial(generic quoi, char* req) {
     send_t transQuoi = (*(send_t*)quoi);
 
