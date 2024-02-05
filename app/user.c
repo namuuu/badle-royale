@@ -49,7 +49,7 @@ int main() {
                 printf("Fermeture du système..........................Au revoir!\n");
                 exit(EXIT_SUCCESS);
             case '\n':
-                returnMsg = "Veuillez entrer une option valide";
+                
                 break;
             default:
                 break;
@@ -145,6 +145,8 @@ int createLobbyWithCode() {
 }
 
 int connectToLobby(char* ip, unsigned short port, char* code) {
+    char* choix = malloc(sizeof(char) * 10);
+
     socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
 
     send_t reqDataLobby;
@@ -158,10 +160,37 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     received_t recDataLobby;
     recevoirSuivant(sockLobby, &recDataLobby, deserial);
 
-    switch (recDataLobby.code)
-    {
+    switch (recDataLobby.code){
     case 202:
         printf("Lobby %s connecté !\n", code);
+
+        if (strcmp(recDataLobby.args[0],"1" )==0){
+            printf(CYAN "\t[G]" RED "Lancer une partie\n");
+            printf(CYAN "\t[Q]" RED " Quitter\n");
+
+            while (choix[0] !='Q'){
+                printf(YELLOW "$ " RESET);
+                scanf("%s", choix);
+                switch(choix[0]) {
+                    case 'G':
+                        reqDataLobby.code = 107;
+                        reqDataLobby.nbArgs = 0;
+                    break;
+                    case 'Q':
+                        printf("Fermeture du système..........................Au revoir!\n");
+                        exit(EXIT_SUCCESS);
+                    default:
+                        printf("Veuillez entrer une option valide");
+                    break;
+
+                }
+            }
+        }
+        else {
+            waitForStartOfTheGame(sockLobby,recDataLobby); 
+            
+        }       
+
         while(1);
         break;
     default:
@@ -211,4 +240,9 @@ void deserial(generic quoi, char *msg) {
 void waitForInput(socket_t sock, generic msg){
     printf("En attente de connexion\n");
     recevoir(sock, msg, deserial);
+}
+
+void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby){
+    printf( GREEN"\n\tEn attente de l'hôte...\n");
+    recevoir(sockLobby, &recDataLobby, deserial);
 }
