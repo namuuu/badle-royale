@@ -45,13 +45,13 @@ void testWord() {
             wordToValidate[strlen(wordToValidate)] = '\n';
         }
 
-            if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) {
+            if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) 
                 wordlize(word, wordToValidate);
-            } else if(strlen(wordToValidate) != strlen(word)) {
+            else if(strlen(wordToValidate) != strlen(word)) 
                 printc(RED, "\t| Le mot n'a pas le bon nombre de lettres !\n");
-            } else {
+            else 
                 printc(RED, "\t| Ce mot n'est pas dans notre dictionnaire\n");
-            }
+            
         nbEssai++;
     }
     if(nbEssai == strlen(word)) printc(RED, "Vous avez épuisé tous vos essais !\n");
@@ -81,9 +81,7 @@ char *getRandomWord() {
     random = (rand() % NB_LIGNES)+1;
 
     while (fgets(word, MAX_LENGTH, f) != NULL) {
-        if (i == random) {
-            return word;
-        }
+        if (i == random) return word;
         i++;
     }
 
@@ -110,12 +108,8 @@ bool validateWord(char *word) {
         return true;
     }
 
-    while (fgets(wordInFile, MAX_LENGTH, f) != NULL) {
-        if (strcmp(wordInFile, word) == 0) {
-            return true;
-        }
-    }
-
+    while (fgets(wordInFile, MAX_LENGTH, f) != NULL) if (strcmp(wordInFile, word) == 0) return true;
+    
     fclose(f);
     return false;
 }
@@ -133,18 +127,18 @@ void wordlize(char *word, char *wordToValidate) {
     int wtvL = strlen(wordToValidate);
     char *wordlized = malloc(wtvL * sizeof(char));
 
-    // Initialisation
+    // Initialisation du tableau de réponse
     for(i = 0; i < wtvL; i++) {
         wordlized[i] = '.';
     }
 
     // Vérification des lettres
-    for(i = 0; i < wtvL-1; i++) {
+    for(i = 0 ; i < wtvL-1; i++) {
         if(word[i] == wordToValidate[i]) {
             wordlized[i] = '!';
-        } else {
+        } else if(strchr(word, wordToValidate[i]) != NULL){
             for(j = 0; j < wtvL-1; j++) {
-                if(word[i] == wordToValidate[j]) {
+                if(word[j] == wordToValidate[i]) {
                     wordlized[i] = '?';
                 }
             }
@@ -152,12 +146,8 @@ void wordlize(char *word, char *wordToValidate) {
     }
 
     // Affichage
-    for(i = 0; i < wtvL; i++) {
-        printcf(BLUE, "\t%c ", wordToValidate[i]);
-    }
-    for(i = 0; i < wtvL-1; i++) {
-        printcf(GREEN, "\t%c ", wordlized[i]);
-    }
+    for(i = 0; i < wtvL; i++) printcf(BLUE, "\t%c ", wordToValidate[i]);
+    for(i = 0; i < wtvL-1; i++) printcf(GREEN, "\t%c ", wordlized[i]);
 
     printf("\n");
     free(wordlized);
