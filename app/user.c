@@ -121,7 +121,7 @@ int requireLobbyFromCode() {
     case 500:
         return recData.code;
     }
-    close(sock.fd);
+    fermerConnexion(sock);
     return 0;
 }
 
@@ -139,7 +139,7 @@ int createLobbyWithCode() {
     received_t recData;
     recevoirSuivant(sock, &recData, deserial);
 
-    close(sock.fd);
+    fermerConnexion(sock);
 
     return connectToLobby(recData.args[0], atoi(recData.args[2]), recData.args[1]);
 }

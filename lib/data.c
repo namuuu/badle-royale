@@ -163,3 +163,13 @@ socket_t prepareForClient(char *ip, short port, short mode) {
         exit(-1);
     }
 }
+
+/** 
+ * @fn void fermerConnexion(socket_t sock)
+ * 
+ * @brief Fermeture d'une connexion
+ * @param sock Fournit la socket à fermer
+*/
+void fermerConnexion(socket_t sock) {
+    closeSocket(sock);
+}

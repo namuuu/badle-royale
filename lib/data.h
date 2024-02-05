@@ -55,5 +55,11 @@ socket_t connectToServer(char *ipClient, short portClient, char *ipServeur, shor
 */
 socket_t prepareForClient(char *ip, short port, short mode);
 
-
+/** 
+ * @fn void fermerConnexion(socket_t sock)
+ * 
+ * @brief Fermeture d'une connexion
+ * @param sock Fournit la socket à fermer
+*/
+void fermerConnexion(socket_t sock);
 

@@ -141,7 +141,7 @@ void serveurLobby(int idLobby) {
         CHECK(pidPlayer = fork(), "fork()");
 
         if(pidPlayer == 0) {
-            CHECK(close(sock.fd), "close()");
+            fermerConnexion(sock);
             // Fils
             recevoirSuivant(sockPlayer, &recData, deserial);
             int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
@@ -155,12 +155,9 @@ void serveurLobby(int idLobby) {
 
             while(1);
         }
-
-
-
     }
 
-    CHECK(close(sock.fd), "close()");
+    fermerConnexion(sock);
 }
 
 int recognizePlayer(int idLobby, char* ip, unsigned short port) {
