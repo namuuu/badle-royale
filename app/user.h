@@ -5,6 +5,7 @@
 
 
 /* ---------------------------------------  DEFINE ------------------------------------------ */
+#define CHECK(sts,msg) if ((sts) == -1) {perror(msg); exit(-1);}
 
 /* SERVER HARDCODED DATA */
 #define IP_HUB "0.0.0.0"
@@ -37,3 +38,5 @@ void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
 void waitForInput(socket_t sock, generic msg);
 void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby);
+void mainToLobby(socket_t socketLobby);
+void writerToLobby(char * ip, unsigned short port);
