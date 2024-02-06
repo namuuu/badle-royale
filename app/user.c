@@ -1,6 +1,5 @@
 /**
  * @file user.c
- * @author Tomas TRENY
  * @version 1.0
  * @date 2024-01-23
 */
@@ -125,6 +124,11 @@ int requireLobbyFromCode() {
     return 0;
 }
 
+/**
+ * \fn int createLobbyWithCode() ;
+ * 
+ * @brief permet d'envoyer une demande de création de lobby  
+ */
 int createLobbyWithCode() {
     //Requête de création de lobby
     send_t reqData;
@@ -144,6 +148,14 @@ int createLobbyWithCode() {
     return connectToLobby(recData.args[0], atoi(recData.args[2]), recData.args[1]);
 }
 
+/**
+ * \fn int connectToLobby(char* ip, unsigned short port, char* code) ;
+ * 
+ * @brief envoie une requete pour se connecter au lobby en prennant en compte le statut du joueur pour savoir si il peut aussi lancer la partie   
+ * @param ip
+ * @param port
+ * @param code
+ */
 int connectToLobby(char* ip, unsigned short port, char* code) {
     socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
     char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
@@ -243,6 +255,8 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
  * @fn void writerToLobby(char * ip, unsigned short port);
  * 
  * @brief This function will handle writing words to the Lobby in a fork while the main one is listening to the lobby
+ * @param ip :  ip du lobby 
+ * @param port : port du lobby 
 */
 void writerToLobby(char * ip, unsigned short port, int idPlayer) {
     socket_t sockLobby = connectToServer(IP_CLIENT, 0, ip, port, SOCK_STREAM);
@@ -277,6 +291,13 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer) {
     }
 }
 
+/**
+ * \fn void serial(generic quoi, char* req) ;
+ * 
+ * @brief transforme les données en chaine de charactères
+ * @param quoi 
+ * @param req
+ */
 void serial(generic quoi, char* req) {
     send_t transQuoi = (*(send_t*)quoi);
 
@@ -289,6 +310,13 @@ void serial(generic quoi, char* req) {
     }
 }
 
+/**
+ * \fn void deserial(generic quoi, char* msg) ;
+ * 
+ * @brief transforme les chaine de charactères en données
+ * @param quoi 
+ * @param msg 
+ */
 void deserial(generic quoi, char *msg) {
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
     char *token = strtok(msg, "-");
@@ -311,13 +339,3 @@ void deserial(generic quoi, char *msg) {
         break;
     }
 }
-
-void waitForInput(socket_t sock, generic msg) {
-    printf("En attente de connexion\n");
-    recevoir(sock, msg, deserial);
-}
-
-// void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby){
-//     printf( GREEN"\n\tEn attente de l'hôte...\n");
-//     recevoir(sockLobby, &recDataLobby, deserial);
-// }

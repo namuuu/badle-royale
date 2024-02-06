@@ -220,8 +220,8 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
  * 
  * @brief reconnaitre les differents joueurs 
  * @param idLobby Emplacement du lobby dans le tableau
- * @param ip 
- * @param port
+ * @param ip : adresse ip du lobby
+ * @param port : port du lobby 
  */
 int recognizePlayer(int idLobby, char* ip, unsigned short port) {
     int idPlayer = tabLobby[idLobby].playerCount;
@@ -239,8 +239,9 @@ int recognizePlayer(int idLobby, char* ip, unsigned short port) {
 
 /**
  * \fn void generateLobbyCode();
- * 
+ *
  * @brief Génération d'un code de session
+  *@param code : code donné au lobby 
 */
 void generateLobbyCode(char *code) {
     FILE* fichier;
@@ -271,7 +272,6 @@ void generateLobbyCode(char *code) {
  * \fn void genererCode(FILE* fichier, char code[6]);
  * 
  * @brief Génération d'un code aléatoire
- * @param fichier Nom du fichier à modifier
  * @param code Code à ajouter au fichier
 */
 void genererCode(char* code) {
@@ -321,6 +321,13 @@ void suppressionCode(const char *code) {
     rename("temp.txt", "code.txt");
 }
 
+/**
+ * \fn void serial(generic quoi, char* req) ;
+ * 
+ * @brief transforme les données en chaine de charactères  
+ * @param quoi 
+ * @param req 
+ */
 void serial(generic quoi, char* req) {
     send_t transQuoi = (*(send_t*)quoi);
 
@@ -333,6 +340,13 @@ void serial(generic quoi, char* req) {
     }
 }
 
+/**
+ * \fn void deserial(generic quoi, char* msg) ;
+ * 
+ * @brief transforme les chaine de charactères en données
+ * @param quoi 
+ * @param msg 
+ */
 void deserial(generic quoi, char *msg) {
 
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
@@ -358,11 +372,11 @@ void deserial(generic quoi, char *msg) {
 }
 
 /**
- * \fn      void installerGestionSignal(int sigNum, void (*handler)(int))
- * \brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
- * \param   sigNum : Numéro du signal déclencheur
- * \param   handler : Nom de la fonction de traitement du signal sigNum
- * \note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
+ * @fn      void installerGestionSignal(int sigNum, void (*handler)(int))
+ * @brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
+ * @param   sigNum : Numéro du signal déclencheur
+ * @param   handler : Nom de la fonction de traitement du signal sigNum
+ * @note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
  */
 void installerGestionSignal(int sigNum, void (*handler)(int)) {
     // Gestion des signaux
@@ -374,10 +388,10 @@ void installerGestionSignal(int sigNum, void (*handler)(int)) {
 
 /*      ****    FCTS GESTION SIGNAUX    *** Q3  *** _________________________*/
 /**
- * \fn      void traiterSignal(int sigNum)
- * \brief   Traitement du signal sigNum
- * \param   sigNum : Numéro du signal déclencheur
- * \note    Signaux implémentés : SIGALRM
+ * @fn      void traiterSignal(int sigNum)
+ * @brief   Traitement du signal sigNum
+ * @param   sigNum : Numéro du signal déclencheur
+ * @note    Signaux implémentés : SIGALRM
  */
 void traiterSignal(int sigNum) {
     switch (sigNum) {
