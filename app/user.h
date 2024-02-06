@@ -2,6 +2,8 @@
 
 #include "../lib/data.h"
 #include "string.h"
+#include <sys/types.h>
+#include <signal.h>
 
 
 /* ---------------------------------------  DEFINE ------------------------------------------ */
@@ -36,7 +38,8 @@ int connectToLobby(char* ip, unsigned short port, char* code);
 void menu();
 void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
-void waitForInput(socket_t sock, generic msg);
-void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby);
-void mainToLobby(socket_t socketLobby);
-void writerToLobby(char * ip, unsigned short port);
+// void waitForInput(socket_t sock, generic msg);
+// void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby);
+void mainToLobby(socket_t socketLobby, int idPlayer);
+void writerToLobby(char * ip, unsigned short port, int idPlayer);
+void gameLoop(socket_t socketLobby, int idPlayer);

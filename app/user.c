@@ -145,51 +145,59 @@ int createLobbyWithCode() {
 }
 
 int connectToLobby(char* ip, unsigned short port, char* code) {
-    char* choix = malloc(sizeof(char) * 10);
-
     socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
+    char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
+
+    // system("clear");
 
     send_t reqDataLobby;
     reqDataLobby.code = 102;
     reqDataLobby.nbArgs = 0;
 
-
     envoyer(sockLobby, &reqDataLobby, serial);
-    printf("Connexion au lobby %s...\n", code);
 
     received_t recDataLobby;
     recevoirSuivant(sockLobby, &recDataLobby, deserial);
+    int idPlayer = atoi(recDataLobby.args[0]);
+    printf(YELLOW "[%s]" RESET " Vous êtes le joueur %d\n\n", code, idPlayer);
 
     switch (recDataLobby.code){
     case 202:
-        printf("Lobby %s connecté !\n", code);
-
-        if (strcmp(recDataLobby.args[0],"1" )==0){
-            printf(CYAN "\t[G]" RED "Lancer une partie\n");
-            printf(CYAN "\t[Q]" RED " Quitter\n");
-
-            while (choix[0] !='Q'){
+        if(idPlayer == 0) {
+            // Le joueur est considéré comme "hôte"
+            while(choix[0] != 'Q') {
+                printf(RED "\t[G]" RESET " Lancer une partie\n");
+                // printf(RED "\t[Q]" RESET " Quitter\n");
                 printf(YELLOW "$ " RESET);
                 scanf("%s", choix);
                 switch(choix[0]) {
                     case 'G':
                         reqDataLobby.code = 107;
                         reqDataLobby.nbArgs = 0;
-                    break;
-                    case 'Q':
-                        printf("Fermeture du système..........................Au revoir!\n");
-                        exit(EXIT_SUCCESS);
+                        envoyer(sockLobby, &reqDataLobby, serial);
+                        recevoirSuivant(sockLobby, &recDataLobby, deserial);
+                        if(recDataLobby.code == 106) {
+                            mainToLobby(sockLobby, idPlayer);
+                        }
+                        break;
+                    // case 'Q':
+                    //     printf("Fermeture du système..........................Au revoir!\n");
+                    //     exit(EXIT_SUCCESS);
                     default:
-                        printf("Veuillez entrer une option valide");
-                    break;
-
+                        break;
                 }
             }
+        } else {
+            // Le joueur est considéré comme "client"
+            printf(GREEN "\tEn attente de l'hôte...\n" RESET);
+            recevoirSuivant(sockLobby, &recDataLobby, deserial);
+            if(recDataLobby.code == 106) {
+                mainToLobby(sockLobby, idPlayer);
+            } else {
+                printf("Erreur de code: %d\n", recDataLobby.code);
+                exit(EXIT_FAILURE);
+            }
         }
-        else {
-            waitForStartOfTheGame(sockLobby,recDataLobby); 
-            
-        }       
 
         while(1);
         break;
@@ -201,19 +209,20 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     return 0;
 }
 
-void mainToLobby(socket_t socketLobby) {
+void mainToLobby(socket_t socketLobby, int idPlayer) {
 
     while(1) {
         // Fork write To Lobby
         int pidWriter;
         CHECK(pidWriter = fork(), "fork()");
         if(pidWriter == 0) {
-            writerToLobby(socketLobby.ip, socketLobby.port);
+            writerToLobby(socketLobby.ip, socketLobby.port, idPlayer);
             return;
         }
         // Main
         received_t recDataLobby;
         recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        kill(pidWriter, SIGKILL);
         while(1);
     }
     
@@ -225,12 +234,24 @@ void mainToLobby(socket_t socketLobby) {
  * 
  * @brief This function will handle writing words to the Lobby in a fork while the main one is listening to the lobby
 */
-void writerToLobby(char * ip, unsigned short port) {
-    socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
+void writerToLobby(char * ip, unsigned short port, int idPlayer) {
+    socket_t sockLobby = connectToServer(IP_CLIENT, 0, ip, port, SOCK_STREAM);
 
     send_t reqDataLobby;
     reqDataLobby.code = 103;
-    reqDataLobby.nbArgs = 0;
+    reqDataLobby.nbArgs = 2;
+    
+    char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
+
+    printf(YELLOW "$ " RESET);
+    scanf("%s", choix);
+
+    // arg 0 = idplayer
+    reqDataLobby.args[0] = malloc(sizeof(char) * 10);
+    sprintf(reqDataLobby.args[0], "%d", idPlayer);
+    // arg 1 = message
+    reqDataLobby.args[1] = malloc(sizeof(char) * 10);
+    strcpy(reqDataLobby.args[1], choix);
 
     envoyer(sockLobby, &reqDataLobby, serial);
     // printf("Connexion au lobby %s...\n", code);
@@ -282,12 +303,12 @@ void deserial(generic quoi, char *msg) {
     }
 }
 
-void waitForInput(socket_t sock, generic msg){
+void waitForInput(socket_t sock, generic msg) {
     printf("En attente de connexion\n");
     recevoir(sock, msg, deserial);
 }
 
-void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby){
-    printf( GREEN"\n\tEn attente de l'hôte...\n");
-    recevoir(sockLobby, &recDataLobby, deserial);
-}
+// void waitForStartOfTheGame(socket_t sockLobby, received_t recDataLobby){
+//     printf( GREEN"\n\tEn attente de l'hôte...\n");
+//     recevoir(sockLobby, &recDataLobby, deserial);
+// }

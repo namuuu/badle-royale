@@ -12,6 +12,13 @@
 
 #define PLAYER_MAX 4
 
+/* ---------------------------------------  ENUMS ------------------------------------------ */
+
+typedef enum  {
+    PREGAME,
+    STARTED
+} lobbyState;
+
 /* ---------------------------------------- STRUCTURE ---------------------------------------- */
 
 typedef struct
@@ -43,13 +50,14 @@ typedef struct {
     playerData_t players[PLAYER_MAX];
     int playerCount;
     int pidLobby;
+    lobbyState state;
 } lobbyData_t;
 
 /* ---------------------------------------  PROTOTYPES ------------------------------------------ */
 
 void serveur();
 void waitForInput(socket_t sock, generic msg);
-void serveurLobby(int idLobby);
+void pregameRoutine(int idLobby);
 void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
 void genererCode(char* code);

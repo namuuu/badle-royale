@@ -77,7 +77,7 @@ void serveur() {
             CHECK(pidLobby = fork(), "fork()");
             if(pidLobby == 0) {
                 // Fils
-                serveurLobby(nbLobby);
+                pregameRoutine(nbLobby);
                 exit(EXIT_SUCCESS);
             } else {
                 // Père, attends l'update de la création du Lobby
@@ -107,12 +107,12 @@ void serveur() {
 }
 
 /**
- * @fn void serveurLobby();
+ * @fn void pregameRoutine();
  * 
  * @brief Lance un lobby
  * @param idLobby Emplacement du lobby dans le tableau
 */
-void serveurLobby(int idLobby) {
+void pregameRoutine(int idLobby) {
     // Préparation de la socket
     char* ip = "0.0.0.0";
     int port = 0;
@@ -129,6 +129,7 @@ void serveurLobby(int idLobby) {
     generateLobbyCode(tabLobby[idLobby].code);
     tabLobby[idLobby].pidLobby = getpid();
     tabLobby[idLobby].playerCount = 0;
+    tabLobby[idLobby].state = PREGAME;
 
     received_t recData;
 
@@ -151,19 +152,57 @@ void serveurLobby(int idLobby) {
             send_t sendData;
             sendData.code = 202;
             sendData.nbArgs = 1;
-            if (idPlayerInLobby==0)
-                sendData.args[0] = "1"; // si le user est le chef 
-            else 
-                sendData.args[0] = "0"; 
+            char idPlayerChar[5];
+            sprintf(idPlayerChar, "%d", idPlayerInLobby);
+            sendData.args[0] = idPlayerChar;
             
-
             envoyer(sockPlayer, &sendData, serial);
+
+            if(idPlayerInLobby == 0) {
+                // Le joueur est le lobbyHost
+                recevoirSuivant(sockPlayer, &recData, deserial);
+                if(recData.code == 107) {
+                    // Le joueur est prêt à commencer la partie
+                    tabLobby[idLobby].state = STARTED;
+                    printf(YELLOW "[%s]"  RESET " Le lobby est prêt à commencer la partie\n", tabLobby[idLobby].code);
+                    sendData.code = 106;
+                    sendData.nbArgs = 0;
+                    envoyer(sockPlayer, &sendData, serial);
+                }
+            } else {
+                // Le joueur n'est pas le lobbyHost
+                while(tabLobby[idLobby].state != STARTED) {
+                    sleep(1);
+                }
+                sendData.code = 106;
+                sendData.nbArgs = 0;
+                envoyer(sockPlayer, &sendData, serial);
+
+            }
 
             while(1);
         }
+
+        
     }
 
     fermerConnexion(sock);
+}
+
+void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
+    while(tabLobby[idLobby].playerCount > 1) {
+        // Sélection mot
+        char* mot = "test";
+        int currentTimer = 0;
+        sleep(10);
+    
+        // Envoi du mot
+        send_t sendData;
+        sendData.code = 300;
+        sendData.nbArgs = 1;
+        sendData.args[0] = mot;
+        envoyer(sockPlayer, &sendData, serial);
+    }
 }
 
 /**
@@ -175,16 +214,17 @@ void serveurLobby(int idLobby) {
  * @param port
  */
 int recognizePlayer(int idLobby, char* ip, unsigned short port) {
-    strcpy(tabLobby[idLobby].players[tabLobby[idLobby].playerCount].ip, ip);
-    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].port = port;
-    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 0;  
+    int idPlayer = tabLobby[idLobby].playerCount;
+    strcpy(tabLobby[idLobby].players[idPlayer].ip, ip);
+    tabLobby[idLobby].players[idPlayer].port = port;
+    tabLobby[idLobby].players[idPlayer].lobbyHost = 0;  
 
-    if (tabLobby[idLobby].playerCount ==0)
-        tabLobby[idLobby].players[tabLobby[idLobby].playerCount].lobbyHost = 1 ;
+    if (idPlayer == 0)
+        tabLobby[idLobby].players[idPlayer].lobbyHost = 1 ;
 
-    tabLobby[idLobby].players[tabLobby[idLobby].playerCount].pidPlayer = getpid();
+    tabLobby[idLobby].players[idPlayer].pidPlayer = getpid();
     tabLobby[idLobby].playerCount++;
-    return tabLobby[idLobby].playerCount - 1;
+    return idPlayer;
 }
 
 /**
