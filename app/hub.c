@@ -198,6 +198,14 @@ void pregameRoutine(int idLobby) {
     fermerConnexion(sock);
 }
 
+/**
+ * @fn void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer);
+ * 
+ * @brief Lance un lobby
+ * @param idLobby Emplacement du lobby dans le tableau
+ * @param sockPlayer 
+ * @param idPlayer Id du joeur dans le lobby 
+*/
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
     while(tabLobby[idLobby].playerCount >= 1) {
         // Sélection mot

@@ -70,7 +70,6 @@ int main() {
  * @brief Menu principal
  * 
 */
-
 void menu() {
     printc(BOLDBLUE, "Bienvenue sur BadleRoyale !\n");
     printc(BLUE, "Veuillez sélectionner une option: \n");
@@ -221,6 +220,13 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     return 0;
 }
 
+/**
+ * \fn void mainToLobby(socket_t socketLobby, int idPlayer)  ;
+ * 
+ * @brief fonction permettant de lancer le jeu 
+ * @param socketLobby
+ * @param idPlayer
+ */
 void mainToLobby(socket_t socketLobby, int idPlayer) {
     printf("Lancement du jeu...\n");
     while(1) {
