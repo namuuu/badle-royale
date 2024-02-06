@@ -136,7 +136,6 @@ void pregameRoutine(int idLobby) {
     while (1)
     {
         sockPlayer = accepterConnexion(sock);
-        printf(YELLOW "[%s]"  RESET " %d se connecte...\n", tabLobby[idLobby].code, sockPlayer.port);
 
         int pidPlayer;
         CHECK(pidPlayer = fork(), "fork()");
@@ -145,42 +144,52 @@ void pregameRoutine(int idLobby) {
             fermerConnexion(sock);
             // Fils
             recevoirSuivant(sockPlayer, &recData, deserial);
-            int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
-            printf(YELLOW "[%s]"  RESET " %d (id: %d) a rejoint le lobby\n", tabLobby[idLobby].code, sockPlayer.port, idPlayerInLobby);
+            switch (recData.code)
+            {
+            case 102: // joinLobby
+                int idPlayerInLobby = recognizePlayer(idLobby, sockPlayer.ip, sockPlayer.port);
+                printf(YELLOW "[%s]"  RESET " %d (id: %d) a rejoint le lobby\n", tabLobby[idLobby].code, sockPlayer.port, idPlayerInLobby);
 
-            // Envoi de confirmation de connexion au Lobby
-            send_t sendData;
-            sendData.code = 202;
-            sendData.nbArgs = 1;
-            char idPlayerChar[5];
-            sprintf(idPlayerChar, "%d", idPlayerInLobby);
-            sendData.args[0] = idPlayerChar;
-            
-            envoyer(sockPlayer, &sendData, serial);
+                // Envoi de confirmation de connexion au Lobby
+                send_t sendData;
+                sendData.code = 202;
+                sendData.nbArgs = 1;
+                char idPlayerChar[5];
+                sprintf(idPlayerChar, "%d", idPlayerInLobby);
+                sendData.args[0] = idPlayerChar;
+                
+                envoyer(sockPlayer, &sendData, serial);
 
-            if(idPlayerInLobby == 0) {
-                // Le joueur est le lobbyHost
-                recevoirSuivant(sockPlayer, &recData, deserial);
-                if(recData.code == 107) {
-                    // Le joueur est prêt à commencer la partie
-                    tabLobby[idLobby].state = STARTED;
-                    printf(YELLOW "[%s]"  RESET " Le lobby est prêt à commencer la partie\n", tabLobby[idLobby].code);
+                if(idPlayerInLobby == 0) {
+                    // Le joueur est le lobbyHost
+                    recevoirSuivant(sockPlayer, &recData, deserial);
+                    if(recData.code == 107) {
+                        // Le joueur est prêt à commencer la partie
+                        tabLobby[idLobby].state = STARTED;
+                        printf(YELLOW "[%s]"  RESET " Le lobby est prêt à commencer la partie\n", tabLobby[idLobby].code);
+                        sendData.code = 106;
+                        sendData.nbArgs = 0;
+                        envoyer(sockPlayer, &sendData, serial);
+                        gameRoutine(sockPlayer, idLobby, idPlayerInLobby);
+                    }
+                } else {
+                    // Le joueur n'est pas le lobbyHost
+                    while(tabLobby[idLobby].state != STARTED) {
+                        sleep(1);
+                    }
                     sendData.code = 106;
                     sendData.nbArgs = 0;
                     envoyer(sockPlayer, &sendData, serial);
+                    gameRoutine(sockPlayer, idLobby, idPlayerInLobby);
                 }
-            } else {
-                // Le joueur n'est pas le lobbyHost
-                while(tabLobby[idLobby].state != STARTED) {
-                    sleep(1);
-                }
-                sendData.code = 106;
-                sendData.nbArgs = 0;
-                envoyer(sockPlayer, &sendData, serial);
-
+                while(1);
+                break;
+            case 103: // playWord
+                printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
+                return;
+            default:
+                break;
             }
-
-            while(1);
         }
 
         
@@ -190,15 +199,16 @@ void pregameRoutine(int idLobby) {
 }
 
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
-    while(tabLobby[idLobby].playerCount > 1) {
+    while(tabLobby[idLobby].playerCount >= 1) {
         // Sélection mot
         char* mot = "test";
         int currentTimer = 0;
         sleep(10);
     
-        // Envoi du mot
+        // Envoi du fin de round
+        printf("Envoi du kill asker vers %d\n", idPlayer);
         send_t sendData;
-        sendData.code = 300;
+        sendData.code = 108;
         sendData.nbArgs = 1;
         sendData.args[0] = mot;
         envoyer(sockPlayer, &sendData, serial);

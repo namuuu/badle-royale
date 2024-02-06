@@ -58,6 +58,7 @@ typedef struct {
 void serveur();
 void waitForInput(socket_t sock, generic msg);
 void pregameRoutine(int idLobby);
+void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer);
 void serial(generic quoi, char* req);
 void deserial(generic quoi, char *msg);
 void genererCode(char* code);

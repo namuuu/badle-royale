@@ -210,7 +210,7 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
 }
 
 void mainToLobby(socket_t socketLobby, int idPlayer) {
-
+    printf("Lancement du jeu...\n");
     while(1) {
         // Fork write To Lobby
         int pidWriter;
@@ -222,7 +222,17 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
         // Main
         received_t recDataLobby;
         recevoirSuivant(socketLobby, &recDataLobby, deserial);
-        kill(pidWriter, SIGKILL);
+        switch (recDataLobby.code)
+        {
+        case 108:
+            printf(GREEN "[%s]" RESET " %s\n", recDataLobby.args[0], recDataLobby.args[1]);
+            printf("Attempting to kill...\n");
+            kill(pidWriter, SIGKILL);
+            break;
+        default:
+            printf("Data received: %d\n", recDataLobby.code);
+            break;
+        }
         while(1);
     }
     
@@ -280,7 +290,6 @@ void serial(generic quoi, char* req) {
 }
 
 void deserial(generic quoi, char *msg) {
-
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
     char *token = strtok(msg, "-");
     ((received_t*)quoi)->code = atoi(token);
