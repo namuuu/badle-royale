@@ -207,18 +207,25 @@ void pregameRoutine(int idLobby) {
  * @param idPlayer Id du joeur dans le lobby 
 */
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
-    while(tabLobby[idLobby].playerCount >= 1) {
+    send_t sendData;
+    while(tabLobby[idLobby].playerCount > 1) {
+
         // Sélection mot
         char* mot = "test";
-        int currentTimer = 0;
-        sleep(10);
-    
-        // Envoi du fin de round
-        printf("Envoi du kill asker vers %d\n", idPlayer);
-        send_t sendData;
+            int currentTimer = 0;
+            sleep(10);
+        
+            // Envoi du fin de round
+            printf("Envoi du kill asker vers %d\n", idPlayer);
+            
         sendData.code = 108;
         sendData.nbArgs = 1;
         sendData.args[0] = mot;
+        envoyer(sockPlayer, &sendData, serial);
+    } 
+    if (tabLobby[idLobby].playerCount == 1) {
+        sendData.code = 110;
+        sendData.nbArgs = 0;
         envoyer(sockPlayer, &sendData, serial);
     }
 }

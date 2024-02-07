@@ -5,7 +5,7 @@
 #include <string.h>
 #include "../../lib/session.h"
 
-#define NB_LIGNES 9081
+#define NB_LIGNES 837
 #define MAX_LENGTH 9
 
 char *getRandomWord();

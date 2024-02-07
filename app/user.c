@@ -228,6 +228,7 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
  * @param idPlayer
  */
 void mainToLobby(socket_t socketLobby, int idPlayer) {
+    char* choix = malloc(sizeof(char) * 10);
     printf("Lancement du jeu...\n");
     while(1) {
         // Fork write To Lobby
@@ -246,6 +247,26 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
             printf(GREEN "[%s]" RESET " %s\n", recDataLobby.args[0], recDataLobby.args[1]);
             printf("Attempting to kill...\n");
             kill(pidWriter, SIGKILL);
+            break;
+        case 110: 
+            printf(YELLOW "JOUEUR %d WON ! \n", idPlayer);
+            printf(CYAN "\t[Q]" RESET " Quitter\n");
+        while(choix[0] != 'Q') {
+            printf(YELLOW "$ " RESET);
+            scanf("%s", choix);
+
+            switch(choix[0]) {
+                case 'Q':
+                    printf("Fermeture du système..........................Au revoir!\n");
+                    exit(EXIT_SUCCESS);
+                case '\n':
+                
+                break;
+            default:
+                break;
+            }
+        }
+    
             break;
         default:
             printf("Data received: %d\n", recDataLobby.code);
