@@ -43,7 +43,8 @@ typedef struct {
     unsigned short port;
     int pidPlayer;
     int lobbyHost;
-    
+    char lastPlayedWord[MAX_LENGTH];
+    int score;
 } playerData_t;
 
 typedef struct {
@@ -55,6 +56,7 @@ typedef struct {
     int pidLobby;
     lobbyState state;
     char word[MAX_LENGTH];
+    int round;
 } lobbyData_t;
 
 /* ---------------------------------------  PROTOTYPES ------------------------------------------ */

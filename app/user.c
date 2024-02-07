@@ -242,22 +242,24 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
         CHECK(pidWriter = fork(), "fork()");
         if(pidWriter == 0) {
             writerToLobby(socketLobby.ip, socketLobby.port, idPlayer);
-            return;
+            exit(EXIT_SUCCESS);
         }
         // Main
         recevoirSuivant(socketLobby, &recDataLobby, deserial);
         switch (recDataLobby.code)
         {
         case 109:
-            printf(GREEN "[%s]" RESET " %s\n", recDataLobby.args[0], recDataLobby.args[1]);
-            printf("Attempting to kill...\n");
+            printf("Vous avez perdu ! Le mot était %s\n", recDataLobby.args[0]);
             kill(pidWriter, SIGKILL);
+            while(1);
             break;
+        case 110:
+            printf("Vous avez gagné ! En attente des autres joueurs\n");
+            break; 
         default:
             printf("Data received: %d\n", recDataLobby.code);
             break;
         }
-        while(1);
     }
     
 
@@ -291,16 +293,6 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer) {
 
     envoyer(sockLobby, &reqDataLobby, serial);
     // printf("Connexion au lobby %s...\n", code);
-
-    received_t recDataLobby;
-    recevoirSuivant(sockLobby, &recDataLobby, deserial);
-
-    switch (recDataLobby.code)
-    {
-        default:
-            printf("Data received: %d\n", recDataLobby.code);
-            return;
-    }
 }
 
 /**

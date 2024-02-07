@@ -130,6 +130,7 @@ void pregameRoutine(int idLobby) {
     tabLobby[idLobby].pidLobby = getpid();
     tabLobby[idLobby].playerCount = 0;
     tabLobby[idLobby].state = PREGAME;
+    tabLobby[idLobby].round = 1;
     strcpy(tabLobby[idLobby].word, ":)");
 
     received_t recData;
@@ -187,6 +188,7 @@ void pregameRoutine(int idLobby) {
                 break;
             case 103: // playWord
                 printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
+                strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
                 return;
             default:
                 break;
@@ -209,15 +211,17 @@ void pregameRoutine(int idLobby) {
 */
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
     sleep(2);
+    char bufferMot[MAX_LENGTH] = ":)";
+    char bufferLastWord[MAX_LENGTH] = "NULL";
 
     send_t sendData;
     while(tabLobby[idLobby].playerCount >= 1) {
-        char bufferMot[MAX_LENGTH] = ":)";
         // Sélection mot
         if(idPlayer == 0) {
-            char mot[MAX_LENGTH] = "test";
-            strcpy(tabLobby[idLobby].word, mot);
-            printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, mot);
+            //char mot[MAX_LENGTH] = "test";
+            strcpy(tabLobby[idLobby].word, getRandomWord());
+            // strcpy(tabLobby[idLobby].word, mot);
+            printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);
         }
         while(strcmp(bufferMot, tabLobby[idLobby].word) == 0) {
             // Sleep for 0.3 seconds
@@ -225,7 +229,7 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         }
 
         char* motLength = malloc(sizeof(char) * 5);
-        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word));
+        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word) - 1);
 
         sendData.code = 108;
         sendData.nbArgs = 1;
@@ -236,7 +240,40 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
 
 
         int currentTimer = 0;
-        while(1);
+        // 200 * 0.3 = 60 secondes
+        while(tabLobby[idLobby].round != tabLobby[idLobby].players[idPlayer].score) {
+            while(currentTimer < 200 && strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
+                // Sleep for 0.3 second
+                usleep(300000);
+                currentTimer++;
+                return;
+            }
+            if(currentTimer >= 200) {
+                // Le joueur n'a pas trouvé le mot
+                sleep(1);
+                printf(YELLOW "[%s]" RESET " %d n'a pas trouvé le mot\n", tabLobby[idLobby].code, idPlayer);
+                sendData.code = 109;
+                sendData.nbArgs = 1;
+                sendData.args[0] = tabLobby[idLobby].word;
+                envoyer(sockPlayer, &sendData, serial);
+            } else {
+                printf("détection de match\n");
+                // Réception d'un mot
+                // Obtention de son codeword
+                char* codeword = malloc(sizeof(char) * MAX_LENGTH);
+                strcpy(codeword, ".?!."); // hardcodé pour le moment
+
+                // Envoi du codeword au joueur
+                sendData.code = 110;
+                sendData.nbArgs = 1;
+                sendData.args[0] = codeword;
+                envoyer(sockPlayer, &sendData, serial);
+
+                tabLobby[idLobby].players[idPlayer].score++;
+
+            }
+        }
+        
 
         // Envoi début de round
 
@@ -244,10 +281,7 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         // // Envoi du fin de round
         // printf("Envoi du kill asker vers %d\n", idPlayer);
         // send_t sendData;
-        // sendData.code = 109;
-        // sendData.nbArgs = 1;
-        // sendData.args[0] = mot;
-        // envoyer(sockPlayer, &sendData, serial);
+        
     }
 }
 
@@ -270,6 +304,8 @@ int recognizePlayer(int idLobby, char* ip, unsigned short port) {
 
     tabLobby[idLobby].players[idPlayer].pidPlayer = getpid();
     tabLobby[idLobby].playerCount++;
+    tabLobby[idLobby].players[idPlayer].score = 0;
+    strcpy(tabLobby[idLobby].players[idPlayer].lastPlayedWord, "NULL");
     return idPlayer;
 }
 
