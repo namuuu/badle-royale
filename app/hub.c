@@ -224,7 +224,7 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         envoyer(sockPlayer, &sendData, serial);
     } 
    
-    sendData.code = 110;
+    sendData.code = 126;
     sendData.nbArgs = 0;
     envoyer(sockPlayer, &sendData, serial);
     

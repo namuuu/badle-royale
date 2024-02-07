@@ -248,7 +248,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
             printf("Attempting to kill...\n");
             kill(pidWriter, SIGKILL);
             break;
-        case 110: 
+        case 126: 
             printf(YELLOW "JOUEUR %d WON ! \n", idPlayer);
             printf(CYAN "\t[Q]" RESET " Quitter\n");
         while(choix[0] != 'Q') {
