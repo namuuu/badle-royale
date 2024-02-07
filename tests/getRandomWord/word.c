@@ -11,7 +11,7 @@
 char *getRandomWord();
 bool validateWord(char *word);
 void testWord();
-void wordlize(char *word, char *wordToValidate);
+char *wordlize(char *word, char *wordToValidate);
 
 int main() {
     testWord();
@@ -21,6 +21,8 @@ int main() {
 void testWord() {
     char *word = getRandomWord();
     char wordToValidate[MAX_LENGTH];
+    char *wordToValidate2 = malloc(sizeof(char) * MAX_LENGTH);
+    
     int nbEssai = 1;
 
     if(word == NULL) {
@@ -46,7 +48,7 @@ void testWord() {
         }
 
             if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) 
-                wordlize(word, wordToValidate);
+                strcpy(wordToValidate2, wordToValidate);
             else if(strlen(wordToValidate) != strlen(word)) 
                 printc(RED, "\t| Le mot n'a pas le bon nombre de lettres !\n");
             else 
@@ -56,6 +58,10 @@ void testWord() {
     }
     if(nbEssai == strlen(word)) printc(RED, "Vous avez épuisé tous vos essais !\n");
     else printc(GREEN, "Bravo ! Vous avez trouvé le mot !\n");
+
+    // afficher wordToValidate2
+    printf("DEBUG : Le mot à valider est : %s\n", wordToValidate2);
+
     free(word);
 }
 
@@ -121,7 +127,7 @@ bool validateWord(char *word) {
  * @param wordToValidate
  * @param word
 */
-void wordlize(char *word, char *wordToValidate) {
+char *wordlize(char *word, char *wordToValidate) {
 
     int i, j;
     int wtvL = strlen(wordToValidate);
