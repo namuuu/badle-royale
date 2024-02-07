@@ -53,6 +53,7 @@ typedef struct {
     char code[6];
     playerData_t players[PLAYER_MAX];
     int playerCount;
+    int playerRemaining;
     int pidLobby;
     lobbyState state;
     char word[MAX_LENGTH];
@@ -147,3 +148,7 @@ int recognizePlayer(int idLobby, char* ip, unsigned short port);
  * @return NULL si le fichier n'a pas pu être ouvert
 */
 char *getRandomWord();
+
+int waitForPlayersToFinish(int idLobby);
+
+void hostRoutine(int idLobby);

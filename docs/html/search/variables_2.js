@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ip_82',['ip',['../structsocket__t.html#a4040865c7f21933ac5598b13d90f9939',1,'socket_t']]]
+  ['fd_170',['fd',['../structsocket__t.html#ad5a75c65e293ca7e66773a89ee049db2',1,'socket_t']]]
 ];

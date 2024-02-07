@@ -168,10 +168,19 @@ void pregameRoutine(int idLobby) {
                     if(recData.code == 107) {
                         // Le joueur est prêt à commencer la partie
                         tabLobby[idLobby].state = STARTED;
+                        tabLobby[idLobby].playerRemaining = tabLobby[idLobby].playerCount;
                         printf(YELLOW "[%s]"  RESET " Le lobby est prêt à commencer la partie\n", tabLobby[idLobby].code);
                         sendData.code = 106;
                         sendData.nbArgs = 0;
                         envoyer(sockPlayer, &sendData, serial);
+                        // fork host routine
+                        int pidHost;
+                        CHECK(pidHost = fork(), "fork()");
+                        if(pidHost == 0) {
+                            hostRoutine(idLobby);
+                            exit(EXIT_SUCCESS);
+                        }
+
                         gameRoutine(sockPlayer, idLobby, idPlayerInLobby);
                     }
                 } else {
@@ -189,7 +198,7 @@ void pregameRoutine(int idLobby) {
             case 103: // playWord
                 printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
                 strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
-                return;
+                exit(EXIT_SUCCESS);
             default:
                 break;
             }
@@ -213,76 +222,115 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
     sleep(2);
     char bufferMot[MAX_LENGTH] = ":)";
     char bufferLastWord[MAX_LENGTH] = "NULL";
+    int bufferRound = tabLobby[idLobby].round;
 
     send_t sendData;
-    while(tabLobby[idLobby].playerCount >= 1) {
+    while(tabLobby[idLobby].playerRemaining > 1) {
         // Sélection mot
-        if(idPlayer == 0) {
-            //char mot[MAX_LENGTH] = "test";
-            strcpy(tabLobby[idLobby].word, getRandomWord());
-            // strcpy(tabLobby[idLobby].word, mot);
-            printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);
-        }
         while(strcmp(bufferMot, tabLobby[idLobby].word) == 0) {
             // Sleep for 0.3 seconds
             usleep(300000);
         }
-
         char* motLength = malloc(sizeof(char) * 5);
-        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word) - 1);
+        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word));
+        bufferRound = tabLobby[idLobby].round;
 
         sendData.code = 108;
         sendData.nbArgs = 1;
         sendData.args[0] = motLength;
 
         envoyer(sockPlayer, &sendData, serial);
-        printf("Envoi du mot vers %d\n", idPlayer);
+        printf("Envoi du %s mot (taille:%s) vers %d pour le round %d\n", tabLobby[idLobby].word, motLength, idPlayer, tabLobby[idLobby].round);
+        printf("Buffers : lastword - %s - lastPlayedWord - %s\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
 
 
         int currentTimer = 0;
         // 200 * 0.3 = 60 secondes
         while(tabLobby[idLobby].round != tabLobby[idLobby].players[idPlayer].score) {
-            while(currentTimer < 200 && strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
+            while(strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
+                // printf("Attente de match (%s %s)\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
                 // Sleep for 0.3 second
                 usleep(300000);
                 currentTimer++;
-                return;
+
+                if(tabLobby[idLobby].round != bufferRound || currentTimer >= 200) {
+                    // Le joueur a été éliminé
+                    sendData.code = 109;
+                    sendData.nbArgs = 1;
+                    sendData.args[0] = tabLobby[idLobby].word;
+                    envoyer(sockPlayer, &sendData, serial);
+                    exit(EXIT_SUCCESS);
+                }
             }
-            if(currentTimer >= 200) {
-                // Le joueur n'a pas trouvé le mot
-                sleep(1);
-                printf(YELLOW "[%s]" RESET " %d n'a pas trouvé le mot\n", tabLobby[idLobby].code, idPlayer);
-                sendData.code = 109;
-                sendData.nbArgs = 1;
-                sendData.args[0] = tabLobby[idLobby].word;
-                envoyer(sockPlayer, &sendData, serial);
+
+            // Réception d'un mot
+            // Obtention de son codeword
+            printf("Trigger de récompense\n");
+            char* codeword = malloc(sizeof(char) * MAX_LENGTH);
+            strcpy(codeword, ".?!."); // hardcodé pour le moment
+
+            // Envoi du codeword au joueur
+            sendData.code = 110;
+            sendData.nbArgs = 1;
+            sendData.args[0] = codeword;
+            envoyer(sockPlayer, &sendData, serial);
+
+            tabLobby[idLobby].players[idPlayer].score++;
+
+            strcpy(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+            
+        }
+
+        strcpy(bufferLastWord, "NULL");
+        strcpy(tabLobby[idLobby].players[idPlayer].lastPlayedWord, "NULL");
+        
+        // Attente nouveau round
+        while(tabLobby[idLobby].round == bufferRound) {
+            sleep(1);
+        }
+    }
+    printf(YELLOW "[%s]" RESET " %d a gagné la partie\n", tabLobby[idLobby].code, idPlayer);
+}
+
+void hostRoutine(int idLobby) {
+    while(tabLobby[idLobby].playerRemaining > 1) {
+        printf(YELLOW "[%s]" RESET " Début du round %d\n", tabLobby[idLobby].code, tabLobby[idLobby].round);
+        // Choix du mot
+        char bufferMot[MAX_LENGTH];
+        strcpy(bufferMot, getRandomWord());
+        bufferMot[strlen(bufferMot) - 1] = '\0';
+        strcpy(tabLobby[idLobby].word, bufferMot);
+        printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);
+
+        // Attente de la fin du round
+        while(!waitForPlayersToFinish(idLobby)) {
+            sleep(1);
+        }
+
+        for(int i = 0; i < tabLobby[idLobby].playerCount; i++) {
+            if(tabLobby[idLobby].players[i].score == tabLobby[idLobby].round) {
+                printf(YELLOW "[%s]" RESET " %d a terminé le round %d\n", tabLobby[idLobby].code, i, tabLobby[idLobby].round);
             } else {
-                printf("détection de match\n");
-                // Réception d'un mot
-                // Obtention de son codeword
-                char* codeword = malloc(sizeof(char) * MAX_LENGTH);
-                strcpy(codeword, ".?!."); // hardcodé pour le moment
-
-                // Envoi du codeword au joueur
-                sendData.code = 110;
-                sendData.nbArgs = 1;
-                sendData.args[0] = codeword;
-                envoyer(sockPlayer, &sendData, serial);
-
-                tabLobby[idLobby].players[idPlayer].score++;
-
+                printf(YELLOW "[%s]" RESET " %d n'a pas terminé le round %d\n", tabLobby[idLobby].code, i, tabLobby[idLobby].round);
             }
         }
-        
 
-        // Envoi début de round
-
-    
-        // // Envoi du fin de round
-        // printf("Envoi du kill asker vers %d\n", idPlayer);
-        // send_t sendData;
-        
+        tabLobby[idLobby].playerRemaining--;
+        tabLobby[idLobby].round++;
     }
+}
+
+int waitForPlayersToFinish(int idLobby) {
+    int finishedPlayers = 0;
+    for(int i = 0; i < tabLobby[idLobby].playerCount; i++) {
+        if(tabLobby[idLobby].players[i].score == tabLobby[idLobby].round) {
+            finishedPlayers++;
+        }
+    }
+    if(finishedPlayers >= tabLobby[idLobby].playerCount - 1) {
+        return 1;
+    }
+    return 0;
 }
 
 /**

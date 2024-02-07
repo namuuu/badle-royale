@@ -1,0 +1,256 @@
+\hypertarget{hub_8h}{}\doxysection{app/hub.h File Reference}
+\label{hub_8h}\index{app/hub.h@{app/hub.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../lib/data.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+Include dependency graph for hub.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hub_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=145pt]{hub_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsend__t}{send\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structreceived__t}{received\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structplayerData__t}{player\+Data\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structlobbyData__t}{lobby\+Data\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{hub_8h_a13c89964ead8364a776d78502b839dea}{HUB\+\_\+\+IP}}~\char`\"{}0.\+0.\+0.\+0\char`\"{}
+\item 
+\#define \mbox{\hyperlink{hub_8h_aabb501e1f8bf0ccfc129c4cc1a886389}{HUB\+\_\+\+PORT}}~5000
+\item 
+\#define \mbox{\hyperlink{hub_8h_ad8edf09d2d914fdd5eae545ee2bd6ce9}{NB\+\_\+\+LIGNES}}~9081
+\item 
+\#define \mbox{\hyperlink{hub_8h_a7a9a231e30b47bc0345749c8bd1e5077}{MAX\+\_\+\+LENGTH}}~9
+\item 
+\#define \mbox{\hyperlink{hub_8h_a8f899d075f01f6a01e44310d8e1f753a}{PLAYER\+\_\+\+MAX}}~4
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{hub_8h_a7ab41c0f95853ffa7436628f52bcb448}{lobby\+State}} \{ \mbox{\hyperlink{hub_8h_a7ab41c0f95853ffa7436628f52bcb448acf9074956d2543bbdbdbab5b928ebe87}{PREGAME}}
+, \mbox{\hyperlink{hub_8h_a7ab41c0f95853ffa7436628f52bcb448a9671ef15a84681350d508f66e1fc1e27}{STARTED}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{hub_8h_adb723d4c0b7a57a31a2de35be952a566}{serveur}} ()
+\item 
+void \mbox{\hyperlink{hub_8h_ab666855c3b8872643dd2f2c74d4fd457}{pregame\+Routine}} (int id\+Lobby)
+\item 
+void \mbox{\hyperlink{hub_8h_a3a42b8bb70546fe2ab518c51c0cf18ba}{game\+Routine}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Player, int id\+Lobby, int id\+Player)
+\begin{DoxyCompactList}\small\item\em Lance un lobby. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hub_8h_aa5774f395e7b2a378e248335de38a0c5}{suppression\+Code}} (const char $\ast$code)
+\item 
+void \mbox{\hyperlink{hub_8h_aa8c0b7a680670d500a503fef565b819e}{serial}} (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, char $\ast$req)
+\begin{DoxyCompactList}\small\item\em transforme les données en chaine de charactères ~\newline
+ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hub_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}{deserial}} (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, char $\ast$msg)
+\begin{DoxyCompactList}\small\item\em transforme les chaine de charactères en données \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{hub_8h_aa15b38403de45e5972bbaef38372c9d5}{generer\+Code}} (char $\ast$code)
+\item 
+void \mbox{\hyperlink{hub_8h_a528d8309bee48d554ad3f14cca7f73b7}{generate\+Lobby\+Code}} (char $\ast$code)
+\item 
+int \mbox{\hyperlink{hub_8h_ab842cf567e345972e1c08f306efcd995}{recognize\+Player}} (int id\+Lobby, char $\ast$ip, unsigned short port)
+\item 
+char $\ast$ \mbox{\hyperlink{hub_8h_a7d2c8c148e87c6ac0ea00e1b17747bf4}{get\+Random\+Word}} ()
+\begin{DoxyCompactList}\small\item\em Récupère un mot aléatoire dans le fichier dico.\+txt. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{hub_8h_a22f2338e646ad5f0678584cd2e36df65}{wait\+For\+Players\+To\+Finish}} (int id\+Lobby)
+\item 
+void \mbox{\hyperlink{hub_8h_a3c3266aaa0eae199caf8141c7f2cdae0}{host\+Routine}} (int id\+Lobby)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{hub_8h_a13c89964ead8364a776d78502b839dea}\label{hub_8h_a13c89964ead8364a776d78502b839dea}} 
+\index{hub.h@{hub.h}!HUB\_IP@{HUB\_IP}}
+\index{HUB\_IP@{HUB\_IP}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{HUB\_IP}{HUB\_IP}}
+{\footnotesize\ttfamily \#define HUB\+\_\+\+IP~\char`\"{}0.\+0.\+0.\+0\char`\"{}}
+
+\mbox{\Hypertarget{hub_8h_aabb501e1f8bf0ccfc129c4cc1a886389}\label{hub_8h_aabb501e1f8bf0ccfc129c4cc1a886389}} 
+\index{hub.h@{hub.h}!HUB\_PORT@{HUB\_PORT}}
+\index{HUB\_PORT@{HUB\_PORT}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{HUB\_PORT}{HUB\_PORT}}
+{\footnotesize\ttfamily \#define HUB\+\_\+\+PORT~5000}
+
+\mbox{\Hypertarget{hub_8h_a7a9a231e30b47bc0345749c8bd1e5077}\label{hub_8h_a7a9a231e30b47bc0345749c8bd1e5077}} 
+\index{hub.h@{hub.h}!MAX\_LENGTH@{MAX\_LENGTH}}
+\index{MAX\_LENGTH@{MAX\_LENGTH}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_LENGTH}{MAX\_LENGTH}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+LENGTH~9}
+
+\mbox{\Hypertarget{hub_8h_ad8edf09d2d914fdd5eae545ee2bd6ce9}\label{hub_8h_ad8edf09d2d914fdd5eae545ee2bd6ce9}} 
+\index{hub.h@{hub.h}!NB\_LIGNES@{NB\_LIGNES}}
+\index{NB\_LIGNES@{NB\_LIGNES}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{NB\_LIGNES}{NB\_LIGNES}}
+{\footnotesize\ttfamily \#define NB\+\_\+\+LIGNES~9081}
+
+\mbox{\Hypertarget{hub_8h_a8f899d075f01f6a01e44310d8e1f753a}\label{hub_8h_a8f899d075f01f6a01e44310d8e1f753a}} 
+\index{hub.h@{hub.h}!PLAYER\_MAX@{PLAYER\_MAX}}
+\index{PLAYER\_MAX@{PLAYER\_MAX}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{PLAYER\_MAX}{PLAYER\_MAX}}
+{\footnotesize\ttfamily \#define PLAYER\+\_\+\+MAX~4}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{hub_8h_a7ab41c0f95853ffa7436628f52bcb448}\label{hub_8h_a7ab41c0f95853ffa7436628f52bcb448}} 
+\index{hub.h@{hub.h}!lobbyState@{lobbyState}}
+\index{lobbyState@{lobbyState}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{lobbyState}{lobbyState}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{hub_8h_a7ab41c0f95853ffa7436628f52bcb448}{lobby\+State}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PREGAME@{PREGAME}!hub.h@{hub.h}}\index{hub.h@{hub.h}!PREGAME@{PREGAME}}}\mbox{\Hypertarget{hub_8h_a7ab41c0f95853ffa7436628f52bcb448acf9074956d2543bbdbdbab5b928ebe87}\label{hub_8h_a7ab41c0f95853ffa7436628f52bcb448acf9074956d2543bbdbdbab5b928ebe87}} 
+PREGAME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STARTED@{STARTED}!hub.h@{hub.h}}\index{hub.h@{hub.h}!STARTED@{STARTED}}}\mbox{\Hypertarget{hub_8h_a7ab41c0f95853ffa7436628f52bcb448a9671ef15a84681350d508f66e1fc1e27}\label{hub_8h_a7ab41c0f95853ffa7436628f52bcb448a9671ef15a84681350d508f66e1fc1e27}} 
+STARTED&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{hub_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}\label{hub_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}} 
+\index{hub.h@{hub.h}!deserial@{deserial}}
+\index{deserial@{deserial}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{deserial()}{deserial()}}
+{\footnotesize\ttfamily void deserial (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+
+
+transforme les chaine de charactères en données 
+
+
+\begin{DoxyParams}{Parameters}
+{\em quoi} & \\
+\hline
+{\em msg} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hub_8h_a3a42b8bb70546fe2ab518c51c0cf18ba}\label{hub_8h_a3a42b8bb70546fe2ab518c51c0cf18ba}} 
+\index{hub.h@{hub.h}!gameRoutine@{gameRoutine}}
+\index{gameRoutine@{gameRoutine}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{gameRoutine()}{gameRoutine()}}
+{\footnotesize\ttfamily void game\+Routine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Player,  }\item[{int}]{id\+Lobby,  }\item[{int}]{id\+Player }\end{DoxyParamCaption})}
+
+
+
+Lance un lobby. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id\+Lobby} & Emplacement du lobby dans le tableau \\
+\hline
+{\em sock\+Player} & \\
+\hline
+{\em id\+Player} & Id du joeur dans le lobby \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hub_8h_a528d8309bee48d554ad3f14cca7f73b7}\label{hub_8h_a528d8309bee48d554ad3f14cca7f73b7}} 
+\index{hub.h@{hub.h}!generateLobbyCode@{generateLobbyCode}}
+\index{generateLobbyCode@{generateLobbyCode}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{generateLobbyCode()}{generateLobbyCode()}}
+{\footnotesize\ttfamily void generate\+Lobby\+Code (\begin{DoxyParamCaption}\item[{char $\ast$}]{code }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_aa15b38403de45e5972bbaef38372c9d5}\label{hub_8h_aa15b38403de45e5972bbaef38372c9d5}} 
+\index{hub.h@{hub.h}!genererCode@{genererCode}}
+\index{genererCode@{genererCode}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{genererCode()}{genererCode()}}
+{\footnotesize\ttfamily void generer\+Code (\begin{DoxyParamCaption}\item[{char $\ast$}]{code }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_a7d2c8c148e87c6ac0ea00e1b17747bf4}\label{hub_8h_a7d2c8c148e87c6ac0ea00e1b17747bf4}} 
+\index{hub.h@{hub.h}!getRandomWord@{getRandomWord}}
+\index{getRandomWord@{getRandomWord}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{getRandomWord()}{getRandomWord()}}
+{\footnotesize\ttfamily char$\ast$ get\+Random\+Word (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Récupère un mot aléatoire dans le fichier dico.\+txt. 
+
+\begin{DoxyReturn}{Returns}
+Mot aléatoire 
+
+NULL si le fichier n\textquotesingle{}a pas pu être ouvert 
+\end{DoxyReturn}
+\mbox{\Hypertarget{hub_8h_a3c3266aaa0eae199caf8141c7f2cdae0}\label{hub_8h_a3c3266aaa0eae199caf8141c7f2cdae0}} 
+\index{hub.h@{hub.h}!hostRoutine@{hostRoutine}}
+\index{hostRoutine@{hostRoutine}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{hostRoutine()}{hostRoutine()}}
+{\footnotesize\ttfamily void host\+Routine (\begin{DoxyParamCaption}\item[{int}]{id\+Lobby }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_ab666855c3b8872643dd2f2c74d4fd457}\label{hub_8h_ab666855c3b8872643dd2f2c74d4fd457}} 
+\index{hub.h@{hub.h}!pregameRoutine@{pregameRoutine}}
+\index{pregameRoutine@{pregameRoutine}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{pregameRoutine()}{pregameRoutine()}}
+{\footnotesize\ttfamily void pregame\+Routine (\begin{DoxyParamCaption}\item[{int}]{id\+Lobby }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_ab842cf567e345972e1c08f306efcd995}\label{hub_8h_ab842cf567e345972e1c08f306efcd995}} 
+\index{hub.h@{hub.h}!recognizePlayer@{recognizePlayer}}
+\index{recognizePlayer@{recognizePlayer}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{recognizePlayer()}{recognizePlayer()}}
+{\footnotesize\ttfamily int recognize\+Player (\begin{DoxyParamCaption}\item[{int}]{id\+Lobby,  }\item[{char $\ast$}]{ip,  }\item[{unsigned short}]{port }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_aa8c0b7a680670d500a503fef565b819e}\label{hub_8h_aa8c0b7a680670d500a503fef565b819e}} 
+\index{hub.h@{hub.h}!serial@{serial}}
+\index{serial@{serial}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{serial()}{serial()}}
+{\footnotesize\ttfamily void serial (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{char $\ast$}]{req }\end{DoxyParamCaption})}
+
+
+
+transforme les données en chaine de charactères ~\newline
+ 
+
+transforme les données en chaine de charactères
+
+
+\begin{DoxyParams}{Parameters}
+{\em quoi} & \\
+\hline
+{\em req} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{hub_8h_adb723d4c0b7a57a31a2de35be952a566}\label{hub_8h_adb723d4c0b7a57a31a2de35be952a566}} 
+\index{hub.h@{hub.h}!serveur@{serveur}}
+\index{serveur@{serveur}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{serveur()}{serveur()}}
+{\footnotesize\ttfamily void serveur (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_aa5774f395e7b2a378e248335de38a0c5}\label{hub_8h_aa5774f395e7b2a378e248335de38a0c5}} 
+\index{hub.h@{hub.h}!suppressionCode@{suppressionCode}}
+\index{suppressionCode@{suppressionCode}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{suppressionCode()}{suppressionCode()}}
+{\footnotesize\ttfamily void suppression\+Code (\begin{DoxyParamCaption}\item[{const char $\ast$}]{code }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{hub_8h_a22f2338e646ad5f0678584cd2e36df65}\label{hub_8h_a22f2338e646ad5f0678584cd2e36df65}} 
+\index{hub.h@{hub.h}!waitForPlayersToFinish@{waitForPlayersToFinish}}
+\index{waitForPlayersToFinish@{waitForPlayersToFinish}!hub.h@{hub.h}}
+\doxysubsubsection{\texorpdfstring{waitForPlayersToFinish()}{waitForPlayersToFinish()}}
+{\footnotesize\ttfamily int wait\+For\+Players\+To\+Finish (\begin{DoxyParamCaption}\item[{int}]{id\+Lobby }\end{DoxyParamCaption})}
+

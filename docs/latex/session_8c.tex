@@ -1,18 +1,14 @@
 \hypertarget{session_8c}{}\doxysection{lib/session.c File Reference}
 \label{session_8c}\index{lib/session.c@{lib/session.c}}
 {\ttfamily \#include \char`\"{}session.\+h\char`\"{}}\newline
-Include dependency graph for session.\+c\+:\nopagebreak
+Include dependency graph for session.\+c\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{session_8c__incl}
 \end{center}
 \end{figure}
-\doxysubsection*{Macros}
-\begin{DoxyCompactItemize}
-\item 
-\#define \mbox{\hyperlink{session_8c_a837e1e45a16b5ca14e33c4f897e05a78}{CHECK}}(status,  msg)
-\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -24,8 +20,8 @@ struct sockaddr\+\_\+in \mbox{\hyperlink{session_8c_a91d486d1919db183070f672cffd
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné et réalisation de l\textquotesingle{}adressage en INET. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_af50e980caf0a387623e73319543d538b}{creer\+Socket\+Ecoute\+Stream}} (char $\ast$ip, short port, short max\+Clts)
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_a6667499579de14d5d4c303661b647f31}{creer\+Socket\+Ecriture\+Stream}} (char $\ast$ip, short port)
-\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_abaf87d30ca098739e6a704acdf48e39f}{creer\+Socket\+Ecriture\+Stream}} (char $\ast$ip\+Client, short \mbox{\hyperlink{user_8c_a15bf1470a9821800132707a195c38ff2}{port\+Client}}, char $\ast$ip\+Serveur, short port\+Serveur)
+\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_a19936bc76cfe3311b6992a0cd5e87c52}{creer\+Socket\+Ecoute\+Dgram}} (char $\ast$ip, short port)
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en DGRAM. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8c_aae82e5786aca610986ee3abb981ec4df}{creer\+Socket\+Ecriture\+Dgram}} (char $\ast$ip, short port)
@@ -34,8 +30,10 @@ struct sockaddr\+\_\+in \mbox{\hyperlink{session_8c_a91d486d1919db183070f672cffd
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{session_8c_a6a27a21b9d2a053b7d609c2d6ccf42fa}{ecrire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, char $\ast$msg, short mode)
 \begin{DoxyCompactList}\small\item\em Ecrit un message sur une socket. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{session_8c_a0a09a8fb6a58b3e12ef99b32fce19854}{lire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Ecoute)
-\begin{DoxyCompactList}\small\item\em Lit un message sur une socket. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{session_8c_a7719e7c17081509c2739af0ad1b4c8b2}{lire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Ecoute, char $\ast$received\+Data)
+\item 
+int \mbox{\hyperlink{session_8c_ae1a6a29a4f2341e9ab138eb465d55478}{lire\+Socket\+Next}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Ecoute, char $\ast$received\+Data)
+\item 
 void \mbox{\hyperlink{session_8c_a690fdbe9b224b3609eb9a1c320e565d4}{close\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
 \begin{DoxyCompactList}\small\item\em Ferme une socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -50,23 +48,6 @@ Tomas TRENY, Leevan DAVID
 \begin{DoxyDate}{Date}
 2024-\/01-\/12 
 \end{DoxyDate}
-
-
-\doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{session_8c_a837e1e45a16b5ca14e33c4f897e05a78}\label{session_8c_a837e1e45a16b5ca14e33c4f897e05a78}} 
-\index{session.c@{session.c}!CHECK@{CHECK}}
-\index{CHECK@{CHECK}!session.c@{session.c}}
-\doxysubsubsection{\texorpdfstring{CHECK}{CHECK}}
-{\footnotesize\ttfamily \#define CHECK(\begin{DoxyParamCaption}\item[{}]{status,  }\item[{}]{msg }\end{DoxyParamCaption})}
-
-{\bfseries Value\+:}
-\begin{DoxyCode}{0}
-\DoxyCodeLine{    \textcolor{keywordflow}{if} ((status) == -\/1) \{                                                    \(\backslash\)}
-\DoxyCodeLine{        perror(msg);                                                         \(\backslash\)}
-\DoxyCodeLine{        exit(EXIT\_FAILURE);                                                  \(\backslash\)}
-\DoxyCodeLine{    \}}
-
-\end{DoxyCode}
 
 
 \doxysubsection{Function Documentation}
@@ -225,26 +206,12 @@ Création d\textquotesingle{}une socket d\textquotesingle{}écriture en DGRAM.
 \begin{DoxyReturn}{Returns}
 structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{session_8c_a6667499579de14d5d4c303661b647f31}\label{session_8c_a6667499579de14d5d4c303661b647f31}} 
+\mbox{\Hypertarget{session_8c_abaf87d30ca098739e6a704acdf48e39f}\label{session_8c_abaf87d30ca098739e6a704acdf48e39f}} 
 \index{session.c@{session.c}!creerSocketEcritureStream@{creerSocketEcritureStream}}
 \index{creerSocketEcritureStream@{creerSocketEcritureStream}!session.c@{session.c}}
 \doxysubsubsection{\texorpdfstring{creerSocketEcritureStream()}{creerSocketEcritureStream()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip\+Client,  }\item[{short}]{port\+Client,  }\item[{char $\ast$}]{ip\+Serveur,  }\item[{short}]{port\+Serveur }\end{DoxyParamCaption})}
 
-
-
-Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
-\hline
-{\em port} & Fournit le port de la socket à créer \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
-\end{DoxyReturn}
 \mbox{\Hypertarget{session_8c_a6a27a21b9d2a053b7d609c2d6ccf42fa}\label{session_8c_a6a27a21b9d2a053b7d609c2d6ccf42fa}} 
 \index{session.c@{session.c}!ecrireSocket@{ecrireSocket}}
 \index{ecrireSocket@{ecrireSocket}!session.c@{session.c}}
@@ -264,18 +231,15 @@ Ecrit un message sur une socket.
 {\em msg} & Fournit le message à écrire \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{session_8c_a0a09a8fb6a58b3e12ef99b32fce19854}\label{session_8c_a0a09a8fb6a58b3e12ef99b32fce19854}} 
+\mbox{\Hypertarget{session_8c_a7719e7c17081509c2739af0ad1b4c8b2}\label{session_8c_a7719e7c17081509c2739af0ad1b4c8b2}} 
 \index{session.c@{session.c}!lireSocket@{lireSocket}}
 \index{lireSocket@{lireSocket}!session.c@{session.c}}
 \doxysubsubsection{\texorpdfstring{lireSocket()}{lireSocket()}}
-{\footnotesize\ttfamily void lire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int lire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute,  }\item[{char $\ast$}]{received\+Data }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{session_8c_ae1a6a29a4f2341e9ab138eb465d55478}\label{session_8c_ae1a6a29a4f2341e9ab138eb465d55478}} 
+\index{session.c@{session.c}!lireSocketNext@{lireSocketNext}}
+\index{lireSocketNext@{lireSocketNext}!session.c@{session.c}}
+\doxysubsubsection{\texorpdfstring{lireSocketNext()}{lireSocketNext()}}
+{\footnotesize\ttfamily int lire\+Socket\+Next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute,  }\item[{char $\ast$}]{received\+Data }\end{DoxyParamCaption})}
 
-
-Lit un message sur une socket. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em sock} & Fournit la socket \\
-\hline
-\end{DoxyParams}

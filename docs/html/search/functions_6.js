@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['serveur_79',['serveur',['../useLibNet_8c.html#a82a5d66dd4e110605754768685b5ef26',1,'useLibNet.c']]]
+  ['hostroutine_148',['hostRoutine',['../hub_8c.html#a3c3266aaa0eae199caf8141c7f2cdae0',1,'hostRoutine(int idLobby):&#160;hub.c'],['../hub_8h.html#a3c3266aaa0eae199caf8141c7f2cdae0',1,'hostRoutine(int idLobby):&#160;hub.c']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['magenta_101',['MAGENTA',['../session_8h.html#a6f699060902f800f12aaae150f3a708e',1,'session.h']]],
-  ['max_5fbuff_102',['MAX_BUFF',['../data_8h.html#a4b70916bdf28ed7afd94e4fb98230a90',1,'data.h']]]
+  ['hub_5fip_208',['HUB_IP',['../hub_8h.html#a13c89964ead8364a776d78502b839dea',1,'hub.h']]],
+  ['hub_5fport_209',['HUB_PORT',['../hub_8h.html#aabb501e1f8bf0ccfc129c4cc1a886389',1,'hub.h']]]
 ];

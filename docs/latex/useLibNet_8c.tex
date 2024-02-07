@@ -2,7 +2,8 @@
 \label{useLibNet_8c}\index{app/useLibNet.c@{app/useLibNet.c}}
 {\ttfamily \#include $<$stdio.\+h$>$}\newline
 {\ttfamily \#include \char`\"{}../lib/data.\+h\char`\"{}}\newline
-Include dependency graph for use\+Lib\+Net.\+c\+:\nopagebreak
+Include dependency graph for use\+Lib\+Net.\+c\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -17,12 +18,14 @@ Include dependency graph for use\+Lib\+Net.\+c\+:\nopagebreak
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{useLibNet_8c_ab10f4a52a79e46f397abcc229e17f868}{client}} (char $\ast$ip, short port)
+void \mbox{\hyperlink{useLibNet_8c_ac7892ccce611bcd2edc3ea7a3e086947}{client}} (char $\ast$ip\+Client, short \mbox{\hyperlink{user_8c_a15bf1470a9821800132707a195c38ff2}{port\+Client}}, char $\ast$ip\+Serveur, short port\+Serveur)
 \begin{DoxyCompactList}\small\item\em Lance un client. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{useLibNet_8c_a82a5d66dd4e110605754768685b5ef26}{serveur}} (char $\ast$ip, short port)
-\begin{DoxyCompactList}\small\item\em Lance un serveur. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Lance un serveur HUB. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{useLibNet_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
-\end{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{useLibNet_8c_a46f227bf8db22162bf6f41e30c4f6b8f}{serveur\+Lobby}} (char $\ast$ip, short port)
+\begin{DoxyCompactList}\small\item\em Lance un lobby. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Macro Definition Documentation}
@@ -35,11 +38,11 @@ int \mbox{\hyperlink{useLibNet_8c_a0ddf1224851353fc92bfbff6f499fa97}{main}} (int
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{useLibNet_8c_ab10f4a52a79e46f397abcc229e17f868}\label{useLibNet_8c_ab10f4a52a79e46f397abcc229e17f868}} 
+\mbox{\Hypertarget{useLibNet_8c_ac7892ccce611bcd2edc3ea7a3e086947}\label{useLibNet_8c_ac7892ccce611bcd2edc3ea7a3e086947}} 
 \index{useLibNet.c@{useLibNet.c}!client@{client}}
 \index{client@{client}!useLibNet.c@{useLibNet.c}}
 \doxysubsubsection{\texorpdfstring{client()}{client()}}
-{\footnotesize\ttfamily void client (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void client (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{char $\ast$}]{ip\+Serveur,  }\item[{short}]{port\+Serveur }\end{DoxyParamCaption})}
 
 
 
@@ -47,9 +50,13 @@ Lance un client.
 
 
 \begin{DoxyParams}{Parameters}
-{\em ip} & Fournit l\textquotesingle{}ip du serveur \\
+{\em ip\+Client} & Fournit l\textquotesingle{}ip du client \\
 \hline
-{\em port} & Fournit le port du serveur \\
+{\em port\+Client} & Fournit le port du client \\
+\hline
+{\em ip\+Serveur} & Fournit l\textquotesingle{}ip du serveur \\
+\hline
+{\em port\+Serveur} & Fournit le port du serveur \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{useLibNet_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{useLibNet_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
@@ -66,12 +73,31 @@ Lance un client.
 
 
 
-Lance un serveur. 
+Lance un serveur HUB. 
+
+Lance un serveur.
 
 
 \begin{DoxyParams}{Parameters}
 {\em ip} & Fournit l\textquotesingle{}ip du serveur \\
 \hline
 {\em port} & Fournit le port du serveur \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{useLibNet_8c_a46f227bf8db22162bf6f41e30c4f6b8f}\label{useLibNet_8c_a46f227bf8db22162bf6f41e30c4f6b8f}} 
+\index{useLibNet.c@{useLibNet.c}!serveurLobby@{serveurLobby}}
+\index{serveurLobby@{serveurLobby}!useLibNet.c@{useLibNet.c}}
+\doxysubsubsection{\texorpdfstring{serveurLobby()}{serveurLobby()}}
+{\footnotesize\ttfamily $\ast$void serveur\+Lobby (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+
+
+
+Lance un lobby. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & Fournit l\textquotesingle{}ip du lubby \\
+\hline
+{\em port} & Fournit le port du lobby \\
 \hline
 \end{DoxyParams}

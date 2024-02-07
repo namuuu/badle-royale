@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['liresocket_75',['lireSocket',['../session_8c.html#a0a09a8fb6a58b3e12ef99b32fce19854',1,'lireSocket(socket_t sockEcoute):&#160;session.c'],['../session_8h.html#af0294d563b93bbb93cad9365dc17f3a1',1,'lireSocket(socket_t sock):&#160;session.c']]]
+  ['deserial_140',['deserial',['../hub_8c.html#a149aad556f95b7c7d0fa0d9d7f1bf12a',1,'deserial(generic quoi, char *msg):&#160;hub.c'],['../hub_8h.html#a149aad556f95b7c7d0fa0d9d7f1bf12a',1,'deserial(generic quoi, char *msg):&#160;hub.c'],['../user_8c.html#a149aad556f95b7c7d0fa0d9d7f1bf12a',1,'deserial(generic quoi, char *msg):&#160;user.c'],['../user_8h.html#a149aad556f95b7c7d0fa0d9d7f1bf12a',1,'deserial(generic quoi, char *msg):&#160;hub.c']]]
 ];

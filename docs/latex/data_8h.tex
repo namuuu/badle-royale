@@ -6,45 +6,39 @@ Data class.
 
 
 {\ttfamily \#include \char`\"{}session.\+h\char`\"{}}\newline
-Include dependency graph for data.\+h\+:\nopagebreak
+Include dependency graph for data.\+h\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{data_8h__incl}
 \end{center}
 \end{figure}
-This graph shows which files directly or indirectly include this file\+:\nopagebreak
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=256pt]{data_8h__dep__incl}
+\includegraphics[width=350pt]{data_8h__dep__incl}
 \end{center}
 \end{figure}
-\doxysubsection*{Macros}
-\begin{DoxyCompactItemize}
-\item 
-\#define \mbox{\hyperlink{data_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}~1024
-\end{DoxyCompactItemize}
-\doxysubsection*{Typedefs}
-\begin{DoxyCompactItemize}
-\item 
-typedef char \mbox{\hyperlink{data_8h_af3c9c9e648eb422e8a1a08a2bba7e108}{buffer\+\_\+t}}\mbox{[}\mbox{\hyperlink{data_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}\mbox{]}
-\item 
-typedef void $\ast$ \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}
-\item 
-typedef void($\ast$ \mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}}) (\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}})
-\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{data_8h_a35a680ae01c917a33973de4c0dd66d49}{envoyer}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}} serial)
+void \mbox{\hyperlink{data_8h_a35a680ae01c917a33973de4c0dd66d49}{envoyer}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}} \mbox{\hyperlink{user_8h_aa8c0b7a680670d500a503fef565b819e}{serial}})
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{data_8h_a76b72db3f0aaa940e2ef2ec71c01dee0}{recevoir}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}} de\+Serial)
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_a69d1980abb0da83f8f3cf1849b174843}{recevoir}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}} de\+Serial)
 \begin{DoxyCompactList}\small\item\em Réception d\textquotesingle{}une donnée sur une socket. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_a2196d57be69bf0f99c0f4997cf933b89}{connect\+To\+Server}} (char $\ast$ip, short port, short mode)
-\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_a5c2a2abf7a096ae0cf726c8fe2586672}{recevoir\+Suivant}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, \mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, \mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}} de\+Serial)
+\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_a55b14ce643d2deee4d6a731a7b532179}{accepter\+Connexion}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
+\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_aafc57360347194c6869fb72b9a05f86b}{connect\+To\+Server}} (char $\ast$ip\+Client, short \mbox{\hyperlink{user_8c_a15bf1470a9821800132707a195c38ff2}{port\+Client}}, char $\ast$ip\+Serveur, short port\+Serveur, short mode)
+\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{data_8h_a6654e21f161146a6966ed5c661ed6379}{prepare\+For\+Client}} (char $\ast$ip, short port, short mode)
-\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{data_8h_a91f2597cb163a94cae6cdf3f2e61ee2d}{fermer\+Connexion}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
+\begin{DoxyCompactList}\small\item\em Fermeture d\textquotesingle{}une connexion. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -61,60 +55,24 @@ Tomas TRENY
 \end{DoxyDate}
 
 
-\doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{data_8h_a4b70916bdf28ed7afd94e4fb98230a90}\label{data_8h_a4b70916bdf28ed7afd94e4fb98230a90}} 
-\index{data.h@{data.h}!MAX\_BUFF@{MAX\_BUFF}}
-\index{MAX\_BUFF@{MAX\_BUFF}!data.h@{data.h}}
-\doxysubsubsection{\texorpdfstring{MAX\_BUFF}{MAX\_BUFF}}
-{\footnotesize\ttfamily \#define MAX\+\_\+\+BUFF~1024}
-
-
-
-\doxysubsection{Typedef Documentation}
-\mbox{\Hypertarget{data_8h_af3c9c9e648eb422e8a1a08a2bba7e108}\label{data_8h_af3c9c9e648eb422e8a1a08a2bba7e108}} 
-\index{data.h@{data.h}!buffer\_t@{buffer\_t}}
-\index{buffer\_t@{buffer\_t}!data.h@{data.h}}
-\doxysubsubsection{\texorpdfstring{buffer\_t}{buffer\_t}}
-{\footnotesize\ttfamily typedef char buffer\+\_\+t\mbox{[}\mbox{\hyperlink{data_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}\mbox{]}}
-
-\mbox{\Hypertarget{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}\label{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}} 
-\index{data.h@{data.h}!generic@{generic}}
-\index{generic@{generic}!data.h@{data.h}}
-\doxysubsubsection{\texorpdfstring{generic}{generic}}
-{\footnotesize\ttfamily typedef void$\ast$ \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}
-
-\mbox{\Hypertarget{data_8h_a0d588b0446583862eaf94f8dc9255e60}\label{data_8h_a0d588b0446583862eaf94f8dc9255e60}} 
-\index{data.h@{data.h}!pFct@{pFct}}
-\index{pFct@{pFct}!data.h@{data.h}}
-\doxysubsubsection{\texorpdfstring{pFct}{pFct}}
-{\footnotesize\ttfamily typedef void($\ast$ p\+Fct) (\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}, \mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}})}
-
-
-
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{data_8h_a2196d57be69bf0f99c0f4997cf933b89}\label{data_8h_a2196d57be69bf0f99c0f4997cf933b89}} 
+\mbox{\Hypertarget{data_8h_a55b14ce643d2deee4d6a731a7b532179}\label{data_8h_a55b14ce643d2deee4d6a731a7b532179}} 
+\index{data.h@{data.h}!accepterConnexion@{accepterConnexion}}
+\index{accepterConnexion@{accepterConnexion}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{accepterConnexion()}{accepterConnexion()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} accepter\+Connexion (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{data_8h_aafc57360347194c6869fb72b9a05f86b}\label{data_8h_aafc57360347194c6869fb72b9a05f86b}} 
 \index{data.h@{data.h}!connectToServer@{connectToServer}}
 \index{connectToServer@{connectToServer}!data.h@{data.h}}
 \doxysubsubsection{\texorpdfstring{connectToServer()}{connectToServer()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} connect\+To\+Server (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port,  }\item[{short}]{mode }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} connect\+To\+Server (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip\+Client,  }\item[{short}]{port\+Client,  }\item[{char $\ast$}]{ip\+Serveur,  }\item[{short}]{port\+Serveur,  }\item[{short}]{mode }\end{DoxyParamCaption})}
 
-
-
-Création d\textquotesingle{}une socket dans un mode donné 
-
-
-\begin{DoxyParams}{Parameters}
-{\em mode} & Fournit le mode de la socket à créer (DGRAM / STREAM) \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} créée 
-\end{DoxyReturn}
 \mbox{\Hypertarget{data_8h_a35a680ae01c917a33973de4c0dd66d49}\label{data_8h_a35a680ae01c917a33973de4c0dd66d49}} 
 \index{data.h@{data.h}!envoyer@{envoyer}}
 \index{envoyer@{envoyer}!data.h@{data.h}}
 \doxysubsubsection{\texorpdfstring{envoyer()}{envoyer()}}
-{\footnotesize\ttfamily void envoyer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}}}]{serial }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void envoyer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}}}]{serial }\end{DoxyParamCaption})}
 
 
 
@@ -127,6 +85,21 @@ Création d\textquotesingle{}une socket dans un mode donné
 {\em quoi} & Fournit la donnée à envoyer \\
 \hline
 {\em serial} & Fournit la fonction de sérialisation \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{data_8h_a91f2597cb163a94cae6cdf3f2e61ee2d}\label{data_8h_a91f2597cb163a94cae6cdf3f2e61ee2d}} 
+\index{data.h@{data.h}!fermerConnexion@{fermerConnexion}}
+\index{fermerConnexion@{fermerConnexion}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{fermerConnexion()}{fermerConnexion()}}
+{\footnotesize\ttfamily void fermer\+Connexion (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock }\end{DoxyParamCaption})}
+
+
+
+Fermeture d\textquotesingle{}une connexion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sock} & Fournit la socket à fermer \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{data_8h_a6654e21f161146a6966ed5c661ed6379}\label{data_8h_a6654e21f161146a6966ed5c661ed6379}} 
@@ -147,11 +120,11 @@ Création d\textquotesingle{}une socket dans un mode donné
 \begin{DoxyReturn}{Returns}
 structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} créée 
 \end{DoxyReturn}
-\mbox{\Hypertarget{data_8h_a76b72db3f0aaa940e2ef2ec71c01dee0}\label{data_8h_a76b72db3f0aaa940e2ef2ec71c01dee0}} 
+\mbox{\Hypertarget{data_8h_a69d1980abb0da83f8f3cf1849b174843}\label{data_8h_a69d1980abb0da83f8f3cf1849b174843}} 
 \index{data.h@{data.h}!recevoir@{recevoir}}
 \index{recevoir@{recevoir}!data.h@{data.h}}
 \doxysubsubsection{\texorpdfstring{recevoir()}{recevoir()}}
-{\footnotesize\ttfamily void recevoir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{data_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{data_8h_a0d588b0446583862eaf94f8dc9255e60}{p\+Fct}}}]{de\+Serial }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} recevoir (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}}}]{de\+Serial }\end{DoxyParamCaption})}
 
 
 
@@ -166,3 +139,9 @@ Réception d\textquotesingle{}une donnée sur une socket.
 {\em de\+Serial} & Fournit la fonction de désérialisation \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{data_8h_a5c2a2abf7a096ae0cf726c8fe2586672}\label{data_8h_a5c2a2abf7a096ae0cf726c8fe2586672}} 
+\index{data.h@{data.h}!recevoirSuivant@{recevoirSuivant}}
+\index{recevoirSuivant@{recevoirSuivant}!data.h@{data.h}}
+\doxysubsubsection{\texorpdfstring{recevoirSuivant()}{recevoirSuivant()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} recevoir\+Suivant (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock,  }\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{\mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}}}]{de\+Serial }\end{DoxyParamCaption})}
+
