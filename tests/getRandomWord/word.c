@@ -14,6 +14,7 @@ void testWord();
 char *wordlize(char *word, char *wordToValidate);
 
 int main() {
+    //printWord("test", ".!??");
     testWord();
     return 0;
 }
@@ -22,6 +23,7 @@ void testWord() {
     char *word = getRandomWord();
     char wordToValidate[MAX_LENGTH];
     char *wordToValidate2 = malloc(sizeof(char) * MAX_LENGTH);
+    int i;
     
     int nbEssai = 1;
 
@@ -47,8 +49,13 @@ void testWord() {
             wordToValidate[strlen(wordToValidate)] = '\n';
         }
 
-            if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) 
-                strcpy(wordToValidate2, wordToValidate);
+            if (validateWord(wordToValidate) && strlen(wordToValidate) == strlen(word)) {
+                strcpy(wordToValidate2, wordlize(word, wordToValidate));
+                int wtvL = strlen(wordToValidate2);
+                printWord(wordToValidate, wordToValidate2);
+                for(i = 0; i < wtvL-1; i++) printcf(GREEN, "\t%c ", wordToValidate2[i]);
+                printf("\n");
+            }
             else if(strlen(wordToValidate) != strlen(word)) 
                 printc(RED, "\t| Le mot n'a pas le bon nombre de lettres !\n");
             else 
@@ -59,10 +66,30 @@ void testWord() {
     if(nbEssai == strlen(word)) printc(RED, "Vous avez épuisé tous vos essais !\n");
     else printc(GREEN, "Bravo ! Vous avez trouvé le mot !\n");
 
-    // afficher wordToValidate2
-    printf("DEBUG : Le mot à valider est : %s\n", wordToValidate2);
+    printf("DEBUG : Le code est : %s\n", wordToValidate2);
+
+    printf("\n");
 
     free(word);
+}
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+ * @param word Mot à afficher
+ * @param wordlized Code de word
+*/
+void printWord(char *word, char *wordlized) {
+    int i;
+    int wL = strlen(word);
+    for(i = 0; i < wL; i++) {
+        if(wordlized[i] == '!') printcf(GREEN, "\t%c ", word[i]);
+        else if(wordlized[i] == '.') printf("\t%c ", word[i]);
+        else if(wordlized[i] == '?') printcf(YELLOW, "\t%c ", word[i]);
+    }
+    printf("\n");
+
 }
 
 /**
@@ -151,11 +178,7 @@ char *wordlize(char *word, char *wordToValidate) {
         }
     }
 
-    // Affichage
-    for(i = 0; i < wtvL; i++) printcf(BLUE, "\t%c ", wordToValidate[i]);
-    for(i = 0; i < wtvL-1; i++) printcf(GREEN, "\t%c ", wordlized[i]);
-
     printf("\n");
-    free(wordlized);
+    return wordlized;
 
 }
