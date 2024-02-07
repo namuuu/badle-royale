@@ -138,7 +138,6 @@ void pregameRoutine(int idLobby) {
     while (1)
     {
         sockPlayer = accepterConnexion(sock);
-        printf("connexion acceptée\n");
 
         int pidPlayer;
         CHECK(pidPlayer = fork(), "fork()");
@@ -147,7 +146,6 @@ void pregameRoutine(int idLobby) {
             fermerConnexion(sock);
             // Fils
             recevoirSuivant(sockPlayer, &recData, deserial);
-            printf("Reçu %d\n", recData.code);
             switch (recData.code)
             {
             case 102: // joinLobby
@@ -198,13 +196,12 @@ void pregameRoutine(int idLobby) {
                 while(1);
                 break;
             case 103: // playWord
-                while(1) {
-                    printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
+                // while(1) {
                     strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
 
-                    recevoirSuivant(sockPlayer, &recData, deserial);
-                }
-                
+                //     recevoirSuivant(sockPlayer, &recData, deserial);
+                // }
+                exit(EXIT_SUCCESS);
             default:
                 fermerConnexion(sock);;
             }
@@ -242,14 +239,12 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         sendData.code = 108;
         sendData.nbArgs = 1;
         strcpy(sendData.args[0], motLength);
-        printf("Envoi de la longueur du mot : %s\n", motLength);
 
         envoyer(sockPlayer, &sendData, serial);
 
         int currentTimer = 0;
         // 200 * 0.3 = 60 secondes
         while(tabLobby[idLobby].round != tabLobby[idLobby].players[idPlayer].score) {
-            printf("Boucle de jeu\n");
             while(strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
                 // printf("Attente de match (%s %s)\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
                 // Sleep for 0.3 second
@@ -267,21 +262,18 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
             }
 
             // Réception d'un mot
-            printf("Trigger de récompense\n");
             char* codeword = malloc(sizeof(char) * MAX_LENGTH);
-
+            strcpy(codeword, wordlize(tabLobby[idLobby].word, tabLobby[idLobby].players[idPlayer].lastPlayedWord));
+            codeword[strlen(tabLobby[idLobby].players[idPlayer].lastPlayedWord)] = '\0';
+            
             // Envoi du codeword au joueur selon le mot joué
-            if(strcmp(tabLobby[idLobby].players[idPlayer].lastPlayedWord, tabLobby[idLobby].word) == 0) {
+            if(checkword(codeword)) {
                 sendData.code = 204;
                 sendData.nbArgs = 1;
                 sendData.args[0] = tabLobby[idLobby].word;
                 envoyer(sockPlayer, &sendData, serial);
                 tabLobby[idLobby].players[idPlayer].score++;
             } else {
-                strcpy(codeword, wordlize(tabLobby[idLobby].word, tabLobby[idLobby].players[idPlayer].lastPlayedWord));
-                codeword[strlen(tabLobby[idLobby].players[idPlayer].lastPlayedWord)] = '\0';
-                printf("Codeword : %s\n", codeword);
-
                 sendData.code = 203;
                 sendData.nbArgs = 1;
                 sendData.args[0] = codeword;
@@ -290,7 +282,6 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
             }
 
             strcpy(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
-            
         }
 
         strcpy(bufferLastWord, "NULL");
@@ -302,6 +293,10 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         }
     }
     printf(YELLOW "[%s]" RESET " %d a gagné la partie\n", tabLobby[idLobby].code, idPlayer);
+    sendData.code = 126;
+    sendData.nbArgs = 0;
+    envoyer(sockPlayer, &sendData, serial);
+
 }
 
 void hostRoutine(int idLobby) {
@@ -311,7 +306,8 @@ void hostRoutine(int idLobby) {
         char bufferMot[MAX_LENGTH];
         strcpy(bufferMot, getRandomWord());
         // printf("Mot choisi : %s\n", bufferMot);
-        bufferMot[strlen(bufferMot) - 1] = '\0';
+        if(bufferMot[strlen(bufferMot) - 1] == '\n')
+            bufferMot[strlen(bufferMot) - 1] = '\0';
         strcpy(tabLobby[idLobby].word, bufferMot);
         printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);
 
@@ -553,11 +549,11 @@ char *wordlize(char *word, char *wordToValidate) {
     }
 
     // Vérification des lettres
-    for(i = 0 ; i < wtvL-1; i++) {
+    for(i = 0 ; i < wtvL; i++) {
         if(word[i] == wordToValidate[i]) {
             wordlized[i] = '!';
         } else if(strchr(word, wordToValidate[i]) != NULL){
-            for(j = 0; j < wtvL-1; j++) {
+            for(j = 0; j < wtvL; j++) {
                 if(word[j] == wordToValidate[i]) {
                     wordlized[i] = '?';
                 }
@@ -565,4 +561,19 @@ char *wordlize(char *word, char *wordToValidate) {
         }
     }
     return wordlized;
+}
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+*/
+int checkword(char *codeword) {
+    long unsigned int i;
+    for (i = 0; i < strlen(codeword) - 1; i++) {
+        if (codeword[i] != '!') {
+            return 0;
+        }
+    }
+    return 1;
 }

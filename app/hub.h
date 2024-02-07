@@ -11,7 +11,7 @@
 #define HUB_PORT 5000
 
 #define NB_LIGNES 835
-#define MAX_LENGTH 9
+#define MAX_LENGTH 20
 
 #define PLAYER_MAX 4
 
@@ -161,3 +161,10 @@ void hostRoutine(int idLobby);
  * @param word
 */
 char *wordlize(char *word, char *wordToValidate);
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+*/
+int checkword(char *codeword);
