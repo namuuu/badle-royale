@@ -240,9 +240,6 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         sendData.args[0] = motLength;
 
         envoyer(sockPlayer, &sendData, serial);
-        printf("Envoi du %s mot (taille:%s) vers %d pour le round %d\n", tabLobby[idLobby].word, motLength, idPlayer, tabLobby[idLobby].round);
-        printf("Buffers : lastword - %s - lastPlayedWord - %s\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
-
 
         int currentTimer = 0;
         // 200 * 0.3 = 60 secondes
@@ -264,18 +261,29 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
             }
 
             // Réception d'un mot
-            // Obtention de son codeword
             printf("Trigger de récompense\n");
             char* codeword = malloc(sizeof(char) * MAX_LENGTH);
-            strcpy(codeword, ".?!."); // hardcodé pour le moment
 
-            // Envoi du codeword au joueur
-            sendData.code = 110;
-            sendData.nbArgs = 1;
-            sendData.args[0] = codeword;
-            envoyer(sockPlayer, &sendData, serial);
+            // Envoi du codeword au joueur selon le mot joué
+            if(strcmp(tabLobby[idLobby].players[idPlayer].lastPlayedWord, tabLobby[idLobby].word) == 0) {
+                sendData.code = 204;
+                sendData.nbArgs = 1;
+                sendData.args[0] = tabLobby[idLobby].word;
+                envoyer(sockPlayer, &sendData, serial);
+                tabLobby[idLobby].players[idPlayer].score++;
+            } else {
+                // Clear le buffer
+                strcpy(codeword, wordlize(tabLobby[idLobby].word, tabLobby[idLobby].players[idPlayer].lastPlayedWord));
+                printf("Codeword : %s\n", codeword);
+                codeword[strlen(tabLobby[idLobby].players[idPlayer].lastPlayedWord)] = '\0';
+                printf("Codeword : %s\n", codeword);
 
-            tabLobby[idLobby].players[idPlayer].score++;
+                sendData.code = 203;
+                sendData.nbArgs = 1;
+                sendData.args[0] = codeword;
+                strcpy(sendData.args[1], tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+                envoyer(sockPlayer, &sendData, serial);
+            }
 
             strcpy(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
             
@@ -519,4 +527,37 @@ char *getRandomWord() {
 
     fclose(f);
     return NULL;
+}
+
+/**
+ * \fn void wordlize();
+ * 
+ * @brief Vérifie pour chaque caractère s'il est présent dans le mot et renvoie des indices pour chaque caractère
+ * @param wordToValidate
+ * @param word
+*/
+char *wordlize(char *word, char *wordToValidate) {
+
+    int i, j;
+    int wtvL = strlen(wordToValidate);
+    char *wordlized = malloc(wtvL * sizeof(char));
+
+    // Initialisation du tableau de réponse
+    for(i = 0; i < wtvL; i++) {
+        wordlized[i] = '.';
+    }
+
+    // Vérification des lettres
+    for(i = 0 ; i < wtvL-1; i++) {
+        if(word[i] == wordToValidate[i]) {
+            wordlized[i] = '!';
+        } else if(strchr(word, wordToValidate[i]) != NULL){
+            for(j = 0; j < wtvL-1; j++) {
+                if(word[j] == wordToValidate[i]) {
+                    wordlized[i] = '?';
+                }
+            }
+        }
+    }
+    return wordlized;
 }

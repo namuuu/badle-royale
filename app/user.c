@@ -230,38 +230,45 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
 void mainToLobby(socket_t socketLobby, int idPlayer) {
     printf("Lancement du jeu...\n");
     received_t recDataLobby;
+    recDataLobby.code = 0;
     while(1) {
         // Wait for the round to start and to receive word length
+         recevoirSuivant(socketLobby, &recDataLobby, deserial);
         printf("Début du round...\n");
-        recevoirSuivant(socketLobby, &recDataLobby, deserial);
         printf("Longueur du mot: %s\n\t", recDataLobby.args[0]);
         for(int i = 0; i < atoi(recDataLobby.args[0]); i++) {
             printf("_ ");
         }
         printf("\n");
 
-        // Fork write To Lobby
-        int pidWriter;
-        CHECK(pidWriter = fork(), "fork()");
-        if(pidWriter == 0) {
-            writerToLobby(socketLobby.ip, socketLobby.port, idPlayer, atoi(recDataLobby.args[0]));
-            exit(EXIT_SUCCESS);
-        }
-        // Main
-        recevoirSuivant(socketLobby, &recDataLobby, deserial);
-        switch (recDataLobby.code)
-        {
-        case 109:
-            printf("\nVous avez perdu ! Le mot était %s\n", recDataLobby.args[0]);
-            kill(pidWriter, SIGKILL);
-            while(1);
-            break;
-        case 110:
-            printf(GREEN "Vous avez deviné le mot ! En attente des autres joueurs...\n" RESET);
-            break; 
-        default:
-            printf("Data received: %d\n", recDataLobby.code);
-            break;
+        while(recDataLobby.code != 109) {
+             // Fork write To Lobby
+            int pidWriter;
+            CHECK(pidWriter = fork(), "fork()");
+            if(pidWriter == 0) {
+                writerToLobby(socketLobby.ip, socketLobby.port, idPlayer, atoi(recDataLobby.args[0]));
+                exit(EXIT_SUCCESS);
+            }
+            // Main
+            recevoirSuivant(socketLobby, &recDataLobby, deserial);
+            switch (recDataLobby.code)
+            {
+            case 109:
+                printf("\nVous avez perdu ! Le mot était %s\n", recDataLobby.args[0]);
+                kill(pidWriter, SIGKILL);
+                while(1);
+                break;
+            case 203: // Incorrect word
+                printf(RED "Le mot n'est pas correct !\n" RESET);
+                printWord(recDataLobby.args[1], recDataLobby.args[0]);
+                break;
+            case 204: // Correct word
+                printf(GREEN "Vous avez deviné le mot ! En attente des autres joueurs...\n" RESET);
+                break; 
+            default:
+                printf("Data received: %d\n", recDataLobby.code);
+                break;
+            }
         }
     }
     
@@ -290,8 +297,6 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned i
     
     while(strlen(choix) != wordSize) {
         scanf("%s", choix);
-        printf("Choix: %s\n", choix);
-        printf("Taille: %ld\n", strlen(choix));
         if(strlen(choix) != wordSize) {
             printf(RED "ERR:" RESET " Le mot doit faire %ld caractères\n", wordSize);
             printf(YELLOW "$ " RESET);
@@ -356,4 +361,23 @@ void deserial(generic quoi, char *msg) {
         }
         break;
     }
+}
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+ * @param word Mot à afficher
+ * @param wordlized Code de word
+*/
+void printWord(char *word, char *wordlized) {
+    int i;
+    int wL = strlen(word);
+    for(i = 0; i < wL; i++) {
+        if(wordlized[i] == '!') printcf(GREEN, "\t%c ", word[i]);
+        else if(wordlized[i] == '.') printf("\t%c ", word[i]);
+        else if(wordlized[i] == '?') printcf(YELLOW, "\t%c ", word[i]);
+    }
+    printf("\n");
+
 }
