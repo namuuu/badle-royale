@@ -130,6 +130,8 @@ void pregameRoutine(int idLobby) {
     tabLobby[idLobby].pidLobby = getpid();
     tabLobby[idLobby].playerCount = 0;
     tabLobby[idLobby].state = PREGAME;
+    tabLobby[idLobby].round = 1;
+    strcpy(tabLobby[idLobby].word, ":)");
 
     received_t recData;
 
@@ -166,10 +168,19 @@ void pregameRoutine(int idLobby) {
                     if(recData.code == 107) {
                         // Le joueur est prêt à commencer la partie
                         tabLobby[idLobby].state = STARTED;
+                        tabLobby[idLobby].playerRemaining = tabLobby[idLobby].playerCount;
                         printf(YELLOW "[%s]"  RESET " Le lobby est prêt à commencer la partie\n", tabLobby[idLobby].code);
                         sendData.code = 106;
                         sendData.nbArgs = 0;
                         envoyer(sockPlayer, &sendData, serial);
+                        // fork host routine
+                        int pidHost;
+                        CHECK(pidHost = fork(), "fork()");
+                        if(pidHost == 0) {
+                            hostRoutine(idLobby);
+                            exit(EXIT_SUCCESS);
+                        }
+
                         gameRoutine(sockPlayer, idLobby, idPlayerInLobby);
                     }
                 } else {
@@ -186,7 +197,8 @@ void pregameRoutine(int idLobby) {
                 break;
             case 103: // playWord
                 printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
-                return;
+                strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
+                exit(EXIT_SUCCESS);
             default:
                 break;
             }
@@ -207,20 +219,118 @@ void pregameRoutine(int idLobby) {
  * @param idPlayer Id du joeur dans le lobby 
 */
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
-    while(tabLobby[idLobby].playerCount >= 1) {
+    sleep(2);
+    char bufferMot[MAX_LENGTH] = ":)";
+    char bufferLastWord[MAX_LENGTH] = "NULL";
+    int bufferRound = tabLobby[idLobby].round;
+
+    send_t sendData;
+    while(tabLobby[idLobby].playerRemaining > 1) {
         // Sélection mot
-        char* mot = "test";
-        int currentTimer = 0;
-        sleep(10);
-    
-        // Envoi du fin de round
-        printf("Envoi du kill asker vers %d\n", idPlayer);
-        send_t sendData;
+        while(strcmp(bufferMot, tabLobby[idLobby].word) == 0) {
+            // Sleep for 0.3 seconds
+            usleep(300000);
+        }
+        char* motLength = malloc(sizeof(char) * 5);
+        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word));
+        bufferRound = tabLobby[idLobby].round;
+
         sendData.code = 108;
         sendData.nbArgs = 1;
-        sendData.args[0] = mot;
+        sendData.args[0] = motLength;
+
         envoyer(sockPlayer, &sendData, serial);
+        printf("Envoi du %s mot (taille:%s) vers %d pour le round %d\n", tabLobby[idLobby].word, motLength, idPlayer, tabLobby[idLobby].round);
+        printf("Buffers : lastword - %s - lastPlayedWord - %s\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+
+
+        int currentTimer = 0;
+        // 200 * 0.3 = 60 secondes
+        while(tabLobby[idLobby].round != tabLobby[idLobby].players[idPlayer].score) {
+            while(strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
+                // printf("Attente de match (%s %s)\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+                // Sleep for 0.3 second
+                usleep(300000);
+                currentTimer++;
+
+                if(tabLobby[idLobby].round != bufferRound || currentTimer >= 200) {
+                    // Le joueur a été éliminé
+                    sendData.code = 109;
+                    sendData.nbArgs = 1;
+                    sendData.args[0] = tabLobby[idLobby].word;
+                    envoyer(sockPlayer, &sendData, serial);
+                    exit(EXIT_SUCCESS);
+                }
+            }
+
+            // Réception d'un mot
+            // Obtention de son codeword
+            printf("Trigger de récompense\n");
+            char* codeword = malloc(sizeof(char) * MAX_LENGTH);
+            strcpy(codeword, ".?!."); // hardcodé pour le moment
+
+            // Envoi du codeword au joueur
+            sendData.code = 110;
+            sendData.nbArgs = 1;
+            sendData.args[0] = codeword;
+            envoyer(sockPlayer, &sendData, serial);
+
+            tabLobby[idLobby].players[idPlayer].score++;
+
+            strcpy(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+            
+        }
+
+        strcpy(bufferLastWord, "NULL");
+        strcpy(tabLobby[idLobby].players[idPlayer].lastPlayedWord, "NULL");
+        
+        // Attente nouveau round
+        while(tabLobby[idLobby].round == bufferRound) {
+            sleep(1);
+        }
     }
+    printf(YELLOW "[%s]" RESET " %d a gagné la partie\n", tabLobby[idLobby].code, idPlayer);
+}
+
+void hostRoutine(int idLobby) {
+    while(tabLobby[idLobby].playerRemaining > 1) {
+        printf(YELLOW "[%s]" RESET " Début du round %d\n", tabLobby[idLobby].code, tabLobby[idLobby].round);
+        // Choix du mot
+        char bufferMot[MAX_LENGTH];
+        strcpy(bufferMot, getRandomWord());
+        bufferMot[strlen(bufferMot) - 1] = '\0';
+        strcpy(tabLobby[idLobby].word, bufferMot);
+        printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);
+
+        // Attente de la fin du round
+        while(!waitForPlayersToFinish(idLobby)) {
+            sleep(1);
+        }
+
+        for(int i = 0; i < tabLobby[idLobby].playerCount; i++) {
+            if(tabLobby[idLobby].players[i].score == tabLobby[idLobby].round) {
+                printf(YELLOW "[%s]" RESET " %d a terminé le round %d\n", tabLobby[idLobby].code, i, tabLobby[idLobby].round);
+            } else {
+                printf(YELLOW "[%s]" RESET " %d n'a pas terminé le round %d\n", tabLobby[idLobby].code, i, tabLobby[idLobby].round);
+            }
+        }
+
+        tabLobby[idLobby].playerRemaining--;
+        tabLobby[idLobby].round++;
+    }
+}
+
+int waitForPlayersToFinish(int idLobby) {
+    int finishedPlayers = 0;
+    for(int i = 0; i < tabLobby[idLobby].playerCount; i++) {
+        if(tabLobby[idLobby].players[i].score == tabLobby[idLobby].round) {
+            finishedPlayers++;
+        }
+    }
+    if(finishedPlayers >= tabLobby[idLobby].playerCount - 1) {
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -242,6 +352,8 @@ int recognizePlayer(int idLobby, char* ip, unsigned short port) {
 
     tabLobby[idLobby].players[idPlayer].pidPlayer = getpid();
     tabLobby[idLobby].playerCount++;
+    tabLobby[idLobby].players[idPlayer].score = 0;
+    strcpy(tabLobby[idLobby].players[idPlayer].lastPlayedWord, "NULL");
     return idPlayer;
 }
 
@@ -380,34 +492,31 @@ void deserial(generic quoi, char *msg) {
 }
 
 /**
- * @fn      void installerGestionSignal(int sigNum, void (*handler)(int))
- * @brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @param   handler : Nom de la fonction de traitement du signal sigNum
- * @note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
- */
-void installerGestionSignal(int sigNum, void (*handler)(int)) {
-    // Gestion des signaux
-    action.sa_handler = handler;
-    sigemptyset(&action.sa_mask);
-    action.sa_flags = 0;
-    CHECK(sigaction(sigNum, &action, NULL), "__sigaction__");
-}
+ * \fn char *getRandomWord();
+ * 
+ * @brief Récupère un mot aléatoire dans le fichier dico.txt
+ * @return Mot aléatoire
+ * @return NULL si le fichier n'a pas pu être ouvert
+*/
+char *getRandomWord() {
+    FILE *f; 
+    char *word = malloc(MAX_LENGTH * sizeof(char));
+    int i = 1, random;
 
-/*      ****    FCTS GESTION SIGNAUX    *** Q3  *** _________________________*/
-/**
- * @fn      void traiterSignal(int sigNum)
- * @brief   Traitement du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @note    Signaux implémentés : SIGALRM
- */
-void traiterSignal(int sigNum) {
-    switch (sigNum) {
-        case SIGALRM:
-            printf("Signal SIGALRM reçu\n");
-            break;
-        default:
-            printf("Signal %d reçu\n", sigNum);
-            break;
+    f = fopen("./exe/dico.txt", "r");
+    if (f == NULL) {
+        printc(RED, "ERREUR : Ne pas ouvrir le fichier\n");
+        return NULL;
     }
+
+    srand(time(NULL));
+    random = (rand() % NB_LIGNES)+1;
+
+    while (fgets(word, MAX_LENGTH, f) != NULL) {
+        if (i == random) return word;
+        i++;
+    }
+
+    fclose(f);
+    return NULL;
 }

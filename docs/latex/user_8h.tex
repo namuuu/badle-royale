@@ -1,0 +1,208 @@
+\hypertarget{user_8h}{}\doxysection{app/user.h File Reference}
+\label{user_8h}\index{app/user.h@{app/user.h}}
+{\ttfamily \#include \char`\"{}../lib/data.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}string.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+Include dependency graph for user.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{user_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=147pt]{user_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsend__t}{send\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structreceived__t}{received\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{user_8h_ad3fe337408f16c132c895f2b59326410}{CHECK}}(sts,  msg)~if ((sts) == -\/1) \{perror(msg); exit(-\/1);\}
+\item 
+\#define \mbox{\hyperlink{user_8h_adfd0edee2be26b454b950f32cee9384a}{IP\+\_\+\+HUB}}~\char`\"{}0.\+0.\+0.\+0\char`\"{}
+\item 
+\#define \mbox{\hyperlink{user_8h_a9d7b6d27bf5aa24e2f820103b0574a93}{PORT\+\_\+\+HUB}}~5000
+\item 
+\#define \mbox{\hyperlink{user_8h_a336c3d26c52e8ec219aad5ddebe6679b}{IP\+\_\+\+CLIENT}}~\char`\"{}127.\+0.\+0.\+1\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{user_8h_a417a1c8a08cfa137670f30c3d9a76249}{require\+Lobby\+From\+Code}} ()
+\begin{DoxyCompactList}\small\item\em Connexion au serveur. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{user_8h_a0120d43faa148f4c87b155290623d8cc}{create\+Lobby\+With\+Code}} ()
+\begin{DoxyCompactList}\small\item\em permet d\textquotesingle{}envoyer une demande de création de lobby ~\newline
+ \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{user_8h_a3bd868026b33e91a7e80c9d0568cf393}{connect\+To\+Lobby}} (char $\ast$ip, unsigned short port, char $\ast$code)
+\begin{DoxyCompactList}\small\item\em envoie une requete pour se connecter au lobby en prennant en compte le statut du joueur pour savoir si il peut aussi lancer la partie ~\newline
+ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{user_8h_a2a0e843767aeea4f433a28b9c54f573a}{menu}} ()
+\begin{DoxyCompactList}\small\item\em Menu principal. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{user_8h_aa8c0b7a680670d500a503fef565b819e}{serial}} (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, char $\ast$req)
+\begin{DoxyCompactList}\small\item\em transforme les données en chaine de charactères ~\newline
+ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{user_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}{deserial}} (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}} quoi, char $\ast$msg)
+\begin{DoxyCompactList}\small\item\em transforme les chaine de charactères en données \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{user_8h_afec3b16c32f77f83c36b9b8fa16ef02d}{main\+To\+Lobby}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} socket\+Lobby, int id\+Player)
+\begin{DoxyCompactList}\small\item\em fonction permettant de lancer le jeu \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{user_8h_ae5578436701542ef79b4eae1df2f6389}{writer\+To\+Lobby}} (char $\ast$ip, unsigned short port, int id\+Player, long unsigned int word\+Size)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{user_8h_ad3fe337408f16c132c895f2b59326410}\label{user_8h_ad3fe337408f16c132c895f2b59326410}} 
+\index{user.h@{user.h}!CHECK@{CHECK}}
+\index{CHECK@{CHECK}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{CHECK}{CHECK}}
+{\footnotesize\ttfamily \#define CHECK(\begin{DoxyParamCaption}\item[{}]{sts,  }\item[{}]{msg }\end{DoxyParamCaption})~if ((sts) == -\/1) \{perror(msg); exit(-\/1);\}}
+
+\mbox{\Hypertarget{user_8h_a336c3d26c52e8ec219aad5ddebe6679b}\label{user_8h_a336c3d26c52e8ec219aad5ddebe6679b}} 
+\index{user.h@{user.h}!IP\_CLIENT@{IP\_CLIENT}}
+\index{IP\_CLIENT@{IP\_CLIENT}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{IP\_CLIENT}{IP\_CLIENT}}
+{\footnotesize\ttfamily \#define IP\+\_\+\+CLIENT~\char`\"{}127.\+0.\+0.\+1\char`\"{}}
+
+\mbox{\Hypertarget{user_8h_adfd0edee2be26b454b950f32cee9384a}\label{user_8h_adfd0edee2be26b454b950f32cee9384a}} 
+\index{user.h@{user.h}!IP\_HUB@{IP\_HUB}}
+\index{IP\_HUB@{IP\_HUB}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{IP\_HUB}{IP\_HUB}}
+{\footnotesize\ttfamily \#define IP\+\_\+\+HUB~\char`\"{}0.\+0.\+0.\+0\char`\"{}}
+
+\mbox{\Hypertarget{user_8h_a9d7b6d27bf5aa24e2f820103b0574a93}\label{user_8h_a9d7b6d27bf5aa24e2f820103b0574a93}} 
+\index{user.h@{user.h}!PORT\_HUB@{PORT\_HUB}}
+\index{PORT\_HUB@{PORT\_HUB}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{PORT\_HUB}{PORT\_HUB}}
+{\footnotesize\ttfamily \#define PORT\+\_\+\+HUB~5000}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{user_8h_a3bd868026b33e91a7e80c9d0568cf393}\label{user_8h_a3bd868026b33e91a7e80c9d0568cf393}} 
+\index{user.h@{user.h}!connectToLobby@{connectToLobby}}
+\index{connectToLobby@{connectToLobby}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{connectToLobby()}{connectToLobby()}}
+{\footnotesize\ttfamily int connect\+To\+Lobby (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{unsigned short}]{port,  }\item[{char $\ast$}]{code }\end{DoxyParamCaption})}
+
+
+
+envoie une requete pour se connecter au lobby en prennant en compte le statut du joueur pour savoir si il peut aussi lancer la partie ~\newline
+ 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & \\
+\hline
+{\em port} & \\
+\hline
+{\em code} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{user_8h_a0120d43faa148f4c87b155290623d8cc}\label{user_8h_a0120d43faa148f4c87b155290623d8cc}} 
+\index{user.h@{user.h}!createLobbyWithCode@{createLobbyWithCode}}
+\index{createLobbyWithCode@{createLobbyWithCode}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{createLobbyWithCode()}{createLobbyWithCode()}}
+{\footnotesize\ttfamily int create\+Lobby\+With\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+permet d\textquotesingle{}envoyer une demande de création de lobby ~\newline
+ 
+
+\mbox{\Hypertarget{user_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}\label{user_8h_a149aad556f95b7c7d0fa0d9d7f1bf12a}} 
+\index{user.h@{user.h}!deserial@{deserial}}
+\index{deserial@{deserial}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{deserial()}{deserial()}}
+{\footnotesize\ttfamily void deserial (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+
+
+transforme les chaine de charactères en données 
+
+
+\begin{DoxyParams}{Parameters}
+{\em quoi} & \\
+\hline
+{\em msg} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{user_8h_afec3b16c32f77f83c36b9b8fa16ef02d}\label{user_8h_afec3b16c32f77f83c36b9b8fa16ef02d}} 
+\index{user.h@{user.h}!mainToLobby@{mainToLobby}}
+\index{mainToLobby@{mainToLobby}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{mainToLobby()}{mainToLobby()}}
+{\footnotesize\ttfamily void main\+To\+Lobby (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{socket\+Lobby,  }\item[{int}]{id\+Player }\end{DoxyParamCaption})}
+
+
+
+fonction permettant de lancer le jeu 
+
+fonction principale permettant de lancer une partie
+
+
+\begin{DoxyParams}{Parameters}
+{\em socket\+Lobby} & \\
+\hline
+{\em id\+Player} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{user_8h_a2a0e843767aeea4f433a28b9c54f573a}\label{user_8h_a2a0e843767aeea4f433a28b9c54f573a}} 
+\index{user.h@{user.h}!menu@{menu}}
+\index{menu@{menu}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{menu()}{menu()}}
+{\footnotesize\ttfamily void menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Menu principal. 
+
+\mbox{\Hypertarget{user_8h_a417a1c8a08cfa137670f30c3d9a76249}\label{user_8h_a417a1c8a08cfa137670f30c3d9a76249}} 
+\index{user.h@{user.h}!requireLobbyFromCode@{requireLobbyFromCode}}
+\index{requireLobbyFromCode@{requireLobbyFromCode}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{requireLobbyFromCode()}{requireLobbyFromCode()}}
+{\footnotesize\ttfamily int require\+Lobby\+From\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Connexion au serveur. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{user_8h_aa8c0b7a680670d500a503fef565b819e}\label{user_8h_aa8c0b7a680670d500a503fef565b819e}} 
+\index{user.h@{user.h}!serial@{serial}}
+\index{serial@{serial}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{serial()}{serial()}}
+{\footnotesize\ttfamily void serial (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}]{quoi,  }\item[{char $\ast$}]{req }\end{DoxyParamCaption})}
+
+
+
+transforme les données en chaine de charactères ~\newline
+ 
+
+transforme les données en chaine de charactères
+
+
+\begin{DoxyParams}{Parameters}
+{\em quoi} & \\
+\hline
+{\em req} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{user_8h_ae5578436701542ef79b4eae1df2f6389}\label{user_8h_ae5578436701542ef79b4eae1df2f6389}} 
+\index{user.h@{user.h}!writerToLobby@{writerToLobby}}
+\index{writerToLobby@{writerToLobby}!user.h@{user.h}}
+\doxysubsubsection{\texorpdfstring{writerToLobby()}{writerToLobby()}}
+{\footnotesize\ttfamily void writer\+To\+Lobby (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{unsigned short}]{port,  }\item[{int}]{id\+Player,  }\item[{long unsigned int}]{word\+Size }\end{DoxyParamCaption})}
+

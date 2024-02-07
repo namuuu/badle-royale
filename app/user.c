@@ -159,7 +159,7 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
     char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
 
-    // system("clear");
+    system("clear");
 
     send_t reqDataLobby;
     reqDataLobby.code = 102;
@@ -229,29 +229,40 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
  */
 void mainToLobby(socket_t socketLobby, int idPlayer) {
     printf("Lancement du jeu...\n");
+    received_t recDataLobby;
     while(1) {
+        // Wait for the round to start and to receive word length
+        printf("Début du round...\n");
+        recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        printf("Longueur du mot: %s\n\t", recDataLobby.args[0]);
+        for(int i = 0; i < atoi(recDataLobby.args[0]); i++) {
+            printf("_ ");
+        }
+        printf("\n");
+
         // Fork write To Lobby
         int pidWriter;
         CHECK(pidWriter = fork(), "fork()");
         if(pidWriter == 0) {
-            writerToLobby(socketLobby.ip, socketLobby.port, idPlayer);
-            return;
+            writerToLobby(socketLobby.ip, socketLobby.port, idPlayer, atoi(recDataLobby.args[0]));
+            exit(EXIT_SUCCESS);
         }
         // Main
-        received_t recDataLobby;
         recevoirSuivant(socketLobby, &recDataLobby, deserial);
         switch (recDataLobby.code)
         {
-        case 108:
-            printf(GREEN "[%s]" RESET " %s\n", recDataLobby.args[0], recDataLobby.args[1]);
-            printf("Attempting to kill...\n");
+        case 109:
+            printf("\nVous avez perdu ! Le mot était %s\n", recDataLobby.args[0]);
             kill(pidWriter, SIGKILL);
+            while(1);
             break;
+        case 110:
+            printf(GREEN "Vous avez deviné le mot ! En attente des autres joueurs...\n" RESET);
+            break; 
         default:
             printf("Data received: %d\n", recDataLobby.code);
             break;
         }
-        while(1);
     }
     
 
@@ -263,8 +274,10 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
  * @brief This function will handle writing words to the Lobby in a fork while the main one is listening to the lobby
  * @param ip :  ip du lobby 
  * @param port : port du lobby 
+ * @param idPlayer : id du joueur
+ * @param wordSize : taille du mot
 */
-void writerToLobby(char * ip, unsigned short port, int idPlayer) {
+void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned int wordSize) {
     socket_t sockLobby = connectToServer(IP_CLIENT, 0, ip, port, SOCK_STREAM);
 
     send_t reqDataLobby;
@@ -274,7 +287,16 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer) {
     char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
 
     printf(YELLOW "$ " RESET);
-    scanf("%s", choix);
+    
+    while(strlen(choix) != wordSize) {
+        scanf("%s", choix);
+        printf("Choix: %s\n", choix);
+        printf("Taille: %ld\n", strlen(choix));
+        if(strlen(choix) != wordSize) {
+            printf(RED "ERR:" RESET " Le mot doit faire %ld caractères\n", wordSize);
+            printf(YELLOW "$ " RESET);
+        }
+    }
 
     // arg 0 = idplayer
     reqDataLobby.args[0] = malloc(sizeof(char) * 10);
@@ -285,16 +307,6 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer) {
 
     envoyer(sockLobby, &reqDataLobby, serial);
     // printf("Connexion au lobby %s...\n", code);
-
-    received_t recDataLobby;
-    recevoirSuivant(sockLobby, &recDataLobby, deserial);
-
-    switch (recDataLobby.code)
-    {
-        default:
-            printf("Data received: %d\n", recDataLobby.code);
-            return;
-    }
 }
 
 /**

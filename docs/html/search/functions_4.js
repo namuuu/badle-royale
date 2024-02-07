@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['prepareforclient_77',['prepareForClient',['../data_8c.html#a6654e21f161146a6966ed5c661ed6379',1,'prepareForClient(char *ip, short port, short mode):&#160;data.c'],['../data_8h.html#a6654e21f161146a6966ed5c661ed6379',1,'prepareForClient(char *ip, short port, short mode):&#160;data.c']]]
+  ['fermerconnexion_143',['fermerConnexion',['../data_8c.html#a91f2597cb163a94cae6cdf3f2e61ee2d',1,'fermerConnexion(socket_t sock):&#160;data.c'],['../data_8h.html#a91f2597cb163a94cae6cdf3f2e61ee2d',1,'fermerConnexion(socket_t sock):&#160;data.c']]]
 ];

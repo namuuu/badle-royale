@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['recevoir_43',['recevoir',['../data_8c.html#a76b72db3f0aaa940e2ef2ec71c01dee0',1,'recevoir(socket_t sock, generic quoi, pFct deSerial):&#160;data.c'],['../data_8h.html#a76b72db3f0aaa940e2ef2ec71c01dee0',1,'recevoir(socket_t sock, generic quoi, pFct deSerial):&#160;data.c']]],
-  ['red_44',['RED',['../session_8h.html#a8d23feea868a983c8c2b661e1e16972f',1,'session.h']]],
-  ['reset_45',['RESET',['../session_8h.html#ab702106cf3b3e96750b6845ded4e0299',1,'session.h']]]
+  ['nb_5flignes_65',['NB_LIGNES',['../hub_8h.html#ad8edf09d2d914fdd5eae545ee2bd6ce9',1,'hub.h']]],
+  ['nbargs_66',['nbArgs',['../structsend__t.html#a3ad7411a1d426f64bf77b4bc3a8371f1',1,'send_t::nbArgs()'],['../structreceived__t.html#adcc97e81a6b28bb39a413c75d29fad44',1,'received_t::nbArgs()']]],
+  ['nblobby_67',['nbLobby',['../hub_8c.html#a83e0f69cc111d712317dd28109e2a807',1,'hub.c']]]
 ];

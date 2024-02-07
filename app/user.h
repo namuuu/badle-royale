@@ -101,5 +101,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer);
  * @brief This function will handle writing words to the Lobby in a fork while the main one is listening to the lobby
  * @param ip :  ip du lobby 
  * @param port : port du lobby 
+ * @param idPlayer : id du joueur
+ * @param wordSize : taille du mot
 */
-void writerToLobby(char * ip, unsigned short port, int idPlayer);
+void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned int wordSize);

@@ -8,18 +8,23 @@
 {\ttfamily \#include $<$sys/socket.\+h$>$}\newline
 {\ttfamily \#include $<$netinet/in.\+h$>$}\newline
 {\ttfamily \#include $<$arpa/inet.\+h$>$}\newline
-Include dependency graph for session.\+h\+:\nopagebreak
+{\ttfamily \#include $<$sys/mman.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+Include dependency graph for session.\+h\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{session_8h__incl}
 \end{center}
 \end{figure}
-This graph shows which files directly or indirectly include this file\+:\nopagebreak
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=286pt]{session_8h__dep__incl}
+\includegraphics[width=350pt]{session_8h__dep__incl}
 \end{center}
 \end{figure}
 \doxysubsection*{Classes}
@@ -62,7 +67,22 @@ struct \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}
 \item 
 \#define \mbox{\hyperlink{session_8h_aa4ef051614aa0bd503b0a18ee158c5d7}{BOLDWHITE}}~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}37m\char`\"{}      /$\ast$ Bold White $\ast$/
 \item 
+\#define \mbox{\hyperlink{session_8h_ad3fe337408f16c132c895f2b59326410}{CHECK}}(sts,  msg)~if ((sts) == -\/1) \{perror(msg); exit(-\/1);\}
+\item 
 \#define \mbox{\hyperlink{session_8h_ab88cc1297d6c95a97f8d80113b776262}{printc}}(color,  msg)~printf(color \char`\"{}\%s\char`\"{} RESET, msg)
+\item 
+\#define \mbox{\hyperlink{session_8h_adba53e4e050e9331f806ff894989d16a}{printcf}}(color,  msg,  ...)~printf(color msg \mbox{\hyperlink{session_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{session_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}~1024
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef char \mbox{\hyperlink{session_8h_af3c9c9e648eb422e8a1a08a2bba7e108}{buffer\+\_\+t}}\mbox{[}\mbox{\hyperlink{session_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}\mbox{]}
+\item 
+typedef void $\ast$ \mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}
+\item 
+typedef void($\ast$ \mbox{\hyperlink{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}{p\+Fct}}) (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}, char $\ast$)
 \end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -75,8 +95,8 @@ struct sockaddr\+\_\+in \mbox{\hyperlink{session_8h_a91d486d1919db183070f672cffd
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket dans un mode donné et réalisation de l\textquotesingle{}adressage en INET. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_af50e980caf0a387623e73319543d538b}{creer\+Socket\+Ecoute\+Stream}} (char $\ast$ip, short port, short max\+Clts)
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_a6667499579de14d5d4c303661b647f31}{creer\+Socket\+Ecriture\+Stream}} (char $\ast$ip, short port)
-\begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_abaf87d30ca098739e6a704acdf48e39f}{creer\+Socket\+Ecriture\+Stream}} (char $\ast$ip\+Client, short \mbox{\hyperlink{user_8c_a15bf1470a9821800132707a195c38ff2}{port\+Client}}, char $\ast$ip\+Serveur, short port\+Serveur)
+\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_a19936bc76cfe3311b6992a0cd5e87c52}{creer\+Socket\+Ecoute\+Dgram}} (char $\ast$ip, short port)
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en DGRAM. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} \mbox{\hyperlink{session_8h_aae82e5786aca610986ee3abb981ec4df}{creer\+Socket\+Ecriture\+Dgram}} (char $\ast$ip, short port)
@@ -85,8 +105,10 @@ struct sockaddr\+\_\+in \mbox{\hyperlink{session_8h_a91d486d1919db183070f672cffd
 \begin{DoxyCompactList}\small\item\em Création d\textquotesingle{}une socket d\textquotesingle{}écoute en STREAM. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}{ecrire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock, char $\ast$msg, short mode)
 \begin{DoxyCompactList}\small\item\em Ecrit un message sur une socket. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{session_8h_af0294d563b93bbb93cad9365dc17f3a1}{lire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
-\begin{DoxyCompactList}\small\item\em Lit un message sur une socket. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{session_8h_a7719e7c17081509c2739af0ad1b4c8b2}{lire\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Ecoute, char $\ast$received\+Data)
+\item 
+int \mbox{\hyperlink{session_8h_ae1a6a29a4f2341e9ab138eb465d55478}{lire\+Socket\+Next}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock\+Ecoute, char $\ast$received\+Data)
+\item 
 void \mbox{\hyperlink{session_8h_a690fdbe9b224b3609eb9a1c320e565d4}{close\+Socket}} (\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} sock)
 \begin{DoxyCompactList}\small\item\em Ferme une socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -158,6 +180,12 @@ Tomas TRENY, Leevan DAVID
 \doxysubsubsection{\texorpdfstring{BOLDYELLOW}{BOLDYELLOW}}
 {\footnotesize\ttfamily \#define BOLDYELLOW~\char`\"{}\textbackslash{}033\mbox{[}1m\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Bold Yellow $\ast$/}
 
+\mbox{\Hypertarget{session_8h_ad3fe337408f16c132c895f2b59326410}\label{session_8h_ad3fe337408f16c132c895f2b59326410}} 
+\index{session.h@{session.h}!CHECK@{CHECK}}
+\index{CHECK@{CHECK}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{CHECK}{CHECK}}
+{\footnotesize\ttfamily \#define CHECK(\begin{DoxyParamCaption}\item[{}]{sts,  }\item[{}]{msg }\end{DoxyParamCaption})~if ((sts) == -\/1) \{perror(msg); exit(-\/1);\}}
+
 \mbox{\Hypertarget{session_8h_ad243f93c16bc4c1d3e0a13b84421d760}\label{session_8h_ad243f93c16bc4c1d3e0a13b84421d760}} 
 \index{session.h@{session.h}!CYAN@{CYAN}}
 \index{CYAN@{CYAN}!session.h@{session.h}}
@@ -176,11 +204,23 @@ Tomas TRENY, Leevan DAVID
 \doxysubsubsection{\texorpdfstring{MAGENTA}{MAGENTA}}
 {\footnotesize\ttfamily \#define MAGENTA~\char`\"{}\textbackslash{}033\mbox{[}35m\char`\"{}      /$\ast$ Magenta $\ast$/}
 
+\mbox{\Hypertarget{session_8h_a4b70916bdf28ed7afd94e4fb98230a90}\label{session_8h_a4b70916bdf28ed7afd94e4fb98230a90}} 
+\index{session.h@{session.h}!MAX\_BUFF@{MAX\_BUFF}}
+\index{MAX\_BUFF@{MAX\_BUFF}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_BUFF}{MAX\_BUFF}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+BUFF~1024}
+
 \mbox{\Hypertarget{session_8h_ab88cc1297d6c95a97f8d80113b776262}\label{session_8h_ab88cc1297d6c95a97f8d80113b776262}} 
 \index{session.h@{session.h}!printc@{printc}}
 \index{printc@{printc}!session.h@{session.h}}
 \doxysubsubsection{\texorpdfstring{printc}{printc}}
 {\footnotesize\ttfamily \#define printc(\begin{DoxyParamCaption}\item[{}]{color,  }\item[{}]{msg }\end{DoxyParamCaption})~printf(color \char`\"{}\%s\char`\"{} RESET, msg)}
+
+\mbox{\Hypertarget{session_8h_adba53e4e050e9331f806ff894989d16a}\label{session_8h_adba53e4e050e9331f806ff894989d16a}} 
+\index{session.h@{session.h}!printcf@{printcf}}
+\index{printcf@{printcf}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{printcf}{printcf}}
+{\footnotesize\ttfamily \#define printcf(\begin{DoxyParamCaption}\item[{}]{color,  }\item[{}]{msg,  }\item[{}]{... }\end{DoxyParamCaption})~printf(color msg \mbox{\hyperlink{session_8h_ab702106cf3b3e96750b6845ded4e0299}{RESET}}, \+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
 
 \mbox{\Hypertarget{session_8h_a8d23feea868a983c8c2b661e1e16972f}\label{session_8h_a8d23feea868a983c8c2b661e1e16972f}} 
 \index{session.h@{session.h}!RED@{RED}}
@@ -205,6 +245,27 @@ Tomas TRENY, Leevan DAVID
 \index{YELLOW@{YELLOW}!session.h@{session.h}}
 \doxysubsubsection{\texorpdfstring{YELLOW}{YELLOW}}
 {\footnotesize\ttfamily \#define YELLOW~\char`\"{}\textbackslash{}033\mbox{[}33m\char`\"{}      /$\ast$ Yellow $\ast$/}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{session_8h_af3c9c9e648eb422e8a1a08a2bba7e108}\label{session_8h_af3c9c9e648eb422e8a1a08a2bba7e108}} 
+\index{session.h@{session.h}!buffer\_t@{buffer\_t}}
+\index{buffer\_t@{buffer\_t}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{buffer\_t}{buffer\_t}}
+{\footnotesize\ttfamily typedef char buffer\+\_\+t\mbox{[}\mbox{\hyperlink{session_8h_a4b70916bdf28ed7afd94e4fb98230a90}{MAX\+\_\+\+BUFF}}\mbox{]}}
+
+\mbox{\Hypertarget{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}\label{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}} 
+\index{session.h@{session.h}!generic@{generic}}
+\index{generic@{generic}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{generic}{generic}}
+{\footnotesize\ttfamily typedef void$\ast$ \mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}}
+
+\mbox{\Hypertarget{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}\label{session_8h_a3b6b13a002142d8fe2a92d9e25ddba6e}} 
+\index{session.h@{session.h}!pFct@{pFct}}
+\index{pFct@{pFct}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{pFct}{pFct}}
+{\footnotesize\ttfamily typedef void($\ast$ p\+Fct) (\mbox{\hyperlink{session_8h_a3880ce875ea7e22dc1ad979b4da08bb2}{generic}}, char $\ast$)}
 
 
 
@@ -364,26 +425,12 @@ Création d\textquotesingle{}une socket d\textquotesingle{}écriture en DGRAM.
 \begin{DoxyReturn}{Returns}
 structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{session_8h_a6667499579de14d5d4c303661b647f31}\label{session_8h_a6667499579de14d5d4c303661b647f31}} 
+\mbox{\Hypertarget{session_8h_abaf87d30ca098739e6a704acdf48e39f}\label{session_8h_abaf87d30ca098739e6a704acdf48e39f}} 
 \index{session.h@{session.h}!creerSocketEcritureStream@{creerSocketEcritureStream}}
 \index{creerSocketEcritureStream@{creerSocketEcritureStream}!session.h@{session.h}}
 \doxysubsubsection{\texorpdfstring{creerSocketEcritureStream()}{creerSocketEcritureStream()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip,  }\item[{short}]{port }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} creer\+Socket\+Ecriture\+Stream (\begin{DoxyParamCaption}\item[{char $\ast$}]{ip\+Client,  }\item[{short}]{port\+Client,  }\item[{char $\ast$}]{ip\+Serveur,  }\item[{short}]{port\+Serveur }\end{DoxyParamCaption})}
 
-
-
-Création d\textquotesingle{}une socket d\textquotesingle{}écriture en STREAM. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em ip} & Fournit l\textquotesingle{}adresse IP de la socket à créer \\
-\hline
-{\em port} & Fournit le port de la socket à créer \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-structure \mbox{\hyperlink{structsocket__t}{socket\+\_\+t}} 
-\end{DoxyReturn}
 \mbox{\Hypertarget{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}\label{session_8h_a6a27a21b9d2a053b7d609c2d6ccf42fa}} 
 \index{session.h@{session.h}!ecrireSocket@{ecrireSocket}}
 \index{ecrireSocket@{ecrireSocket}!session.h@{session.h}}
@@ -403,18 +450,15 @@ Ecrit un message sur une socket.
 {\em msg} & Fournit le message à écrire \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{session_8h_af0294d563b93bbb93cad9365dc17f3a1}\label{session_8h_af0294d563b93bbb93cad9365dc17f3a1}} 
+\mbox{\Hypertarget{session_8h_a7719e7c17081509c2739af0ad1b4c8b2}\label{session_8h_a7719e7c17081509c2739af0ad1b4c8b2}} 
 \index{session.h@{session.h}!lireSocket@{lireSocket}}
 \index{lireSocket@{lireSocket}!session.h@{session.h}}
 \doxysubsubsection{\texorpdfstring{lireSocket()}{lireSocket()}}
-{\footnotesize\ttfamily void lire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int lire\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute,  }\item[{char $\ast$}]{received\+Data }\end{DoxyParamCaption})}
 
+\mbox{\Hypertarget{session_8h_ae1a6a29a4f2341e9ab138eb465d55478}\label{session_8h_ae1a6a29a4f2341e9ab138eb465d55478}} 
+\index{session.h@{session.h}!lireSocketNext@{lireSocketNext}}
+\index{lireSocketNext@{lireSocketNext}!session.h@{session.h}}
+\doxysubsubsection{\texorpdfstring{lireSocketNext()}{lireSocketNext()}}
+{\footnotesize\ttfamily int lire\+Socket\+Next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsocket__t}{socket\+\_\+t}}}]{sock\+Ecoute,  }\item[{char $\ast$}]{received\+Data }\end{DoxyParamCaption})}
 
-
-Lit un message sur une socket. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em sock} & Fournit la socket \\
-\hline
-\end{DoxyParams}
