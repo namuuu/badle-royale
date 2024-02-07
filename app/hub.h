@@ -10,6 +10,9 @@
 #define HUB_IP "0.0.0.0"
 #define HUB_PORT 5000
 
+#define NB_LIGNES 9081
+#define MAX_LENGTH 9
+
 #define PLAYER_MAX 4
 
 /* ---------------------------------------  ENUMS ------------------------------------------ */
@@ -40,7 +43,7 @@ typedef struct {
     unsigned short port;
     int pidPlayer;
     int lobbyHost;
-
+    
 } playerData_t;
 
 typedef struct {
@@ -51,6 +54,7 @@ typedef struct {
     int playerCount;
     int pidLobby;
     lobbyState state;
+    char word[MAX_LENGTH];
 } lobbyData_t;
 
 /* ---------------------------------------  PROTOTYPES ------------------------------------------ */
@@ -61,9 +65,6 @@ typedef struct {
  * @brief Lance un serveur HUB
 */
 void serveur();
-
-
-void waitForInput(socket_t sock, generic msg);
 
 /**
  * @fn void pregameRoutine();
@@ -84,15 +85,6 @@ void pregameRoutine(int idLobby);
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer);
 
 /**
- * @fn      void installerGestionSignal(int sigNum, void (*handler)(int))
- * @brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @param   handler : Nom de la fonction de traitement du signal sigNum
- * @note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
- */
-void installerGestionSignal(int sigNum, void (*handler)(int));
-
-/**
  * \fn void suppressionCode(FILE* fichier, const char *code);
  * 
  * @brief Suppression d'un code dans le fichier
@@ -100,14 +92,6 @@ void installerGestionSignal(int sigNum, void (*handler)(int));
  * @param code Code à supprimer
  */
 void suppressionCode(const char *code);
-
-/**
- * @fn      void traiterSignal(int sigNum)
- * @brief   Traitement du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @note    Signaux implémentés : SIGALRM
- */
-void traiterSignal(int sigNum);
 
 /**
  * \fn void serial(generic quoi, char* req) ;
@@ -152,3 +136,12 @@ void generateLobbyCode(char *code);
  * @param port : port du lobby 
  */
 int recognizePlayer(int idLobby, char* ip, unsigned short port);
+
+/**
+ * \fn char *getRandomWord();
+ * 
+ * @brief Récupère un mot aléatoire dans le fichier dico.txt
+ * @return Mot aléatoire
+ * @return NULL si le fichier n'a pas pu être ouvert
+*/
+char *getRandomWord();

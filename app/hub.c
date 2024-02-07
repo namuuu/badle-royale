@@ -130,6 +130,7 @@ void pregameRoutine(int idLobby) {
     tabLobby[idLobby].pidLobby = getpid();
     tabLobby[idLobby].playerCount = 0;
     tabLobby[idLobby].state = PREGAME;
+    strcpy(tabLobby[idLobby].word, ":)");
 
     received_t recData;
 
@@ -207,19 +208,46 @@ void pregameRoutine(int idLobby) {
  * @param idPlayer Id du joeur dans le lobby 
 */
 void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
+    sleep(2);
+
+    send_t sendData;
     while(tabLobby[idLobby].playerCount >= 1) {
+        char bufferMot[MAX_LENGTH] = ":)";
         // Sélection mot
-        char* mot = "test";
-        int currentTimer = 0;
-        sleep(10);
-    
-        // Envoi du fin de round
-        printf("Envoi du kill asker vers %d\n", idPlayer);
-        send_t sendData;
+        if(idPlayer == 0) {
+            char mot[MAX_LENGTH] = "test";
+            strcpy(tabLobby[idLobby].word, mot);
+            printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, mot);
+        }
+        while(strcmp(bufferMot, tabLobby[idLobby].word) == 0) {
+            // Sleep for 0.3 seconds
+            usleep(300000);
+        }
+
+        char* motLength = malloc(sizeof(char) * 5);
+        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word));
+
         sendData.code = 108;
         sendData.nbArgs = 1;
-        sendData.args[0] = mot;
+        sendData.args[0] = motLength;
+
         envoyer(sockPlayer, &sendData, serial);
+        printf("Envoi du mot vers %d\n", idPlayer);
+
+
+        int currentTimer = 0;
+        while(1);
+
+        // Envoi début de round
+
+    
+        // // Envoi du fin de round
+        // printf("Envoi du kill asker vers %d\n", idPlayer);
+        // send_t sendData;
+        // sendData.code = 109;
+        // sendData.nbArgs = 1;
+        // sendData.args[0] = mot;
+        // envoyer(sockPlayer, &sendData, serial);
     }
 }
 
@@ -380,34 +408,31 @@ void deserial(generic quoi, char *msg) {
 }
 
 /**
- * @fn      void installerGestionSignal(int sigNum, void (*handler)(int))
- * @brief   Installer le traitement handler pour un déclenchement sur occurence du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @param   handler : Nom de la fonction de traitement du signal sigNum
- * @note    handler peut valoir SIG_DFL (traitement par défaut) ou SIG_IGN (pour ignorer le signal)
- */
-void installerGestionSignal(int sigNum, void (*handler)(int)) {
-    // Gestion des signaux
-    action.sa_handler = handler;
-    sigemptyset(&action.sa_mask);
-    action.sa_flags = 0;
-    CHECK(sigaction(sigNum, &action, NULL), "__sigaction__");
-}
+ * \fn char *getRandomWord();
+ * 
+ * @brief Récupère un mot aléatoire dans le fichier dico.txt
+ * @return Mot aléatoire
+ * @return NULL si le fichier n'a pas pu être ouvert
+*/
+char *getRandomWord() {
+    FILE *f; 
+    char *word = malloc(MAX_LENGTH * sizeof(char));
+    int i = 1, random;
 
-/*      ****    FCTS GESTION SIGNAUX    *** Q3  *** _________________________*/
-/**
- * @fn      void traiterSignal(int sigNum)
- * @brief   Traitement du signal sigNum
- * @param   sigNum : Numéro du signal déclencheur
- * @note    Signaux implémentés : SIGALRM
- */
-void traiterSignal(int sigNum) {
-    switch (sigNum) {
-        case SIGALRM:
-            printf("Signal SIGALRM reçu\n");
-            break;
-        default:
-            printf("Signal %d reçu\n", sigNum);
-            break;
+    f = fopen("./exe/dico.txt", "r");
+    if (f == NULL) {
+        printc(RED, "ERREUR : Ne pas ouvrir le fichier\n");
+        return NULL;
     }
+
+    srand(time(NULL));
+    random = (rand() % NB_LIGNES)+1;
+
+    while (fgets(word, MAX_LENGTH, f) != NULL) {
+        if (i == random) return word;
+        i++;
+    }
+
+    fclose(f);
+    return NULL;
 }

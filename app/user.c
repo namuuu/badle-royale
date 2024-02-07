@@ -159,7 +159,7 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
     socket_t sockLobby = connectToServer(IP_CLIENT, portClient, ip, port, SOCK_STREAM);
     char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
 
-    // system("clear");
+    system("clear");
 
     send_t reqDataLobby;
     reqDataLobby.code = 102;
@@ -229,7 +229,14 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
  */
 void mainToLobby(socket_t socketLobby, int idPlayer) {
     printf("Lancement du jeu...\n");
+    received_t recDataLobby;
     while(1) {
+        printf("Début du round...\n");
+
+        // Wait for the round to start and to receive word length
+        recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        printf("Taille du mot: %s\n", recDataLobby.args[0]);
+
         // Fork write To Lobby
         int pidWriter;
         CHECK(pidWriter = fork(), "fork()");
@@ -238,11 +245,10 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
             return;
         }
         // Main
-        received_t recDataLobby;
         recevoirSuivant(socketLobby, &recDataLobby, deserial);
         switch (recDataLobby.code)
         {
-        case 108:
+        case 109:
             printf(GREEN "[%s]" RESET " %s\n", recDataLobby.args[0], recDataLobby.args[1]);
             printf("Attempting to kill...\n");
             kill(pidWriter, SIGKILL);
