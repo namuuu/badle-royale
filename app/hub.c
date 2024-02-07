@@ -138,6 +138,7 @@ void pregameRoutine(int idLobby) {
     while (1)
     {
         sockPlayer = accepterConnexion(sock);
+        printf("connexion acceptée\n");
 
         int pidPlayer;
         CHECK(pidPlayer = fork(), "fork()");
@@ -146,6 +147,7 @@ void pregameRoutine(int idLobby) {
             fermerConnexion(sock);
             // Fils
             recevoirSuivant(sockPlayer, &recData, deserial);
+            printf("Reçu %d\n", recData.code);
             switch (recData.code)
             {
             case 102: // joinLobby
@@ -196,18 +198,20 @@ void pregameRoutine(int idLobby) {
                 while(1);
                 break;
             case 103: // playWord
-                printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
-                strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
-                exit(EXIT_SUCCESS);
+                while(1) {
+                    printf("Reçu le mot %s de %d\n", recData.args[1], atoi(recData.args[0]));
+                    strcpy(tabLobby[idLobby].players[atoi(recData.args[0])].lastPlayedWord, recData.args[1]);
+
+                    recevoirSuivant(sockPlayer, &recData, deserial);
+                }
+                
             default:
-                break;
+                fermerConnexion(sock);;
             }
         }
 
         
     }
-
-    fermerConnexion(sock);
 }
 
 /**
@@ -232,25 +236,27 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
             usleep(300000);
         }
         char* motLength = malloc(sizeof(char) * 5);
-        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word));
+        sprintf(motLength, "%ld", strlen(tabLobby[idLobby].word) - 1);
         bufferRound = tabLobby[idLobby].round;
 
         sendData.code = 108;
         sendData.nbArgs = 1;
-        sendData.args[0] = motLength;
+        strcpy(sendData.args[0], motLength);
+        printf("Envoi de la longueur du mot : %s\n", motLength);
 
         envoyer(sockPlayer, &sendData, serial);
 
         int currentTimer = 0;
         // 200 * 0.3 = 60 secondes
         while(tabLobby[idLobby].round != tabLobby[idLobby].players[idPlayer].score) {
+            printf("Boucle de jeu\n");
             while(strcmp(bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord) == 0) {
                 // printf("Attente de match (%s %s)\n", bufferLastWord, tabLobby[idLobby].players[idPlayer].lastPlayedWord);
                 // Sleep for 0.3 second
                 usleep(300000);
                 currentTimer++;
 
-                if(tabLobby[idLobby].round != bufferRound || currentTimer >= 200) {
+                if(tabLobby[idLobby].round != bufferRound/* || currentTimer >= 200*/) {
                     // Le joueur a été éliminé
                     sendData.code = 109;
                     sendData.nbArgs = 1;
@@ -272,16 +278,14 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
                 envoyer(sockPlayer, &sendData, serial);
                 tabLobby[idLobby].players[idPlayer].score++;
             } else {
-                // Clear le buffer
                 strcpy(codeword, wordlize(tabLobby[idLobby].word, tabLobby[idLobby].players[idPlayer].lastPlayedWord));
-                printf("Codeword : %s\n", codeword);
                 codeword[strlen(tabLobby[idLobby].players[idPlayer].lastPlayedWord)] = '\0';
                 printf("Codeword : %s\n", codeword);
 
                 sendData.code = 203;
                 sendData.nbArgs = 1;
                 sendData.args[0] = codeword;
-                strcpy(sendData.args[1], tabLobby[idLobby].players[idPlayer].lastPlayedWord);
+                // strcpy(sendData.args[1], tabLobby[idLobby].players[idPlayer].lastPlayedWord);
                 envoyer(sockPlayer, &sendData, serial);
             }
 
@@ -306,6 +310,7 @@ void hostRoutine(int idLobby) {
         // Choix du mot
         char bufferMot[MAX_LENGTH];
         strcpy(bufferMot, getRandomWord());
+        // printf("Mot choisi : %s\n", bufferMot);
         bufferMot[strlen(bufferMot) - 1] = '\0';
         strcpy(tabLobby[idLobby].word, bufferMot);
         printf(YELLOW "[%s]" RESET " Mot choisi : %s\n", tabLobby[idLobby].code, tabLobby[idLobby].word);

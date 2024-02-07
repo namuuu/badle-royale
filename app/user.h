@@ -104,7 +104,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer);
  * @param idPlayer : id du joueur
  * @param wordSize : taille du mot
 */
-void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned int wordSize);
+void writerToLobby(socket_t socketWriter, int idPlayer, long unsigned int wordSize);
 
 /**
  * \fn void printWord(char *word, char *wordlized);

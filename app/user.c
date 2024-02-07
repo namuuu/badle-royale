@@ -230,12 +230,15 @@ int connectToLobby(char* ip, unsigned short port, char* code) {
 void mainToLobby(socket_t socketLobby, int idPlayer) {
     printf("Lancement du jeu...\n");
     received_t recDataLobby;
+    printf("IP: %s | Port: %d\n", socketLobby.ip, socketLobby.port);
+    socket_t sockWriter = connectToServer(IP_CLIENT, 0, socketLobby.ip, socketLobby.port, SOCK_STREAM);
     recDataLobby.code = 0;
     while(1) {
         // Wait for the round to start and to receive word length
-         recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        recevoirSuivant(socketLobby, &recDataLobby, deserial);
+        // system("clear");
         printf("Début du round...\n");
-        printf("Longueur du mot: %s\n\t", recDataLobby.args[0]);
+        printf("Longueur du mot: %s (code: %d)\n\t", recDataLobby.args[0], recDataLobby.code);
         for(int i = 0; i < atoi(recDataLobby.args[0]); i++) {
             printf("_ ");
         }
@@ -246,7 +249,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
             int pidWriter;
             CHECK(pidWriter = fork(), "fork()");
             if(pidWriter == 0) {
-                writerToLobby(socketLobby.ip, socketLobby.port, idPlayer, atoi(recDataLobby.args[0]));
+                writerToLobby(sockWriter, idPlayer, atoi(recDataLobby.args[0]));
                 exit(EXIT_SUCCESS);
             }
             // Main
@@ -260,7 +263,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
                 break;
             case 203: // Incorrect word
                 printf(RED "Le mot n'est pas correct !\n" RESET);
-                printWord(recDataLobby.args[1], recDataLobby.args[0]);
+                // printWord(recDataLobby.args[1], recDataLobby.args[0]);
                 break;
             case 204: // Correct word
                 printf(GREEN "Vous avez deviné le mot ! En attente des autres joueurs...\n" RESET);
@@ -269,6 +272,8 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
                 printf("Data received: %d\n", recDataLobby.code);
                 break;
             }
+            // freeze for 0.1 second
+            usleep(100000);
         }
     }
     
@@ -284,13 +289,7 @@ void mainToLobby(socket_t socketLobby, int idPlayer) {
  * @param idPlayer : id du joueur
  * @param wordSize : taille du mot
 */
-void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned int wordSize) {
-    socket_t sockLobby = connectToServer(IP_CLIENT, 0, ip, port, SOCK_STREAM);
-
-    send_t reqDataLobby;
-    reqDataLobby.code = 103;
-    reqDataLobby.nbArgs = 2;
-    
+void writerToLobby(socket_t socketWriter, int idPlayer, long unsigned int wordSize) {
     char* choix = malloc(sizeof(char) * 10); // Will be used to store the user's choice
 
     printf(YELLOW "$ " RESET);
@@ -303,6 +302,12 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned i
         }
     }
 
+    
+
+    send_t reqDataLobby;
+    reqDataLobby.code = 103;
+    reqDataLobby.nbArgs = 2;
+
     // arg 0 = idplayer
     reqDataLobby.args[0] = malloc(sizeof(char) * 10);
     sprintf(reqDataLobby.args[0], "%d", idPlayer);
@@ -310,7 +315,7 @@ void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned i
     reqDataLobby.args[1] = malloc(sizeof(char) * 10);
     strcpy(reqDataLobby.args[1], choix);
 
-    envoyer(sockLobby, &reqDataLobby, serial);
+    envoyer(socketWriter, &reqDataLobby, serial);
     // printf("Connexion au lobby %s...\n", code);
 }
 
@@ -342,6 +347,7 @@ void serial(generic quoi, char* req) {
  */
 void deserial(generic quoi, char *msg) {
     // Séparer les données selon le séparateur "-" et les ranger dans une array de strings
+    printf("msg: %s\n", msg);
     char *token = strtok(msg, "-");
     ((received_t*)quoi)->code = atoi(token);
     ((received_t*)quoi)->nbArgs = 0;
