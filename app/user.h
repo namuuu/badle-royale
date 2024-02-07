@@ -105,3 +105,12 @@ void mainToLobby(socket_t socketLobby, int idPlayer);
  * @param wordSize : taille du mot
 */
 void writerToLobby(char * ip, unsigned short port, int idPlayer, long unsigned int wordSize);
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+ * @param word Mot à afficher
+ * @param wordlized Code de word
+*/
+void printWord(char *word, char *wordlized);

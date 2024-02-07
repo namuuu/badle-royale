@@ -10,8 +10,8 @@
 #define HUB_IP "0.0.0.0"
 #define HUB_PORT 5000
 
-#define NB_LIGNES 9081
-#define MAX_LENGTH 9
+#define NB_LIGNES 835
+#define MAX_LENGTH 20
 
 #define PLAYER_MAX 4
 
@@ -152,3 +152,19 @@ char *getRandomWord();
 int waitForPlayersToFinish(int idLobby);
 
 void hostRoutine(int idLobby);
+
+/**
+ * \fn void wordlize();
+ * 
+ * @brief Vérifie pour chaque caractère s'il est présent dans le mot et renvoie des indices pour chaque caractère
+ * @param wordToValidate
+ * @param word
+*/
+char *wordlize(char *word, char *wordToValidate);
+
+/**
+ * \fn void printWord(char *word, char *wordlized);
+ * 
+ * @brief Affiche les caractères du mot en fonction du code de wordlized (vert => '!' ; rouge => '.' ; jaune => '?')
+*/
+int checkword(char *codeword);
