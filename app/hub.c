@@ -223,11 +223,11 @@ void gameRoutine(socket_t sockPlayer, int idLobby, int idPlayer) {
         sendData.args[0] = mot;
         envoyer(sockPlayer, &sendData, serial);
     } 
-    if (tabLobby[idLobby].playerCount == 1) {
-        sendData.code = 110;
-        sendData.nbArgs = 0;
-        envoyer(sockPlayer, &sendData, serial);
-    }
+   
+    sendData.code = 110;
+    sendData.nbArgs = 0;
+    envoyer(sockPlayer, &sendData, serial);
+    
 }
 
 /**
